@@ -1,6 +1,6 @@
 import React from 'react';
 
-
+// helper functions
 const gotError = ({touched, error}) => {
 
     if(touched && error) return true;
@@ -15,14 +15,13 @@ const renderErrorField = (meta) => {
         )
 }
 
-const InputField = ({input, label, meta}) => {
+// the component
+const TextareaField = ({input, label, meta}) => {
 
-
-    
     return (
         <div className="form-group">
             <label>{label}</label>
-            <input 
+            <textarea 
                 type="text" 
                 className={`form-control ${ gotError(meta) ? 'is-invalid':''}`}
                 autoComplete="off"
@@ -34,4 +33,6 @@ const InputField = ({input, label, meta}) => {
     )
 }
 
-export default InputField;
+//
+
+export default TextareaField;
