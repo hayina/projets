@@ -11,11 +11,9 @@ const RadioField = ({ input, meta, label, options }) => {
                     <input
                         className="form-check-input"
                         type="radio"
-                        // 
-                        // {...input}
                         value={ option.value }
                         checked={ option.value === input.value }
-                        onChange={input.onChange}
+                        onChange={(e) => input.onChange(option.value)}
                     />
                     <label className="form-check-label">
                         {option.label}

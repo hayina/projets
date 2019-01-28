@@ -17,3 +17,6 @@ export const phoneNumber = value =>
 export const alphaNumeric = value =>
     value && /[^a-zA-Z0-9 ]/i.test(value)
     ? 'Only alphanumeric characters' : undefined
+
+export const emptyArray = array =>
+    array && array.length === 0 ? 'Required ...' : undefined

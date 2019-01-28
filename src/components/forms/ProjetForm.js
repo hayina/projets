@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 
 import * as actions from '../../actions'
 
-import { required, number } from './validator'
+import { required, number, emptyArray } from './validator'
 import TextField from './form-fields/TextField'
 import SelectField from './form-fields/SelectField'
 import RadioFields from './form-fields/RadioFields'
@@ -55,7 +55,7 @@ class ProjetForm extends Component {
                     name="isConvention"
                     component={RadioFields}
                     label="conventionné"
-                    options={[{label: 'non', value: 'non'}, {label: 'oui', value: 'oui'}]}
+                    options={[{label: 'non', value: false}, {label: 'oui', value: true}]}
                 />
 
 
@@ -72,8 +72,9 @@ class ProjetForm extends Component {
                     name="communes"
                     component={CheckboxFields}
                     label="communes"
-                    options={[{label: 'taourirt', value: '1'}, {label: 'el aioun', value: '2'}, 
-                    {label: 'debdou', value: '3'}]}
+                    options={[{label: 'taourirt', value: 1}, {label: 'el aioun', value: 2}, 
+                    {label: 'debdou', value: 3}]}
+                    validate={[emptyArray]}
                 />
 
                 <button type="submit" className="btn btn-primary">Submit</button>
@@ -97,7 +98,8 @@ const initialValues = {
     intitule: 'YOUSSEF PROJET',
     montant: 300000,
     secteur: 'santé',
-    isConvention: 'non'
+    isConvention: false,
+    communes: [2, 3]
 
 }
 
@@ -111,5 +113,5 @@ export default connect(
     // {
     //     initFormValues: actions.initFormValues
     // }
-)
-    (ProjetForm);
+)(ProjetForm);
+

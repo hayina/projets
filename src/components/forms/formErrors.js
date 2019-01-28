@@ -4,6 +4,7 @@ import React from 'react';
 export const gotError = ({touched, error}) => {
 
     if(touched && error) return true;
+    // if(error) return true;
     return false;
 }
 

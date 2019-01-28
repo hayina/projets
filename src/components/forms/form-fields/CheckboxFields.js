@@ -1,30 +1,40 @@
 import React from 'react';
 
-const CheckboxField = ({ input, meta, label, options }) => {
+import { gotError, renderErrorField } from '../formErrors';
 
-    console.log(input.value)
-    
+const CheckboxField = ({ input, meta, label, options }) => {
 
     return (
 
         <div className="form-group">
             <label>{label}</label>
-            { options.map((option) => (
+            <div className={`form-control ${ gotError(meta) ? 'is-invalid':'' }`}>
+            {options.map((option) => (
                 <div className="form-check" key={option.value}>
                     <input
                         className="form-check-input"
                         type="checkbox"
-                        // 
-                        // {...input}
-                        value={ option.value }
-                        // checked={ option.value === input.value }
-                        onChange={input.onChange}
+                        checked={input.value.indexOf(option.value) !== -1}
+                        //
+                        onChange={(e) => {
+                            const newValues = [...input.value];
+                            if (e.target.checked) {
+                                newValues.push(option.value);
+                            } else {
+                                newValues.splice(newValues.indexOf(option.value), 1);
+                            }
+                            return input.onChange(newValues);
+                        }}
                     />
                     <label className="form-check-label">
                         {option.label}
                     </label>
                 </div>
-            )) }
+            ))}
+            </div>
+
+            { renderErrorField(meta) }
+
         </div>
 
     )
