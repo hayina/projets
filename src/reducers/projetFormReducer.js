@@ -1,13 +1,8 @@
-const INITIAL_STATE = {
-
-    intitule: 'YOUSSEF PROJET',
-    montant: 300000,
-    secteur: 'santé',
-    isConvention: false
-
-};
+const INITIAL_STATE = {};
 
 export default (state=INITIAL_STATE, action) => {
+
+    console.log(action.type)
 
     switch(action.type) {
 

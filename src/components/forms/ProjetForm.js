@@ -7,15 +7,15 @@ import * as actions from '../../actions'
 import { required, number } from './validator'
 import TextField from './form-fields/TextField'
 import SelectField from './form-fields/SelectField'
-import RadioField from './form-fields/RadioField'
+import RadioFields from './form-fields/RadioFields'
 
 
 class ProjetForm extends Component {
 
-    componentDidMount(){
+    componentDidMount() {
         // initialize the form
 
-        this.props.initFormValues();
+        //this.props.initFormValues();
     }
 
     onSubmit(formValues) {
@@ -28,39 +28,43 @@ class ProjetForm extends Component {
         const { handleSubmit, initialValues } = this.props;
         // const { formValuesChange, form } = this.props;
 
-        console.log(`initialValues -> `,initialValues)
+        // console.log(`initialValues -> `, initialValues)
 
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
 
-                <Field 
-                    name="intitule" 
-                    component={TextField} 
-                    label="intitulé" 
+                <Field
+                    name="intitule"
+                    component={TextField}
+                    label="intitulé"
                     fieldType="textarea"
-                    validate={ [required] } 
+                    validate={[required]}
                 />
 
-                <Field 
-                    name="montant" 
-                    component={TextField} 
-                    label="montant" 
+                <Field
+                    name="montant"
+                    component={TextField}
+                    label="montant"
                     fieldType="input"
-                    validate={ [required, number] } 
+                    validate={[required, number]}
                 />
 
-                <div className="form-group">
-                    <label>conventionné</label>
-                    <Field name="isConvention" component={RadioField} label="non" valueField={false} />
-                    <Field name="isConvention" component={RadioField} label="oui" valueField={true} />
-                </div>
 
-                <Field 
-                    name="secteur" 
-                    component={SelectField} 
-                    label="commune" 
+                <Field
+                    name="isConvention"
+                    component={RadioFields}
+                    label="conventionné"
+                    options={[{label: 'non', value: 'non'}, {label: 'oui', value: 'oui'}]}
+                />
+
+
+
+                <Field
+                    name="secteur"
+                    component={SelectField}
+                    label="commune"
                     options={['santé', 'education', 'eau potable', 'électricité', 'routes & voiries', 'autres']}
-                    validate={ [required] } 
+                    validate={[required]}
                 />
 
                 <button type="submit" className="btn btn-primary">Submit</button>
@@ -70,39 +74,33 @@ class ProjetForm extends Component {
     }
 }
 
-// const validate = (formValues) => {
-
-//     const errors = {}
-//     if(!formValues.intitule){
-//         errors.intitule = 'Requierd !';
-//     }
-
-//     return errors;
-// }
-
 
 // connecting with the redux-form hoc
-ProjetForm =  reduxForm({
+ProjetForm = reduxForm({
     form: 'projetForm'
 })(ProjetForm)
 
 
+//setting initial values
+
+const initialValues = {
+
+    intitule: 'YOUSSEF PROJET',
+    montant: 300000,
+    secteur: 'santé',
+    isConvention: 'non'
+
+}
+
 // connecting with the redux hoc
 export default connect(
     // MapStateToProps
-    (state) => ({
-        initialValues: state.initialValues
+    () => ({
+        initialValues,
     }),
     //MapDispatchToProps
-    {
-        initFormValues: actions.initFormValues
-    }
+    // {
+    //     initFormValues: actions.initFormValues
+    // }
 )
-(ProjetForm);
-  
-// const mapStateToProps = (state) => { return { form: state.form } }
-
-// export default connect(
-//     mapStateToProps,
-//     actions
-// )(ProjetForm);
+    (ProjetForm);
