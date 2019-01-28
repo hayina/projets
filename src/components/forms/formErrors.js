@@ -1,9 +1,9 @@
 import React from 'react';
 
 // helper functions
-export const gotError = ({touched, error}) => {
+export const gotError = ({touched, error, dirty}) => {
 
-    if(touched && error) return true;
+    if((dirty || touched) && error) return true;
     // if(error) return true;
     return false;
 }

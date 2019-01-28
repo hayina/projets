@@ -4,6 +4,8 @@ import { gotError, renderErrorField } from '../formErrors';
 
 const CheckboxField = ({ input, meta, label, options }) => {
 
+    console.log(meta)
+
     return (
 
         <div className="form-group">
