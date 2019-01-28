@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { gotError, renderErrorField } from '../formErrors';
 
 const renderOptions = (options) => {
     return options.map((op) => <option key={op} value={op}>{op}</option>);
@@ -11,10 +12,11 @@ const SelectField = ({input, meta, label, options}) => {
     return (
         <div className="form-group">
             <label>{label}</label>
-            <select className="form-control" {...input}>
-                <option>...</option>
+            <select className={`form-control ${ gotError(meta) ? 'is-invalid':'' }`} {...input}>
+                <option value=''>...</option>
                 {renderOptions(options)}
             </select>
+            { renderErrorField(meta) }
         </div>
     )
 

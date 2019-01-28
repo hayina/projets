@@ -1,11 +1,18 @@
 
 
-export const formValuesChange = (inputValue, inputName) => {
-
-
-
-    return {
+export const formValuesChange = (inputValue, inputName) => (
+    {
         type: 'INPUT_CHANGED',
-        payload: {inputValue, inputName}
+        payload: { inputValue, inputName }
     }
-}
+);
+
+
+export const initFormValues = () => (
+    {
+        type: 'LOAD_INIT_FORM_VALUES'
+    }
+);
+
+
+

@@ -12,7 +12,11 @@ import RadioField from './form-fields/RadioField'
 
 class ProjetForm extends Component {
 
-    
+    componentDidMount(){
+        // initialize the form
+
+        this.props.initFormValues();
+    }
 
     onSubmit(formValues) {
         console.log(formValues)
@@ -21,9 +25,10 @@ class ProjetForm extends Component {
     render() {
 
         // props from redux
-        const { handleSubmit } = this.props;
+        const { handleSubmit, initialValues } = this.props;
         // const { formValuesChange, form } = this.props;
-  
+
+        console.log(`initialValues -> `,initialValues)
 
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -37,24 +42,25 @@ class ProjetForm extends Component {
                 />
 
                 <Field 
-                    name="mantant" 
+                    name="montant" 
                     component={TextField} 
-                    label="mantant" 
+                    label="montant" 
                     fieldType="input"
                     validate={ [required, number] } 
                 />
 
                 <div className="form-group">
                     <label>conventionné</label>
-                    <Field name="isConvention" component={RadioField} label="oui" valueField={1} />
-                    <Field name="isConvention" component={RadioField} label="non" valueField={0} />
+                    <Field name="isConvention" component={RadioField} label="non" valueField={false} />
+                    <Field name="isConvention" component={RadioField} label="oui" valueField={true} />
                 </div>
 
                 <Field 
-                    name="commune" 
+                    name="secteur" 
                     component={SelectField} 
                     label="commune" 
-                    options={['taourirt', 'debdou', 'el aioun']}
+                    options={['santé', 'education', 'eau potable', 'électricité', 'routes & voiries', 'autres']}
+                    validate={ [required] } 
                 />
 
                 <button type="submit" className="btn btn-primary">Submit</button>
@@ -74,10 +80,25 @@ class ProjetForm extends Component {
 //     return errors;
 // }
 
-export default reduxForm({
+
+// connecting with the redux-form hoc
+ProjetForm =  reduxForm({
     form: 'projetForm'
 })(ProjetForm)
 
+
+// connecting with the redux hoc
+export default connect(
+    // MapStateToProps
+    (state) => ({
+        initialValues: state.initialValues
+    }),
+    //MapDispatchToProps
+    {
+        initFormValues: actions.initFormValues
+    }
+)
+(ProjetForm);
   
 // const mapStateToProps = (state) => { return { form: state.form } }
 

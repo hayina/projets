@@ -1,27 +1,18 @@
 const INITIAL_STATE = {
 
-    status: null,
-    values: {
-        intitule: '',
-        montant: ''
-    },
-    pending: null
+    intitule: 'YOUSSEF PROJET',
+    montant: 300000,
+    secteur: 'santé',
+    isConvention: false
 
 };
 
 export default (state=INITIAL_STATE, action) => {
 
-
     switch(action.type) {
 
-        
-
-        case 'INPUT_CHANGED':
-
-            const { inputName, inputValue } = action.payload;
-            const newState = { ...state }
-            newState.values[inputName] = inputValue;
-            return newState;
+        case 'LOAD_INIT_FORM_VALUES':
+            return {...state, intitule: 'YOUSSEF PROJET INIT ...'};
 
         default:
             return state;

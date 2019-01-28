@@ -4,8 +4,10 @@ import React from 'react';
 const RadioField = ({ input, meta, label, valueField }) => {
 
 
+    // console.log(input.value);
+
     // update of the value property in radio input
-    input.value = valueField;
+    // input.value = valueField;
 
     return (
 
@@ -13,6 +15,7 @@ const RadioField = ({ input, meta, label, valueField }) => {
             <input 
                 className="form-check-input" 
                 type="radio" 
+                // checked={ valueField ===  }
                 { ...input }
             />
             <label className="form-check-label">{label}</label>

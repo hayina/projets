@@ -1,19 +1,7 @@
 import React from 'react';
 
-// helper functions
-const gotError = ({touched, error}) => {
+import { gotError, renderErrorField } from '../formErrors';
 
-    if(touched && error) return true;
-    return false;
-}
-
-const renderErrorField = (meta) => {
-
-    if(gotError(meta))
-        return (
-            <div className="invalid-feedback">{meta.error}</div>
-        )
-}
 
 const renderTextField = (fieldType, fieldProps) => {
 
@@ -29,7 +17,7 @@ const renderTextField = (fieldType, fieldProps) => {
 const TextField = ({input, meta, label, fieldType}) => {
 
     const fieldProps = { 
-        ...input, // redux input
+        ...input, // redux input (provided by the redux form HOC)
         type: "text",
         className: `form-control ${ gotError(meta) ? 'is-invalid':'' }`,
         autoComplete: "off",
