@@ -27,7 +27,7 @@ const TextField = ({input, meta, label, fieldType}) => {
     return (
         <div className="form-group">
 
-            <label>{label}</label>
+            <label className="form-label">{label}</label>
             { renderTextField(fieldType, fieldProps) }
             { renderErrorField(meta) }
 

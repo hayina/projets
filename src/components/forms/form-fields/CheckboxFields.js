@@ -2,9 +2,7 @@ import React from 'react';
 
 import { gotError, renderErrorField } from '../formErrors';
 
-const CheckboxField = ({ input, meta, label, options }) => {
-
-    console.log(meta)
+const CheckboxField = ({ input, meta, label, options }) => {    
 
     return (
 

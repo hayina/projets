@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
 
 import * as actions from '../../actions'
 
@@ -9,6 +9,8 @@ import TextField from './form-fields/TextField'
 import SelectField from './form-fields/SelectField'
 import RadioFields from './form-fields/RadioFields'
 import CheckboxFields from './form-fields/CheckboxFields'
+
+import './forms.css';
 
 
 class ProjetForm extends Component {
@@ -26,10 +28,10 @@ class ProjetForm extends Component {
     render() {
 
         // props from redux
-        const { handleSubmit, initialValues } = this.props;
+        const { handleSubmit, isConvention } = this.props;
         // const { formValuesChange, form } = this.props;
 
-        // console.log(`initialValues -> `, initialValues)
+        console.log(this.props)
 
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -55,16 +57,18 @@ class ProjetForm extends Component {
                     name="isConvention"
                     component={RadioFields}
                     label="conventionné"
-                    options={[{label: 'non', value: false}, {label: 'oui', value: true}]}
+                    options={[{ label: 'non', value: false }, { label: 'oui', value: true }]}
                 />
 
+                
+                {isConvention ? (<h1>convention !!!</h1>) : undefined}
 
 
                 <Field
                     name="secteur"
                     component={SelectField}
                     label="secteur"
-                    options={['santé', 'education', 'eau potable', 'électricité', 'routes & voiries', 'autres']}
+                    options={[{ label: 'santé', value: 1 }, { label: 'education', value: 2 }, { label: 'eau potable', value: 3 }]}
                     validate={[required]}
                 />
 
@@ -72,8 +76,8 @@ class ProjetForm extends Component {
                     name="communes"
                     component={CheckboxFields}
                     label="communes"
-                    options={[{label: 'taourirt', value: 1}, {label: 'el aioun', value: 2}, 
-                    {label: 'debdou', value: 3}]}
+                    options={[{ label: 'taourirt', value: 1 }, { label: 'el aioun', value: 2 },
+                    { label: 'debdou', value: 3 }]}
                     validate={[emptyArray]}
                 />
 
@@ -97,18 +101,24 @@ const initialValues = {
 
     intitule: 'YOUSSEF PROJET',
     montant: 300000,
-    secteur: 'santé',
+    secteur: 1,
     isConvention: false,
     communes: [2, 3]
 
 }
 
+const selector = formValueSelector('projetForm');
+
 // connecting with the redux hoc
 export default connect(
     // MapStateToProps
-    () => ({
-        initialValues,
-    }),
+    (state) => {
+        const isConvention = selector(state, 'isConvention')
+        return {
+            initialValues,
+            isConvention
+        }
+    },
     //MapDispatchToProps
     // {
     //     initFormValues: actions.initFormValues
