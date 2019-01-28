@@ -8,6 +8,7 @@ import { required, number } from './validator'
 import TextField from './form-fields/TextField'
 import SelectField from './form-fields/SelectField'
 import RadioFields from './form-fields/RadioFields'
+import CheckboxFields from './form-fields/CheckboxFields'
 
 
 class ProjetForm extends Component {
@@ -62,9 +63,17 @@ class ProjetForm extends Component {
                 <Field
                     name="secteur"
                     component={SelectField}
-                    label="commune"
+                    label="secteur"
                     options={['santé', 'education', 'eau potable', 'électricité', 'routes & voiries', 'autres']}
                     validate={[required]}
+                />
+
+                <Field
+                    name="communes"
+                    component={CheckboxFields}
+                    label="communes"
+                    options={[{label: 'taourirt', value: '1'}, {label: 'el aioun', value: '2'}, 
+                    {label: 'debdou', value: '3'}]}
                 />
 
                 <button type="submit" className="btn btn-primary">Submit</button>

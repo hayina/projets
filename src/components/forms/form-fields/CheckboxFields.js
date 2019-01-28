@@ -1,6 +1,9 @@
 import React from 'react';
 
-const RadioField = ({ input, meta, label, options }) => {
+const CheckboxField = ({ input, meta, label, options }) => {
+
+    console.log(input.value)
+    
 
     return (
 
@@ -10,11 +13,11 @@ const RadioField = ({ input, meta, label, options }) => {
                 <div className="form-check" key={option.value}>
                     <input
                         className="form-check-input"
-                        type="radio"
+                        type="checkbox"
                         // 
                         // {...input}
                         value={ option.value }
-                        checked={ option.value === input.value }
+                        // checked={ option.value === input.value }
                         onChange={input.onChange}
                     />
                     <label className="form-check-label">
@@ -28,4 +31,4 @@ const RadioField = ({ input, meta, label, options }) => {
 
 }
 
-export default RadioField;
+export default CheckboxField;
