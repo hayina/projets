@@ -1,30 +1,35 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
+
+import TextField from '../forms/form-fields/TextField'
 
 class Convention extends React.Component {
 
+
+    onSubmit(formValues) {
+        console.log(formValues);
+    }
+
     render() {
+
+        const { handleSubmit } = this.props;
 
         return (
             <div className="conv-container">
-
-                <div className="partners-container">
-                    <div className="modal-form-line">
-                        <label htmlFor="">Partner</label>
-                        <input type="text" />
-                    </div>
-                    <div className="modal-form-line">
-                        <label htmlFor="">Montant</label>
-                        <input type="text" />
-                    </div>
-
-
-                </div>
-                <div id="add-partner" className="add-buttom-btn">add partner</div>
-
-            </div>
+                <form onSubmit={ handleSubmit(this.onSubmit) }>
+                    <Field name="partner" component={TextField} label="Partner" cssClass="" />
+                    <Field name="montant" component={TextField} label="Montant" cssClass="" />
+                </form >
+            </div >
         )
     }
 
 }
+
+Convention = reduxForm({
+    form: 'conventionForm'
+})(Convention)
+
 
 export default Convention;

@@ -22,8 +22,8 @@ class Modal extends React.Component {
                 </div>
 
                 <div className="pop-validation">
-                    <button className="btn btn-primary">cancel</button>
-                    <button className="btn btn-secondary">save</button>
+                    <button className="btn btn-secondary">cancel</button>
+                    <button type="submit" className="btn btn-primary">save</button>
                 </div>
             
             </div>
