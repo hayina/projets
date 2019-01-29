@@ -1,11 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { submit } from 'redux-form';
 
 import ProjetForm from './forms/ProjetForm'
 import Modal from './modals/Modal'
 import Convention from './modals/Convention'
 
 
-const App = () => {
+const App = (props) => {
+
+    const { dispatch } = props;
 
     return (
 
@@ -15,8 +19,11 @@ const App = () => {
 
             <h1>popup</h1>
 
-            <Modal>
-                <Convention />  
+            <Modal 
+                handleClick={() => dispatch(submit('conventionForm'))}
+                title="ADD PARTNER"
+            >
+                <Convention/>  
             </Modal>
 
         </div>
@@ -24,4 +31,4 @@ const App = () => {
     )
 }
 
-export default App;
+export default connect()(App);

@@ -4,12 +4,14 @@ import { Field, reduxForm, formValueSelector } from 'redux-form';
 
 import TextField from '../forms/form-fields/TextField'
 
+const onSubmit= (formValues) => {
+    console.log(formValues);
+}
+
 class Convention extends React.Component {
 
 
-    onSubmit(formValues) {
-        console.log(formValues);
-    }
+
 
     render() {
 
@@ -17,7 +19,7 @@ class Convention extends React.Component {
 
         return (
             <div className="conv-container">
-                <form onSubmit={ handleSubmit(this.onSubmit) }>
+                <form onSubmit={ handleSubmit }>
                     <Field name="partner" component={TextField} label="Partner" cssClass="" />
                     <Field name="montant" component={TextField} label="Montant" cssClass="" />
                 </form >
@@ -28,7 +30,7 @@ class Convention extends React.Component {
 }
 
 Convention = reduxForm({
-    form: 'conventionForm'
+    form: 'conventionForm', onSubmit
 })(Convention)
 
 
