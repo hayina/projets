@@ -15,11 +15,7 @@ import './forms.css';
 
 class ProjetForm extends Component {
 
-    componentDidMount() {
-        // initialize the form
-
-        //this.props.initFormValues();
-    }
+    componentDidMount() { }
 
     onSubmit(formValues) {
         console.log(formValues)
@@ -109,7 +105,8 @@ const initialValues = {
     montant: 300000,
     secteur: 1,
     isConvention: true,
-    communes: [2, 3]
+    communes: [2, 3],
+    partners: [],
 
 }
 

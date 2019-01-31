@@ -25,14 +25,22 @@ class Modal extends React.Component {
 
     handleClickOutside = (event) => {
         if (this.modalDialogRef.current && !this.modalDialogRef.current.contains(event.target)) {
-            console.log('You clicked outside of me!');
             this.props.toggleModal(this.props.modalName, false);
         }
     }
 
+    handleClickValidation = () => {
+
+        console.log('handleClickValidation');
+
+        const { toggleModal, handleClick, modalName } = this.props;
+        handleClick();
+        // toggleModal(modalName, false);
+    }
+
     render() {
 
-        const { title, children, handleClick } = this.props;
+        const { title, children, toggleModal, modalName } = this.props;
 
         return (
             <div className="pop-container">
@@ -48,9 +56,11 @@ class Modal extends React.Component {
                     </div>
 
                     <div className="pop-validation">
-                        <button className="btn btn-secondary">Annuler</button>
+                        <button className="btn btn-secondary" 
+                            onClick={() => toggleModal(modalName, false)}
+                        >Annuler</button>
                         <button type="submit" className="btn btn-primary"
-                            onClick={handleClick}
+                            onClick={this.handleClickValidation}
                         >Valider</button>
                     </div>
                 </div>

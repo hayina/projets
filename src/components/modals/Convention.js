@@ -1,16 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { Field, reduxForm, arrayPush } from 'redux-form';
 
 import TextField from '../forms/form-fields/TextField'
 
-const onSubmit= (formValues) => {
+const onSubmit = (formValues, dispatch) => {
+    console.log('onSubmit Convention ...');
     console.log(formValues);
+
+    const partners = [];
+    partners.push(formValues);
+
+    dispatch(arrayPush('projetForm', 'partners', partners));
+
+    
+
+    // Object.entries(formValues).forEach(([field, value]) => {
+    //     console.log(field);          // the name of the current key.
+    //     console.log(value);          // the value of the current key.
+        
+
+    // });
+
+    // dispatch(arrayPush());
+
 }
 
 class Convention extends React.Component {
-
-
 
 
     render() {
@@ -20,10 +36,7 @@ class Convention extends React.Component {
         return (
             <div className="conv-container">
                 <form onSubmit={ handleSubmit }>
-                    <Field name="partner" component={TextField} label="Partner" cssClass="" 
-                        // format={ v => !v ? '' : v.toUpperCase()  }
-                        parse={ v => !v ? '' : v.toUpperCase() }
-                    />
+                    <Field name="partner" component={TextField} label="Partner" cssClass="" />
                     <Field name="montant" component={TextField} label="Montant" cssClass="" />
                 </form >
             </div >
@@ -33,7 +46,8 @@ class Convention extends React.Component {
 }
 
 Convention = reduxForm({
-    form: 'conventionForm', onSubmit
+    form: 'conventionForm', 
+    onSubmit
 })(Convention)
 
 
