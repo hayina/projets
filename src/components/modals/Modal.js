@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './modal.css'
+
 
 
 class Modal extends React.Component {
@@ -14,23 +16,22 @@ class Modal extends React.Component {
         return (
             <div className="pop-container">
 
-                <div className="pop-header">
-                    <div className="pop-title">
-                        <h1>{title}</h1>
+                <div className="pop-dialog">
+
+                    <div className="pop-header">
+                        <div className="pop-title">{title}</div>
                     </div>
-                </div>
 
-                <div className="pop-content">
-                    {children}
-                </div>
+                    <div className="pop-content">
+                        {children}
+                    </div>
 
-                <div className="pop-validation">
-                    <button className="btn btn-secondary">cancel</button>
-                    <button type="submit" className="btn btn-primary"
-                        onClick={ handleClick }
-                    >
-                        save
-                    </button>
+                    <div className="pop-validation">
+                        <button className="btn btn-secondary">Annuler</button>
+                        <button type="submit" className="btn btn-primary"
+                            onClick={handleClick}
+                        >Valider</button>
+                    </div>
                 </div>
 
             </div>

@@ -1,0 +1,48 @@
+.pop-container {
+
+    background-color: #808080b8;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+}
+
+.pop-dialog {
+
+    background-color: white;
+    margin: 20px auto;
+    /* padding: 20px; */
+    max-width: 500px;
+    margin: 1.75rem auto;
+    border-radius: 3px;
+
+}
+
+.pop-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.pop-title {
+
+}
+
+
+.pop-content {
+    padding: 20px;
+}
+
+.pop-validation {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid #e9ecef;
+    padding: 20px;
+}
+.pop-validation .btn {
+    margin-left: 10px;
+}
+
+ 
