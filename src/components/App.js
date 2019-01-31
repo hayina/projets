@@ -9,26 +9,33 @@ import Convention from './modals/Convention'
 
 const App = (props) => {
 
-    const { dispatch } = props;
+    const { dispatch, formModals } = props;
 
     return (
 
         <div>
-            {/* <h1>PROJET FORMULAIRE</h1>
-            <ProjetForm /> */}
+            
+            <ProjetForm />
 
-            <h1>popup</h1>
 
-            <Modal 
-                handleClick={() => dispatch(submit('conventionForm'))}
-                title="ADD PARTNER"
-            >
-                <Convention/>  
-            </Modal>
+            { formModals.modal && (
+                <Modal
+                    handleClick={() => dispatch(submit('conventionForm'))}
+                    title="ADD PARTNER"
+                    modalName='convention'
+                >
+                    { formModals.convention && <Convention /> } 
+                </Modal>
+            )}
 
         </div>
 
     )
 }
 
-export default connect()(App);
+export default connect(
+    // map state to props function
+    (state) => ({
+        formModals: state.formModals
+    })
+)(App);

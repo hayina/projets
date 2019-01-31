@@ -20,7 +20,10 @@ class Convention extends React.Component {
         return (
             <div className="conv-container">
                 <form onSubmit={ handleSubmit }>
-                    <Field name="partner" component={TextField} label="Partner" cssClass="" />
+                    <Field name="partner" component={TextField} label="Partner" cssClass="" 
+                        // format={ v => !v ? '' : v.toUpperCase()  }
+                        parse={ v => !v ? '' : v.toUpperCase() }
+                    />
                     <Field name="montant" component={TextField} label="Montant" cssClass="" />
                 </form >
             </div >

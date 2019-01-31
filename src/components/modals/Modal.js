@@ -1,4 +1,7 @@
 import React from 'react';
+import {connect} from 'react-redux';
+
+import { toggleModal } from '../../actions'
 
 import './modal.css'
 
@@ -7,7 +10,25 @@ import './modal.css'
 class Modal extends React.Component {
 
 
+    constructor(props) {
+        super(props);
+        this.modalDialogRef = React.createRef();
+    }
 
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+        if (this.modalDialogRef.current && !this.modalDialogRef.current.contains(event.target)) {
+            console.log('You clicked outside of me!');
+            this.props.toggleModal(this.props.modalName, false);
+        }
+    }
 
     render() {
 
@@ -16,7 +37,7 @@ class Modal extends React.Component {
         return (
             <div className="pop-container">
 
-                <div className="pop-dialog">
+                <div className="pop-dialog" ref={this.modalDialogRef}>
 
                     <div className="pop-header">
                         <div className="pop-title">{title}</div>
@@ -40,5 +61,12 @@ class Modal extends React.Component {
 }
 
 
-export default Modal;
+export default connect(
+    // map state to props function
+    null,
+    //map actions dispatch to props
+    { toggleModal }
+)(Modal);
+
+
 

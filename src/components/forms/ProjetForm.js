@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm, formValueSelector } from 'redux-form'
 
-import * as actions from '../../actions'
+import { toggleModal } from '../../actions'
 
 import { required, number, emptyArray } from './validator'
 import TextField from './form-fields/TextField'
@@ -28,13 +28,15 @@ class ProjetForm extends Component {
     render() {
 
         // props from redux
-        const { handleSubmit, isConvention } = this.props;
+        const { handleSubmit, isConvention, toggleModal } = this.props;
         // const { formValuesChange, form } = this.props;
 
         console.log(this.props)
 
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
+
+                <h1>PROJET FORMULAIRE</h1>
 
                 <Field
                     name="intitule"
@@ -60,8 +62,12 @@ class ProjetForm extends Component {
                     options={[{ label: 'non', value: false }, { label: 'oui', value: true }]}
                 />
 
-                
-                {isConvention ? (<h1>convention !!!</h1>) : undefined}
+
+                { isConvention && (
+                    <input type="button" className="show-modal show-modal-conv" value="add partners" 
+                        onClick={ () => toggleModal('convention', true) }
+                    />
+                )}
 
 
                 <Field
@@ -102,7 +108,7 @@ const initialValues = {
     intitule: 'YOUSSEF PROJET',
     montant: 300000,
     secteur: 1,
-    isConvention: false,
+    isConvention: true,
     communes: [2, 3]
 
 }
@@ -112,16 +118,13 @@ const selector = formValueSelector('projetForm');
 // connecting with the redux hoc
 export default connect(
     // MapStateToProps
-    (state) => {
-        const isConvention = selector(state, 'isConvention')
-        return {
+    (state) => (
+        {
             initialValues,
-            isConvention
+            isConvention: selector(state, 'isConvention')
         }
-    },
+    ),
     //MapDispatchToProps
-    // {
-    //     initFormValues: actions.initFormValues
-    // }
+    { toggleModal }
 )(ProjetForm);
 

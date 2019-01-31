@@ -2,11 +2,11 @@ import { combineReducers } from 'redux';
 
 // import projetFormReducer from './projetFormReducer'
 import { reducer as formReducer } from 'redux-form';
-import projetFormReducer from './projetFormReducer';
+import {formModalsReducer} from './projetFormReducer';
 
 
 
 export default combineReducers({
     form: formReducer,
-    initialValues: projetFormReducer
+    formModals: formModalsReducer
 })

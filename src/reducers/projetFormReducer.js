@@ -1,16 +1,23 @@
 const INITIAL_STATE = {};
+const FORM_MODALS_STATE = {
 
-export default (state=INITIAL_STATE, action) => {
+    modal: false,
+    convention: false
+};
+
+export const formModalsReducer = (state=FORM_MODALS_STATE, action) => {
 
     console.log(action.type)
 
     switch(action.type) {
 
-        case 'LOAD_INIT_FORM_VALUES':
-            return {...state, intitule: 'YOUSSEF PROJET INIT ...'};
+        case 'TOGGLE_MODAL':
+            const { modalName, modalToggle} = action.payload;
+            return { ...state, [modalName]: modalToggle, modal: modalToggle };
 
         default:
             return state;
     }
 
 }
+
