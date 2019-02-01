@@ -24,10 +24,10 @@ class ProjetForm extends Component {
     render() {
 
         // props from redux
-        const { handleSubmit, isConvention, toggleModal } = this.props;
+        const { handleSubmit, isConvention, toggleModal, partners } = this.props;
         // const { formValuesChange, form } = this.props;
 
-        console.log(this.props)
+        console.log(partners)
 
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -62,9 +62,20 @@ class ProjetForm extends Component {
                 { isConvention && (
                     <input type="button" className="show-modal show-modal-conv" value="add partners" 
                         onClick={ () => toggleModal('convention', true) }
-                    />
+                    /> 
                 )}
+                
+                {   partners &&
+                    partners.map((partner, i) => (
+                        <div className="partner-item" key={i}>
+                            <div className="partner-label">partner {i+1} :</div>
+                            <div className="partner-name">{partner.name}</div>
+                            <div className="partner-montant">{partner.montant}</div>
+                        </div>
+                    ))
+                }
 
+                
 
                 <Field
                     name="secteur"
@@ -118,7 +129,8 @@ export default connect(
     (state) => (
         {
             initialValues,
-            isConvention: selector(state, 'isConvention')
+            isConvention: selector(state, 'isConvention'),
+            partners: selector(state, 'partners'),
         }
     ),
     //MapDispatchToProps

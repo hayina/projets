@@ -13,7 +13,7 @@ const App = (props) => {
 
     return (
 
-        <div>
+        <div className="app-container">
             
             <ProjetForm />
 
@@ -38,4 +38,5 @@ export default connect(
     (state) => ({
         formModals: state.formModals
     })
+
 )(App);
