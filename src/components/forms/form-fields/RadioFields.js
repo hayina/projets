@@ -1,11 +1,12 @@
 import React from 'react';
 
+import SimpleField from './SimpleField';
+
 const RadioField = ({ input, meta, label, options }) => {
 
     return (
 
-        <div className="form-group">
-            <label>{label}</label>
+        <SimpleField label={label} meta={meta} >
             { options.map((option) => (
                 <div className="form-check" key={option.value}>
                     <input
@@ -20,7 +21,7 @@ const RadioField = ({ input, meta, label, options }) => {
                     </label>
                 </div>
             )) }
-        </div>
+        </SimpleField>
 
     )
 

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import SimpleField from './SimpleField';
 import { gotError, renderErrorField } from '../formErrors';
 
 const renderOptions = (options) => {
@@ -10,19 +11,15 @@ const SelectField = ({ input, meta, label, options }) => {
 
 
     return (
-        <div className="form-group">
-            <label>{label}</label>
+        <SimpleField label={label} meta={meta} >
             <select className={`form-control ${gotError(meta) ? 'is-invalid' : ''}`}
-                
                 onChange={(e) => input.onChange(e)}
                 value={input.value}
-            // {...input}
             >
                 <option value=''>...</option>
                 {renderOptions(options)}
             </select>
-            {renderErrorField(meta)}
-        </div>
+        </SimpleField>
     )
 
 }

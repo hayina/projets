@@ -25,9 +25,7 @@ class ProjetForm extends Component {
 
         // props from redux
         const { handleSubmit, isConvention, toggleModal, partners } = this.props;
-        // const { formValuesChange, form } = this.props;
 
-        console.log(partners)
 
         return (
             <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -55,27 +53,31 @@ class ProjetForm extends Component {
                     name="isConvention"
                     component={RadioFields}
                     label="conventionné"
-                    options={[{ label: 'non', value: false }, { label: 'oui', value: true }]}
+                    options={[{ label: 'oui', value: true }, { label: 'non', value: false }]}
                 />
 
 
-                { isConvention && (
-                    <input type="button" className="show-modal show-modal-conv" value="add partners" 
-                        onClick={ () => toggleModal('convention', true) }
-                    /> 
+                {isConvention && (
+                    <input type="button" className="btn btn-info show-modal show-modal-conv" value="ajouter un partenaire"
+                        onClick={() => toggleModal('convention', true)}
+                    />
                 )}
-                
-                {   partners &&
-                    partners.map((partner, i) => (
-                        <div className="partner-item" key={i}>
-                            <div className="partner-label">partner {i+1} :</div>
-                            <div className="partner-name">{partner.name}</div>
-                            <div className="partner-montant">{partner.montant}</div>
-                        </div>
-                    ))
-                }
 
-                
+                {partners && (
+                    <div className="form-group">
+                        {partners.map((partner, i) => (
+                            <div className="partner-item" key={i}>
+                                <div className="partner-label">partenaire {i + 1} :</div>
+                                <div className="partner-info">
+                                    <div className="partner-name">{partner.name}</div>
+                                    <div className="partner-montant">{partner.montant}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+
 
                 <Field
                     name="secteur"

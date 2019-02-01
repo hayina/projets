@@ -29,13 +29,18 @@ class Modal extends React.Component {
         }
     }
 
+    // i need this promise cauz modal compenent when it toggle to false 
+    // it destroy the convention form so the sumbit function dont get called
+    doSaving = (f) => new Promise((resolve, reject) => {
+        f();
+        resolve();
+    })
+
     handleClickValidation = () => {
-
-        console.log('handleClickValidation');
-
         const { toggleModal, handleClick, modalName } = this.props;
-        handleClick();
-        // toggleModal(modalName, false);
+        this.doSaving(handleClick).then(
+            () => toggleModal(modalName, false)
+        );
     }
 
     render() {
@@ -57,11 +62,9 @@ class Modal extends React.Component {
 
                     <div className="pop-validation">
                         <button className="btn btn-secondary" 
-                            onClick={() => toggleModal(modalName, false)}
-                        >Annuler</button>
+                            onClick={() => toggleModal(modalName, false)} >Annuler</button>
                         <button type="submit" className="btn btn-primary"
-                            onClick={this.handleClickValidation}
-                        >Valider</button>
+                            onClick={this.handleClickValidation} >Valider</button>
                     </div>
                 </div>
 

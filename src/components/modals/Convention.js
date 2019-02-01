@@ -6,6 +6,7 @@ import TextField from '../forms/form-fields/TextField'
 
 const onSubmit = (formValues, dispatch) => {
 
+    console.log('--------------> dispatch(arrayPush) ...')
     dispatch(arrayPush('projetForm', 'partners', formValues));
 
 }

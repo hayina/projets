@@ -6,10 +6,46 @@
 
 
 .show-modal {
-
+    font-weight: 100;
+    text-transform: uppercase;
 }
 
 
 .show-modal-conv {
     
+}
+
+.partner-item {
+
+}
+
+.partner-label {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.partner-name {
+
+}
+
+
+.partner-montant {
+
+}
+
+.partner-info {
+    color: black;
+    font-weight: 300;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+    padding: .75rem 1.25rem;
+    /* margin-bottom: 1rem; */
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
+
+.form-check-label, select {
+    font-weight: 300;
+    text-transform: uppercase;
 }

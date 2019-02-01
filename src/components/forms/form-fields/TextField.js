@@ -1,5 +1,6 @@
 import React from 'react';
 
+import SimpleField from './SimpleField';
 import { gotError, renderErrorField } from '../formErrors';
 
 
@@ -25,13 +26,9 @@ const TextField = ({input, meta, label, fieldType}) => {
 
 
     return (
-        <div className="form-group">
-
-            <label className="form-label">{label}</label>
+        <SimpleField label={label} meta={meta} >
             { renderTextField(fieldType, fieldProps) }
-            { renderErrorField(meta) }
-
-        </div>
+        </SimpleField>
     )
 }
 

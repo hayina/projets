@@ -1,13 +1,13 @@
 import React from 'react';
 
+import SimpleField from './SimpleField';
 import { gotError, renderErrorField } from '../formErrors';
 
 const CheckboxField = ({ input, meta, label, options }) => {    
 
     return (
 
-        <div className="form-group">
-            <label>{label}</label>
+        <SimpleField label={label} meta={meta} >
             <div className={`form-control ${ gotError(meta) ? 'is-invalid':'' }`}>
             {options.map((option) => (
                 <div className="form-check" key={option.value}>
@@ -32,10 +32,7 @@ const CheckboxField = ({ input, meta, label, options }) => {
                 </div>
             ))}
             </div>
-
-            { renderErrorField(meta) }
-
-        </div>
+        </SimpleField>
 
     )
 
