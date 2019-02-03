@@ -21,12 +21,17 @@ const outsideClick = (WC) => {
         handleClickOutside = (event) => {
             if (this.ref.current && !this.ref.current.contains(event.target)) {
                 // this.props.toggleModal(this.props.modalName, false);
-                this.props.handleClickOutside();
+                // this.props.handleClickOutside();
+                console.log('you clicked outside ;)')
             }
         }
 
         render() {
-            return (<WC {...this.props} ref={this.ref} />);
+            return (
+                <div className="outside-click-wr" ref={this.ref} >
+                    <WC {...this.props} />
+                </div>
+            );
         }
     }
 

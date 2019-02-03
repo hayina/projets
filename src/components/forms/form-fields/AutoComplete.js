@@ -25,56 +25,48 @@ class AutoComplete extends Component {
     state = {
         filtredSuggestions: [],
         showSuggestions: false,
+        term: ''
     }
 
     //user hitting input
     onChange = (e) => {
 
-        
-        const term = e.currentTarget.value;
+        const term = e.target.value;
+        let filtredSuggestions = [], showSuggestions=false ;
 
-        if(!term) {
-            this.setState({
-                filtredSuggestions: [],
-                showSuggestions: false,
-            })
-        }
-
-        else {
-            const filtredSuggestions = suggestions.filter(
-                (suggestion) => (suggestion.toLowerCase().indexOf(term) !== -1)
+        if(term) {
+            filtredSuggestions = suggestions.filter(
+                (suggestion) => (suggestion.toLowerCase().indexOf(term.toLowerCase()) !== -1)
             )
-    
-            this.setState({
-                filtredSuggestions,
-                showSuggestions: true,
-            })
+            showSuggestions=true;
         }
 
-        this.setState({ term })
-
+        this.setState({ filtredSuggestions, showSuggestions, term });
     }
 
     // click on suggestion
     onClick = (e) => {
 
+        this.setState({
+            filtredSuggestions: [],
+            showSuggestions: false,
+            term: e.target.innerText
+        })
     }
 
     renderSuggestionsList() {
 
         const { showSuggestions, filtredSuggestions } = this.state;
-
-
         let suggestionsList;
+
         if (showSuggestions) {
             if (filtredSuggestions.length > 0) {
                 suggestionsList = filtredSuggestions.map((suggestion) => (
-                    <li className="suggestions-item" key={suggestion}>{suggestion}</li>
+                    <li onClick={this.onClick} className="suggestions-item" key={suggestion}>{suggestion}</li>
                 ))
             } else {
                 suggestionsList = (<li className="no-suggestions">No results found</li>)
             }
-
             return (<ul className="suggestions-list">{suggestionsList}</ul>)
         } 
 
@@ -82,10 +74,10 @@ class AutoComplete extends Component {
 
     render() {
 
-
         return (
             <div className="autocomplete-wrapper">
-                <input onClick={this.onClick} onChange={this.onChange} className="autocomplete-input" />
+                <input type="text" onChange={this.onChange} className="autocomplete-input"
+                    value={this.state.term} />
                 {this.renderSuggestionsList()}
             </div>
         )
@@ -94,4 +86,5 @@ class AutoComplete extends Component {
 }
 
 
-export default outsideClick(AutoComplete);
+export default AutoComplete;
+// export default outsideClick(AutoComplete);
