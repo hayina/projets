@@ -1,4 +1,4 @@
-const INITIAL_STATE = {};
+
 const FORM_MODALS_STATE = {
 
     modal: false,
@@ -21,3 +21,21 @@ export const formModalsReducer = (state=FORM_MODALS_STATE, action) => {
 
 }
 
+const AUTOCOMPLETE_STATE = {
+    filtredSuggestions: [],
+    showSuggestions: false,
+};
+
+export const autocompleteReducer = (state=AUTOCOMPLETE_STATE, action) => {
+
+    switch(action.type) {
+
+        case 'LOAD_SUGGESTIONS':
+            const { filtredSuggestions } = action.payload;
+            return { ...state, filtredSuggestions, showSuggestions: true };
+
+        default:
+            return state;
+
+    }
+}

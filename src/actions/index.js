@@ -22,5 +22,21 @@ export const toggleModal = (modalName, modalToggle) => ({
     payload: { modalName, modalToggle }
 })
 
+///////////////
 
+export const loadSuggestions = (term) => {
 
+    const suggestions=[
+        "Alligator",
+        "Bask",
+        "Crocodilian",
+        "Death Roll",
+        "Eggs",
+        "Jaws",
+        "Reptile",
+        "Solitary",
+        "Tail",
+        "Wetlands"
+    ]
+
+}

@@ -3,8 +3,11 @@ import { connect } from 'react-redux';
 import { submit } from 'redux-form';
 
 import ProjetForm from './forms/ProjetForm'
+import AutoComplete from './forms/form-fields/AutoComplete'
 import Modal from './modals/Modal'
 import Convention from './modals/Convention'
+
+
 
 
 const App = (props) => {
@@ -15,6 +18,9 @@ const App = (props) => {
 
         <div className="app-container">
             
+            <h1>AutoComplete</h1>
+            <AutoComplete />
+
             <ProjetForm />
 
 
