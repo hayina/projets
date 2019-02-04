@@ -1,7 +1,6 @@
-import React, { Component, Fragment } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useRef } from 'react';
 
-import outsideClick from '../../../hoc/outsideClick';
+import useClickOutside from '../../hooks/useClickOutside';
 
 import './autocomplete.css'
 
@@ -19,69 +18,81 @@ const suggestions = [
     "Wetlands"
 ]
 
-class AutoComplete extends Component {
+const AutoComplete = (props) => {
 
-
-    state = {
+    const [state, setState] = useState({
         filtredSuggestions: [],
         showSuggestions: false,
         term: ''
-    }
+    })
+
+    const inputEl = useRef(null);
+
+    useClickOutside(inputEl.current, () => {
+        setState({ ...state, showSuggestions: false });
+    });
 
     //user hitting input
-    onChange = (e) => {
+    function onChange(e) {
 
         const term = e.target.value;
-        let filtredSuggestions = [], showSuggestions=false ;
+        let filtredSuggestions = [], showSuggestions = false;
 
-        if(term) {
+        if (term) {
             filtredSuggestions = suggestions.filter(
                 (suggestion) => (suggestion.toLowerCase().indexOf(term.toLowerCase()) !== -1)
             )
-            showSuggestions=true;
+            showSuggestions = true;
         }
 
-        this.setState({ filtredSuggestions, showSuggestions, term });
+        setState({ filtredSuggestions, showSuggestions, term });
     }
 
-    // click on suggestion
-    onClick = (e) => {
+    function onFocus(e) {
+        onChange(e);
+    }
 
-        this.setState({
+
+    // click on suggestion
+    function onClick(e) {
+
+        setState({
             filtredSuggestions: [],
             showSuggestions: false,
             term: e.target.innerText
         })
     }
 
-    renderSuggestionsList() {
+    function renderSuggestionsList() {
 
-        const { showSuggestions, filtredSuggestions } = this.state;
+        const { showSuggestions, filtredSuggestions } = state;
         let suggestionsList;
 
         if (showSuggestions) {
             if (filtredSuggestions.length > 0) {
                 suggestionsList = filtredSuggestions.map((suggestion) => (
-                    <li onClick={this.onClick} className="suggestions-item" key={suggestion}>{suggestion}</li>
+                    <li onClick={onClick} className="suggestions-item" key={suggestion}>{suggestion}</li>
                 ))
             } else {
                 suggestionsList = (<li className="no-suggestions">No results found</li>)
             }
             return (<ul className="suggestions-list">{suggestionsList}</ul>)
-        } 
+        }
 
     }
 
-    render() {
 
-        return (
-            <div className="autocomplete-wrapper">
-                <input type="text" onChange={this.onChange} className="autocomplete-input"
-                    value={this.state.term} />
-                {this.renderSuggestionsList()}
-            </div>
-        )
-    }
+
+    return (
+        <div className="autocomplete-wrapper" ref={inputEl}>
+            <input type="text" className="autocomplete-input"
+                onChange={onChange} 
+                onFocus={onFocus}
+                value={state.term} />
+            {renderSuggestionsList()}
+        </div>
+    )
+
 
 }
 
