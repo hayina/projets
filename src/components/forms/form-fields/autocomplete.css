@@ -17,7 +17,7 @@
     padding: 3px 8px;
     font-weight: 300;
 }
-.suggestions-item:hover, .active-suggestion {
+.active-suggestion {
     background-color: royalblue;
     color: white;
     cursor: pointer;

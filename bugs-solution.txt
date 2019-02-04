@@ -1,0 +1,10 @@
+
+- always check toLowerCase() f les 2 sens
+- when updating the state tjrs faire attention de mettre { ...state } et non pas un à un { prop1: .., prop2:.., ...} cauz on risque d'oublier some property
+
+--------------
+Warning: A component is changing a controlled input of type text to be uncontrolled. Input elements should not switch from controlled to uncontrolled (or vice versa). 
+Decide between using a controlled or uncontrolled input element for the lifetime of the component
+---> input value fih chi string khawi wla undefined ymkn
+
+--------------
