@@ -1,22 +1,11 @@
 import React, { useState, useRef } from 'react';
+import { connect } from 'react-redux';
 
 import useClickOutside from '../../hooks/useClickOutside';
+import { loadACSuggestion } from '../../../actions'
 
 import './autocomplete.css'
 
-
-const suggestions = [
-    "Alligator",
-    "Bask",
-    "Crocodilian",
-    "Death Roll",
-    "Eggs",
-    "Jaws",
-    "Reptile",
-    "Solitary",
-    "Tail",
-    "Wetlands"
-]
 
 
 const AutoComplete = (props) => {
@@ -36,15 +25,26 @@ const AutoComplete = (props) => {
     });
 
     //user interaction with input
-    function onChange(e) {
+    const onChange = (e) => {
 
         const term = e.target.value;
         let filtredSuggestions = [], showSuggestions = false;
 
+        const { suggestions, loadACSuggestion, dispatch } = props;
+
         if (term) {
-            filtredSuggestions = suggestions.filter(
-                (suggestion) => (suggestion.toLowerCase().indexOf(term.toLowerCase()) !== -1)
-            )
+
+            //api request
+
+            // const response = await apiServer.get('/get_partners', {
+            //     params: { q : term }
+            // })
+
+            loadACSuggestion(term, dispatch);
+
+            console.log(suggestions);
+
+            filtredSuggestions = suggestions.filter((suggestion) => suggestion.label)
             showSuggestions = true;
         }
 
@@ -132,7 +132,7 @@ const AutoComplete = (props) => {
 
     return (
         <div className="autocomplete-wrapper" ref={inputEl}>
-            <input type="text" className="autocomplete-input"
+            <input type="text" className="form-control autocomplete-input"
                 onChange={onChange} 
                 onFocus={onFocus}
                 onKeyDown={onKeyDown}
@@ -145,5 +145,10 @@ const AutoComplete = (props) => {
 }
 
 
-export default AutoComplete;
+export default connect(
+    ({autocomplete}) => ({
+        autocomplete
+    }),
+    { loadACSuggestion }
+)(AutoComplete);
 // export default outsideClick(AutoComplete);

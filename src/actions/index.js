@@ -1,42 +1,25 @@
+import { REQUEST_PENDING, REQUEST_SUCCESS } from '../types';
+import { apiServer } from '../requests';
 
 
-export const formValuesChange = (inputValue, inputName) => (
-    {
-        type: 'INPUT_CHANGED',
-        payload: { inputValue, inputName }
-    }
-);
-
-
-export const initFormValues = () => (
-    {
-        type: 'LOAD_INIT_FORM_VALUES'
-    }
-);
-
-
-///////////////
+/////////////// MODALS
 
 export const toggleModal = (modalName, modalToggle) => ({
     type: 'TOGGLE_MODAL',
     payload: { modalName, modalToggle }
 })
 
-///////////////
+/////////////// AUTO COMPLETE
 
-export const loadSuggestions = (term) => {
+export const loadACSuggestion = async (term, dispatch) => {
 
-    const suggestions=[
-        "Alligator",
-        "Bask",
-        "Crocodilian",
-        "Death Roll",
-        "Eggs",
-        "Jaws",
-        "Reptile",
-        "Solitary",
-        "Tail",
-        "Wetlands"
-    ]
+
+    dispatch({ type: REQUEST_PENDING });
+
+    const response = await apiServer.get('/get_partners', {
+        params: { term }
+    })
+
+    return { type: REQUEST_SUCCESS, payload: response.data };
 
 }
