@@ -16,6 +16,8 @@ export const autocomplete = (state=STATE, action) => {
             return { ...state, pending: true };
         case REQUEST_SUCCESS:
             return { ...state, pending: true, suggestions: action.payload.data };
+        case TOGGLE_SUGGESTIONS:
+            return { ...state, showSuggestions: action.payload };
 
 
         default:

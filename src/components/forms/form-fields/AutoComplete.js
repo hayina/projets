@@ -30,17 +30,15 @@ const AutoComplete = (props) => {
         const term = e.target.value;
         let filtredSuggestions = [], showSuggestions = false;
 
-        const { suggestions, loadACSuggestion, dispatch } = props;
+        const { autocomplete: { suggestions }, loadACSuggestion, dispatch } = props;
+
+   
 
         if (term) {
 
-            //api request
 
-            // const response = await apiServer.get('/get_partners', {
-            //     params: { q : term }
-            // })
 
-            loadACSuggestion(term, dispatch);
+            loadACSuggestion(term);
 
             console.log(suggestions);
 
