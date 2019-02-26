@@ -5,9 +5,11 @@ const STATE = {
     showSuggestions: false,
     activeSuggestion: -1,
     term: '',
-    pending: false,
+    loading: false,
     apiRequestCount: 0
 }
+
+export const getLoadingStatus = state => state.pending;
 
 export const autocomplete = (state=STATE, action) => {
 
@@ -15,12 +17,12 @@ export const autocomplete = (state=STATE, action) => {
 
         case types.INPUT_CHANGED:
             return { ...state, term: action.payload };
-        case types.REQUEST_PENDING:
-            return { ...state, pending: true };
+        case types.SET_LOADER:
+            return { ...state, loading: true };
         case types.NEW_API_REQUEST:
             return { ...state, apiRequestCount: state.apiRequestCount+1 };
         case types.REQUEST_SUCCESS:
-            return { ...state, pending: true, suggestions: action.payload };
+            return { ...state, loading: true, suggestions: action.payload };
         case types.TOGGLE_SUGGESTIONS:
             return { ...state, showSuggestions: action.payload };
         case types.SET_ACTIVE_SUGGESTION:

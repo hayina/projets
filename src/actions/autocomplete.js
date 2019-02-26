@@ -3,19 +3,21 @@ import { apiServer } from '../requests';
 
 /////////////// AUTO COMPLETE
 
-export const loadACSuggestion = (term) => (dispatch, getState) => {
+export const fetchSuggestions = (term) => (dispatch, getState) => {
 
-    dispatch(updateACInput(term));
+
+    dispatch(setACInput(term));
 
     if (term) {
 
-        dispatch({ type: types.REQUEST_PENDING });
-        // should we abort the previous request
+        dispatch(setLoader(true));
+        dispatch(apiRequest('/get_partners', { q: term }, SUGGESTIONS));
+        
         dispatch({ type: types.NEW_API_REQUEST });
         const seq = getState().autocomplete.apiRequestCount;
 
         apiServer.get('/get_partners', {
-            params: { q: term }
+            params: 
         })
         .then((response) => {
             // ça se peut que 'term' is empty meanwhile
@@ -32,7 +34,8 @@ export const loadACSuggestion = (term) => (dispatch, getState) => {
 
 }
 
-export const updateACInput = term => ({ type: types.INPUT_CHANGED, payload: term });
+export const setACInput = term => ({ type: types.INPUT_CHANGED, payload: term });
+export const setLoader = state => ({ type: types.SET_LOADER, payload: state });
 export const toggleSuggestions = toggle => ({ type: types.TOGGLE_SUGGESTIONS, payload: toggle });
 export const setActiveSuggestion = index => ({ type: types.SET_ACTIVE_SUGGESTION, payload: index });
 export const initActiveSuggestion = () => ({ type: types.INIT_ACTIVE_SUGGESTION });
@@ -42,13 +45,13 @@ export const clickOnSuggestion = suggestion => dispatch => dispatch(selectSugges
 export const selectSuggestion = suggestion => dispatch => {
     dispatch(toggleSuggestions(false));
     dispatch(initActiveSuggestion());
-    dispatch(updateACInput(suggestion));
+    dispatch(setACInput(suggestion));
     dispatch(initSuggestions());
 }
 
 export const handlingUpDownKey = (index) => (dispatch, getState) => {
     dispatch(setActiveSuggestion(index));
-    dispatch(updateACInput(getState().autocomplete.suggestions[index].label));
+    dispatch(setACInput(getState().autocomplete.suggestions[index].label));
 }
 
 export const handleKeyDown = (keyCode) => (dispatch, getState) => {

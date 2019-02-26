@@ -18,21 +18,23 @@ const App = (props) => {
     return (
 
         <div className="app-container">
-            
+
 
             <h1>AutoComplete</h1>
             <AutoComplete />
 
+            
+
             <ProjetForm />
 
 
-            { formModals.modal && (
+            {formModals.modal && (
                 <Modal
                     handleClick={() => dispatch(submit('conventionForm'))}
                     title="ADD PARTNER"
                     modalName='convention'
                 >
-                    { formModals.convention && <Convention /> } 
+                    {formModals.convention && <Convention />}
                 </Modal>
             )}
 

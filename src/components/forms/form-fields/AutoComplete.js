@@ -1,11 +1,12 @@
-import React, {  useRef } from 'react';
+import React, { useRef } from 'react';
 import { connect } from 'react-redux';
 
 import useClickOutside from '../../hooks/useClickOutside';
-import { 
-    loadACSuggestion, toggleSuggestions, clickOnSuggestion, initActiveSuggestion,
-    setActiveSuggestion, handleKeyDown 
-} from '../../../actions/autocomplete'
+import {
+    fetchSuggestions, toggleSuggestions, clickOnSuggestion, initActiveSuggestion,
+    setActiveSuggestion, handleKeyDown } from '../../../actions/autocomplete'
+
+import { getLoadingStatus } from '../../../reducers/autocomplete'
 
 import './autocomplete.css'
 
@@ -20,14 +21,14 @@ const AutoComplete = (props) => {
 
     // user interaction with input
     const onChange = (e) => {
-        props.loadACSuggestion(e.target.value);
+        props.fetchSuggestions(e.target.value);
     }
 
     function onFocus(e) {
         onChange(e);
     }
 
-    const onKeyDown = (e) => { 
+    const onKeyDown = (e) => {
         props.handleKeyDown(e.keyCode);
     }
 
@@ -45,20 +46,20 @@ const AutoComplete = (props) => {
     const onMouseLeave = (e) => {
         props.initActiveSuggestion();
     }
-    
-    const { showSuggestions, suggestions, activeSuggestion, term } = props.autocomplete;
+
+    const { showSuggestions, suggestions, activeSuggestion, term, pending } = props.autocomplete;
 
     function renderSuggestionsList() {
-        
+
         let suggestionsList;
 
         if (showSuggestions) {
             if (suggestions.length > 0) {
                 suggestionsList = suggestions.map((suggestion, i) => (
-                    <li 
-                        onClick={(e) => onClick(e, suggestion)} 
+                    <li
+                        onClick={(e) => onClick(e, suggestion)}
                         onMouseEnter={(e) => onMouseEnter(e, i)}
-                        className={`suggestions-item ${ (i === activeSuggestion) ? 'active-suggestion':'' }`}
+                        className={`suggestions-item ${(i === activeSuggestion) ? 'active-suggestion' : ''}`}
                         key={suggestion.id}
                     >
                         {suggestion.label}
@@ -75,22 +76,31 @@ const AutoComplete = (props) => {
 
     return (
         <div className="autocomplete-wrapper" ref={inputEl}>
-            <input type="text" className="form-control autocomplete-input"
-                onChange={onChange} 
-                onFocus={onFocus}
-                onKeyDown={onKeyDown}
-                value={term} 
-            />
+            <div className="oc-input-wr">
+                <input type="text" className="form-control autocomplete-input"
+                    onChange={onChange}
+                    onFocus={onFocus}
+                    onKeyDown={onKeyDown}
+                    value={term}
+                />
+                <i className={`fas fa-spinner ac-sppiner ${ pending ? 'show' : '' }`}></i>
+                
+            </div>
             {renderSuggestionsList()}
         </div>
     )
 }
 
 export default connect(
-    ({ autocomplete }) => ({ autocomplete }),
-    { 
-        loadACSuggestion, toggleSuggestions, setActiveSuggestion, handleKeyDown, 
-        clickOnSuggestion, initActiveSuggestion 
+    // map state
+    (state) => ({
+        autocomplete: state.autocomplete,
+        loadingStatus: getLoadingStatus(state)
+    }),
+    // map dispatch
+    {
+        fetchSuggestions, toggleSuggestions, setActiveSuggestion, handleKeyDown,
+        clickOnSuggestion, initActiveSuggestion
     }
 )(AutoComplete);
 // export default outsideClick(AutoComplete);
