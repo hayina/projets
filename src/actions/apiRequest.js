@@ -15,8 +15,5 @@ export const apiRequest = ({ url, params, feature }) => (dispatch) => {
 }
 
 export const apiSuccess = (data, feature) => (dispatch) => {
-    dispatch({
-        type: `${feature} ${API_SUCCESS}`,
-        
-    })
+    dispatch({ type: `${feature} ${API_SUCCESS}`, data });
 }

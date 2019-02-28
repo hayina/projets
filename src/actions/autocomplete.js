@@ -11,13 +11,13 @@ export const fetchSuggestions = (term) => (dispatch, getState) => {
     if (term) {
 
         dispatch(setLoader(true));
-        dispatch(apiRequest('/get_partners', { q: term }, SUGGESTIONS));
+        // dispatch(apiRequest('/get_partners', { q: term }, SUGGESTIONS));
         
         dispatch({ type: types.NEW_API_REQUEST });
         const seq = getState().autocomplete.apiRequestCount;
 
         apiServer.get('/get_partners', {
-            params: 
+            params: { q: term }
         })
         .then((response) => {
             // ça se peut que 'term' is empty meanwhile

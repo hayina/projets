@@ -7,7 +7,7 @@ const FORM_MODALS_STATE = {
 
 export const formModalsReducer = (state=FORM_MODALS_STATE, action) => {
 
-    console.log(action.type)
+    // console.log(action.type)
 
     switch(action.type) {
 
