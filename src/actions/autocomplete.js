@@ -1,53 +1,56 @@
 import types from '../types';
-import { apiServer } from '../requests';
 
 /////////////// AUTO COMPLETE
 
-export const fetchSuggestions = (term) => (dispatch, getState) => {
+// export const fetchSuggestions = (term) => (dispatch, getState) => {
 
 
-    dispatch(setACInput(term));
+//     dispatch(setACInput(term));
 
-    if (term) {
+//     if (term) {
 
-        dispatch(setLoader(true));
-        // dispatch(apiRequest('/get_partners', { q: term }, SUGGESTIONS));
+//         dispatch(setLoader(true));
+//         // dispatch(apiRequest({
+//         //     url:'/get_partners', method: 'GET', params: { q: term }, feature: SUGGESTIONS
+//         // }));
         
-        dispatch({ type: types.NEW_API_REQUEST });
-        const seq = getState().autocomplete.apiRequestCount;
+//         dispatch({ type: types.NEW_API_REQUEST });
+//         const seq = getState().autocomplete.apiRequestCount;
 
-        apiServer.get('/get_partners', {
-            params: { q: term }
-        })
-        .then((response) => {
-            // ça se peut que 'term' is empty meanwhile
-            if ( getState().autocomplete.term && seq === getState().autocomplete.apiRequestCount ) {
-                dispatch({ type: types.REQUEST_SUCCESS, payload: response.data });
-                dispatch(toggleSuggestions(true));
-            }
-        })
-    }
-    else {
-        dispatch(initSuggestions());
-        dispatch(toggleSuggestions(false));
-    }
+//         apiServer.get('/get_partners', {
+//             params: { q: term }
+//         })
+//         .then((response) => {
+//             // ça se peut que 'term' is empty meanwhile
+//             if ( getState().autocomplete.term && seq === getState().autocomplete.apiRequestCount ) {
+//                 dispatch({ type: types.REQUEST_SUCCESS, payload: response.data });
+//                 dispatch(toggleSuggestionsList(true));
+//             }
+//         })
+//     }
+//     else {
+//         dispatch(initSuggestions());
+//         dispatch(toggleSuggestionsList(false));
+//     }
 
-}
+// }
 
-export const setACInput = term => ({ type: types.INPUT_CHANGED, payload: term });
-export const setLoader = state => ({ type: types.SET_LOADER, payload: state });
-export const toggleSuggestions = toggle => ({ type: types.TOGGLE_SUGGESTIONS, payload: toggle });
-export const setActiveSuggestion = index => ({ type: types.SET_ACTIVE_SUGGESTION, payload: index });
+export const fetchSuggestions = (term) => ({ type: types.FETCH_SUGGESTIONS, term })
+export const setACInput = term => ({ type: types.INPUT_CHANGED, term });
+export const setLoader = state => ({ type: types.SET_LOADER, state });
+export const toggleSuggestionsList = toggle => ({ type: types.TOGGLE_SUGGESTIONS, toggle });
+export const setActiveSuggestion = index => ({ type: types.SET_ACTIVE_SUGGESTION, index });
 export const initActiveSuggestion = () => ({ type: types.INIT_ACTIVE_SUGGESTION });
 export const initSuggestions = () => ({ type: types.INIT_SUGGESTIONS });
-export const clickOnSuggestion = suggestion => dispatch => dispatch(selectSuggestion(suggestion.label));
+export const setSuggestions = suggestions => ({ type: types.SET_SUGGESTIONS, suggestions });
+export const selectSuggestion = suggestion => ({ type: types.SELECT_SUGGESTION, suggestion });
 
-export const selectSuggestion = suggestion => dispatch => {
-    dispatch(toggleSuggestions(false));
-    dispatch(initActiveSuggestion());
-    dispatch(setACInput(suggestion));
-    dispatch(initSuggestions());
-}
+// export const selectSuggestion = suggestion => dispatch => {
+//     dispatch(toggleSuggestionsList(false));
+//     dispatch(initActiveSuggestion());
+//     dispatch(setACInput(suggestion.label));
+//     dispatch(initSuggestions());
+// }
 
 export const handlingUpDownKey = (index) => (dispatch, getState) => {
     dispatch(setActiveSuggestion(index));

@@ -9,6 +9,9 @@ ul {
     list-style: none;
 }
 
+.hide {
+    display: none;
+}
 
 /* Define an animation behavior */
 @keyframes spinner {
@@ -19,3 +22,4 @@ ul {
 /* Apply 'spinner' keyframes looping once every second (1s)  */
 animation: spinner 0.6s linear infinite;
 }
+

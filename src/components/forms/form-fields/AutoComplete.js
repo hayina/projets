@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import useClickOutside from '../../hooks/useClickOutside';
 import {
-    fetchSuggestions, toggleSuggestions, clickOnSuggestion, initActiveSuggestion,
+    fetchSuggestions, toggleSuggestionsList, selectSuggestion, initActiveSuggestion,
     setActiveSuggestion, handleKeyDown } from '../../../actions/autocomplete'
 
 import { getLoadingStatus } from '../../../reducers/autocomplete'
@@ -16,7 +16,7 @@ const AutoComplete = (props) => {
 
     // using the custom hook
     useClickOutside(inputEl.current, () => {
-        props.toggleSuggestions(false);
+        props.toggleSuggestionsList(false);
     });
 
     // user interaction with input
@@ -34,7 +34,7 @@ const AutoComplete = (props) => {
 
     // click on suggestion
     function onClick(e, suggestion) {
-        props.clickOnSuggestion(suggestion)
+        props.dispatch(selectSuggestion(suggestion));
     }
 
     // hover  suggestion
@@ -47,7 +47,7 @@ const AutoComplete = (props) => {
         props.initActiveSuggestion();
     }
 
-    const { showSuggestions, suggestions, activeSuggestion, term, pending } = props.autocomplete;
+    const { showSuggestions, suggestions, activeSuggestion, term, loading } = props.autocomplete;
 
     function renderSuggestionsList() {
 
@@ -74,6 +74,8 @@ const AutoComplete = (props) => {
 
     }
 
+
+
     return (
         <div className="autocomplete-wrapper" ref={inputEl}>
             <div className="oc-input-wr">
@@ -83,9 +85,11 @@ const AutoComplete = (props) => {
                     onKeyDown={onKeyDown}
                     value={term}
                 />
-                <i className={`fas fa-spinner ac-sppiner ${ pending ? 'show' : '' }`}></i>
+                { loading && (<i className='fas fa-spinner ac-sppiner'></i>) }
+                {/* <i className={`fas fa-spinner ac-sppiner ${ loading ? '' : 'hide' }`}></i> */}
                 
             </div>
+
             {renderSuggestionsList()}
         </div>
     )
@@ -99,8 +103,8 @@ export default connect(
     }),
     // map dispatch
     {
-        fetchSuggestions, toggleSuggestions, setActiveSuggestion, handleKeyDown,
-        clickOnSuggestion, initActiveSuggestion
+        fetchSuggestions, toggleSuggestionsList, setActiveSuggestion,
+        handleKeyDown, initActiveSuggestion
     }
 )(AutoComplete);
 // export default outsideClick(AutoComplete);
