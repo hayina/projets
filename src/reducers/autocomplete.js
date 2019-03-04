@@ -9,7 +9,7 @@ const STATE = {
     apiRequestCount: 0
 }
 
-export const getLoadingStatus = state => state.pending;
+export const getLoadingStatus = state => state.loading;
 
 export const autocomplete = (state=STATE, action) => {
 

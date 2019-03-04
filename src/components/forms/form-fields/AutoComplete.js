@@ -4,50 +4,36 @@ import { connect } from 'react-redux';
 import useClickOutside from '../../hooks/useClickOutside';
 import {
     fetchSuggestions, toggleSuggestionsList, selectSuggestion, initActiveSuggestion,
-    setActiveSuggestion, handleKeyDown } from '../../../actions/autocomplete'
+    setActiveSuggestion, handleKeyPressed } from '../../../actions/autocomplete'
 
 import { getLoadingStatus } from '../../../reducers/autocomplete'
 
 import './autocomplete.css'
 
-const AutoComplete = (props) => {
+const AutoComplete = ({ autocomplete, dispatch }) => {
 
     const inputEl = useRef(null);
 
-    // using the custom hook
-    useClickOutside(inputEl.current, () => {
-        props.toggleSuggestionsList(false);
-    });
+    // using the custom Hook
+    useClickOutside(inputEl.current, () => dispatch(toggleSuggestionsList(false)));
 
-    // user interaction with input
-    const onChange = (e) => {
-        props.fetchSuggestions(e.target.value);
-    }
+    const onChange = (e) => dispatch(fetchSuggestions(e.target.value));
 
-    function onFocus(e) {
-        onChange(e);
-    }
+    const onFocus = (e) => onChange(e);
 
-    const onKeyDown = (e) => {
-        props.handleKeyDown(e.keyCode);
-    }
+    const onKeyDown = (e) => dispatch(handleKeyPressed(e.keyCode || e.which));
 
     // click on suggestion
-    function onClick(e, suggestion) {
-        props.dispatch(selectSuggestion(suggestion));
-    }
+    const onClick = (e, suggestion) => dispatch(selectSuggestion(suggestion));
 
-    // hover  suggestion
-    const onMouseEnter = (e, activeSuggestion) => {
-        props.setActiveSuggestion(activeSuggestion);
-    }
+    // hover on suggestion
+    const onMouseEnter = (e, activeSuggestion) => dispatch(setActiveSuggestion(activeSuggestion));
 
     // leaving suggestions list
-    const onMouseLeave = (e) => {
-        props.initActiveSuggestion();
-    }
+    const onMouseLeave = (e) => dispatch(initActiveSuggestion());
+ 
 
-    const { showSuggestions, suggestions, activeSuggestion, term, loading } = props.autocomplete;
+    const { showSuggestions, suggestions, activeSuggestion, term, loading } = autocomplete;
 
     function renderSuggestionsList() {
 
@@ -74,8 +60,6 @@ const AutoComplete = (props) => {
 
     }
 
-
-
     return (
         <div className="autocomplete-wrapper" ref={inputEl}>
             <div className="oc-input-wr">
@@ -96,15 +80,8 @@ const AutoComplete = (props) => {
 }
 
 export default connect(
-    // map state
     (state) => ({
         autocomplete: state.autocomplete,
-        loadingStatus: getLoadingStatus(state)
-    }),
-    // map dispatch
-    {
-        fetchSuggestions, toggleSuggestionsList, setActiveSuggestion,
-        handleKeyDown, initActiveSuggestion
-    }
+        loadingStatus: getLoadingStatus(state) // selector
+    })
 )(AutoComplete);
-// export default outsideClick(AutoComplete);
