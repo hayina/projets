@@ -20,8 +20,8 @@ const App = (props) => {
         <div className="app-container">
 
 
-            <h1>AutoComplete</h1>
-            <AutoComplete />
+            {/* <h1>AutoComplete</h1>
+            <AutoComplete /> */}
 
             
 

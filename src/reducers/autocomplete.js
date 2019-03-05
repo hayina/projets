@@ -17,23 +17,24 @@ export const autocomplete = (state=STATE, action) => {
 
         case types.INPUT_CHANGED:
             return { ...state, term: action.term };
+
         case types.SET_LOADER:
             return { ...state, loading: action.state };
-        case types.NEW_API_REQUEST:
-            return { ...state, apiRequestCount: state.apiRequestCount+1 };
-        // case types.REQUEST_SUCCESS:
-        //     return { ...state, loading: true, suggestions: action.payload };
+
         case types.TOGGLE_SUGGESTIONS:
             return { ...state, showSuggestions: action.toggle };
+
         case types.SET_ACTIVE_SUGGESTION:
             return { ...state, activeSuggestion: action.index };
+
         case types.INIT_ACTIVE_SUGGESTION:
             return { ...state, activeSuggestion: -1 };
+
         case types.INIT_SUGGESTIONS:
             return { ...state, suggestions: [] };
+
         case types.SET_SUGGESTIONS:
             return { ...state, suggestions: action.suggestions };
-
 
         default:
             return state;

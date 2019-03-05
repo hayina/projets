@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import useClickOutside from '../../hooks/useClickOutside';
 import {
-    fetchSuggestions, toggleSuggestionsList, selectSuggestion, initActiveSuggestion,
-    setActiveSuggestion, handleKeyPressed } from '../../../actions/autocomplete'
+    toggleSuggestionsList, selectSuggestion, initActiveSuggestion, outsideClick,
+    setActiveSuggestion, handleKeyPressed, inputChanged, inputFocused } from '../../../actions/autocomplete'
 
 import { getLoadingStatus } from '../../../reducers/autocomplete'
 
@@ -15,11 +15,11 @@ const AutoComplete = ({ autocomplete, dispatch }) => {
     const inputEl = useRef(null);
 
     // using the custom Hook
-    useClickOutside(inputEl.current, () => dispatch(toggleSuggestionsList(false)));
+    useClickOutside(inputEl.current, () => dispatch(outsideClick()));
 
-    const onChange = (e) => dispatch(fetchSuggestions(e.target.value));
+    const onChange = (e) => dispatch(inputChanged(e.target.value));
 
-    const onFocus = (e) => onChange(e);
+    const onFocus = (e) => dispatch(inputFocused(e.target.value));
 
     const onKeyDown = (e) => dispatch(handleKeyPressed(e.keyCode || e.which));
 

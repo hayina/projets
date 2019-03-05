@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 
 // import projetFormReducer from './projetFormReducer'
 import { reducer as formReducer } from 'redux-form';
-import {formModalsReducer, autocompleteReducer} from './projetFormReducer';
+import {formModalsReducer} from './projetFormReducer';
 import { autocomplete } from './autocomplete';
 
 

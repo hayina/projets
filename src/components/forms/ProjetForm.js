@@ -5,10 +5,7 @@ import { Field, reduxForm, formValueSelector } from 'redux-form'
 import { toggleModal } from '../../actions'
 
 import { required, number, emptyArray } from './validator'
-import TextField from './form-fields/TextField'
-import SelectField from './form-fields/SelectField'
-import RadioFields from './form-fields/RadioFields'
-import CheckboxFields from './form-fields/CheckboxFields'
+import { TextField, CheckboxField, RadioField, SelectField} from './form-fields/fields'
 
 import './forms.css';
 
@@ -51,7 +48,7 @@ class ProjetForm extends Component {
 
                 <Field
                     name="isConvention"
-                    component={RadioFields}
+                    component={RadioField}
                     label="conventionné"
                     options={[{ label: 'oui', value: true }, { label: 'non', value: false }]}
                 />
@@ -63,11 +60,11 @@ class ProjetForm extends Component {
                     />
                 )}
 
-                {partners && (
+                { partners && (
                     <div className="form-group">
                         {partners.map((partner, i) => (
                             <div className="partner-item" key={i}>
-                                <div className="partner-label">partenaire {i + 1} :</div>
+                                <div className="form-label partner-label">partenaire {i + 1} :</div>
                                 <div className="partner-info">
                                     <div className="partner-name">{partner.name}</div>
                                     <div className="partner-montant">{partner.montant}</div>
@@ -75,9 +72,7 @@ class ProjetForm extends Component {
                             </div>
                         ))}
                     </div>
-                )}
-
-
+                ) }
 
                 <Field
                     name="secteur"
@@ -89,7 +84,7 @@ class ProjetForm extends Component {
 
                 <Field
                     name="communes"
-                    component={CheckboxFields}
+                    component={CheckboxField}
                     label="communes"
                     options={[{ label: 'taourirt', value: 1 }, { label: 'el aioun', value: 2 },
                     { label: 'debdou', value: 3 }]}

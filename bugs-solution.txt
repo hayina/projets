@@ -10,3 +10,7 @@ Decide between using a controlled or uncontrolled input element for the lifetime
 --------------
 
 - const { meta = {} } = action; // if meta is missing e.q undefined alors il sera initialisé a {}
+
+- tjours check if we tap DISPATCH and not only the actions (function)
+dispatch(setSuggestios(...)) and not just setSuggestios(...)
+it's a common error

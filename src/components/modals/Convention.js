@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Field, reduxForm, arrayPush } from 'redux-form';
 
-import TextField from '../forms/form-fields/TextField'
+import {TextField} from '../forms/form-fields/fields'
 
 const onSubmit = (formValues, dispatch) => {
 
@@ -18,11 +17,14 @@ class Convention extends React.Component {
 
         const { handleSubmit } = this.props;
 
+        const props = { component: TextField, fieldType: 'input', cssClass: '' }
+
         return (
             <div className="conv-container">
                 <form onSubmit={ handleSubmit }>
-                    <Field name="name" component={TextField} label="Partner" cssClass="" />
-                    <Field name="montant" component={TextField} label="Montant" cssClass="" />
+                    <Field name="name" component={TextField} fieldType="input" label="Partner" cssClass="" />
+                    <Field name="montant" component={TextField} fieldType="input" label="Montant" cssClass="" />
+                    <Field name="signed" label="signature" {...props} />
                 </form >
             </div >
         )

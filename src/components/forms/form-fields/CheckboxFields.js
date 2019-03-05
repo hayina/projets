@@ -1,7 +1,7 @@
 import React from 'react';
 
 import SimpleField from './SimpleField';
-import { gotError, renderErrorField } from '../formErrors';
+import { gotError } from '../formErrors';
 
 const CheckboxField = ({ input, meta, label, options }) => {    
 

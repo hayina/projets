@@ -5,3 +5,7 @@ is it good to just ignore them in success as i did ???
 
 - where to call next in a middleware ?
 - how to set state in reducers ? one bye one all in one like { ...state, p1, p2, p3, ... }
+
+- changing that axios, why
+no abort system
+if error is discard in sucess then it will be executed by catch

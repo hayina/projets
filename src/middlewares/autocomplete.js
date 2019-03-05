@@ -1,44 +1,75 @@
 import types from '../types';
 import {
-    setACInput, setLoader, setSuggestions, toggleSuggestionsList,
+    setACInput, setLoader, setSuggestions, toggleSuggestionsList, fetchSuggestions,
     initSuggestions, initActiveSuggestion, selectSuggestion, setActiveSuggestion
 } from '../actions/autocomplete';
 import { apiRequest } from './api';
 
-
+let lastTime;
 
 // MIDDLEWARE
 export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action => {
 
     next(action);
 
-
+    const { term } = action;
+    const { suggestions, showSuggestions, activeSuggestion } = getState().autocomplete;
 
     switch (action.type) {
+
+        case types.AC_INPUT_CHANGED:
+        
+            // DEBOUNCE
+            // const currentTime = Date.now();
+            // if (!lastTime)
+            //     lastTime = currentTime;
+            // console.log(`Time elapsed is (${currentTime - lastTime}) ms`)
+            // lastTime = currentTime;
+
+            dispatch(setACInput(term));
+            if (term) {
+                dispatch(fetchSuggestions(term));
+            }
+            else {
+                dispatch(initSuggestions());
+                dispatch(setLoader(false));
+                dispatch(toggleSuggestionsList(false));
+            }
+            break;
+
+        case types.AC_INPUT_FOCUSED:
+
+            if (term && !showSuggestions) {
+                dispatch(toggleSuggestionsList(true));
+                //     dispatch(fetchSuggestions(term));
+            }
+            break;
+
+        case types.AC_OUTSIDE_CLICK:
+            if (showSuggestions){
+                dispatch(toggleSuggestionsList(false));
+            }
+            break;
 
         //// fetching suggestions ...
         case types.FETCH_SUGGESTIONS:
 
-            const { term } = action;
-
-            if (term) {
-                dispatch(setACInput(term));
-                dispatch(setLoader(true));
-                dispatch(apiRequest({
-                    url: '/get_partners', method: 'GET', params: { q: term }, feature: types.SUGGESTIONS
-                }));
-            }
-            else {
-                // dispatch(initSuggestions());
-                // dispatch(toggleSuggestionsList(false));
-            }
+            dispatch(setLoader(true));
+            dispatch(apiRequest({
+                url: '/get_partners', method: 'GET', params: { q: term },
+                feature: types.SUGGESTIONS,
+                race: true, requestType: 'AUTO_COMPLETE_INPUT'
+            }));
             break;
 
         //// calling suggestions api success ...
         case types.SUGGESTIONS_API_SUCCESS:
 
             if (getState().autocomplete.term) {
-                dispatch(setSuggestions(action.data));
+
+                const suggestions = action.data.map((s) => ({ id: s.id, label: s.label }));
+
+                dispatch(setSuggestions(suggestions));
                 dispatch(setLoader(false));
                 dispatch(toggleSuggestionsList(true));
             }
@@ -61,24 +92,24 @@ export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action
         //// handling key pressed (down, up, enter) when selecting a suggestion
         case types.SUGGESTIONS_KEY_PRESSED:
 
-            const { suggestions, activeSuggestion } = getState().autocomplete;
             //ENTER
             if (action.keyCode === 13) {
-                dispatch(selectSuggestion(suggestions[activeSuggestion].label));
+                dispatch(selectSuggestion(suggestions[activeSuggestion]));
             }
             //UP
             else if (action.keyCode === 38) {
                 if (activeSuggestion > 0) {
-                    dispatch(handlingUpDownKeys(activeSuggestion - 1, suggestions, dispatch));
+                    handlingUpDownKeys(activeSuggestion - 1, suggestions, dispatch);
                 }
             }
             //DOWN
             else if (action.keyCode === 40) {
                 if (activeSuggestion < suggestions.length - 1) {
-                    dispatch(handlingUpDownKeys(activeSuggestion + 1, suggestions, dispatch));
+                    handlingUpDownKeys(activeSuggestion + 1, suggestions, dispatch);
                 }
             }
             break;
+
     }
 
 }

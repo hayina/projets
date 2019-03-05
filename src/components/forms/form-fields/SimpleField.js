@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { gotError, renderErrorField } from '../formErrors';
+import { renderErrorField } from '../formErrors';
 
 
 const SimpleField = ({children, meta, label}) => {
