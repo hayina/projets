@@ -4,7 +4,7 @@
 is it good to just ignore them in success as i did ???
 
 - where to call next in a middleware ?
-- how to set state in reducers ? one bye one all in one like { ...state, p1, p2, p3, ... }
+- how to set state in reducers ? one bye one or all in one like { ...state, p1, p2, p3, ... }
 
 - changing that axios, why
 no abort system

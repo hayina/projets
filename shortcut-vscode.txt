@@ -1,0 +1,7 @@
+Ctrl+Shift+K    = Delete Line
+Alt+Shift+F     = Format code
+Alt+Up          = Move code up
+Ctrl+/          = Comment code
+Shift+Alt       = Duplicate code up or down
+Ctrl+D          = Multi Selecte
+

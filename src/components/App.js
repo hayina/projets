@@ -2,13 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { submit } from 'redux-form';
 
-import ProjetForm from './forms/ProjetForm'
-import AutoComplete from './forms/form-fields/AutoComplete'
-import Modal from './modals/Modal'
-import Convention from './modals/Convention'
-
-
-
+import ProjetForm from './forms/ProjetForm';
+import Modal from './modals/Modal';
+import Convention from './modals/Convention';
 
 
 const App = (props) => {
@@ -19,16 +15,9 @@ const App = (props) => {
 
         <div className="app-container">
 
-
-            {/* <h1>AutoComplete</h1>
-            <AutoComplete /> */}
-
-            
-
             <ProjetForm />
 
-
-            {formModals.modal && (
+            { formModals.modal && (
                 <Modal
                     handleClick={() => dispatch(submit('conventionForm'))}
                     title="ADD PARTNER"
@@ -44,9 +33,7 @@ const App = (props) => {
 }
 
 export default connect(
-    // map state to props function
     (state) => ({
         formModals: state.formModals
     })
-
 )(App);

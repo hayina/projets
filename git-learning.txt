@@ -1,0 +1,6 @@
+
+git add .
+git commit -m "...."
+(we need an account in github)
+git push
+git pull

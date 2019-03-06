@@ -20,5 +20,6 @@ steady = stable, régulier,constant
 come up with = touver une solution, avoir une idée
 FYI = For Your Information
 fellow = sharing a particular activity, quality, or condition with someone or something. -> collègue, compagnon || a man or boy
+pace = rythme, allure, vitesse
 
 
