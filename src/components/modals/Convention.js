@@ -18,7 +18,7 @@ class Convention extends React.Component {
             <div className="conv-container">
                 <form onSubmit={ handleSubmit }>
                     <Field name="name" label="Partner" {...props} 
-                        _autoComplete 
+                        autoComplete 
                         
                     />
                     <Field name="montant" label="Montant" {...props} />

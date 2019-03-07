@@ -1,11 +1,11 @@
 import types from '../types';
 import {
     setACInput, setLoader, setSuggestions, toggleSuggestionsList, fetchSuggestions,
-    initSuggestions, initActiveSuggestion, selectSuggestion, setActiveSuggestion
+    initSuggestions, initActiveSuggestion, selectSuggestion, setActiveSuggestion, setErrors
 } from '../actions/autocomplete';
 import { apiRequest } from './api';
 
-let lastTime;
+// let lastTime;
 
 // MIDDLEWARE
 export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action => {
@@ -79,6 +79,7 @@ export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action
         case types.SUGGESTIONS_API_ERROR:
             console.log(action.error);
             dispatch(setLoader(false));
+            dispatch(setErrors());
             break;
 
         //// selecting a suggestion ...
@@ -109,6 +110,8 @@ export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action
                 }
             }
             break;
+
+            default: break;
 
     }
 

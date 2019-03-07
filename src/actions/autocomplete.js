@@ -5,8 +5,9 @@ import types from '../types';
 export const inputChanged = term => ({ type: types.AC_INPUT_CHANGED, term })
 export const inputFocused = term => ({ type: types.AC_INPUT_FOCUSED, term })
 export const fetchSuggestions = term => ({ type: types.FETCH_SUGGESTIONS, term })
-export const setACInput = term => ({ type: types.INPUT_CHANGED, term });
+export const setACInput = term => ({ type: types.SET_AC_INPUT, term });
 export const setLoader = state => ({ type: types.SET_LOADER, state });
+export const setErrors = () => ({ type: types.SUGGESTIONS_SET_ERRORS });
 export const toggleSuggestionsList = toggle => ({ type: types.TOGGLE_SUGGESTIONS, toggle });
 export const handleKeyPressed = keyCode => ({ type: types.SUGGESTIONS_KEY_PRESSED, keyCode });
 export const setActiveSuggestion = index => ({ type: types.SET_ACTIVE_SUGGESTION, index });

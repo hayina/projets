@@ -1,11 +1,22 @@
 import React from 'react';
 
 import AutoComplete from './AutoComplete';
-import { gotError, renderErrorField } from '../formErrors';
+
 
 ////////////// helpers
 
 const fieldCss = (meta) => `form-control ${gotError(meta) ? 'is-invalid' : ''}`;
+
+const gotError = ({ touched, error, dirty }) => {
+    if( (dirty || touched) && error ) return true;
+    return false;
+}
+
+const renderErrorField = (meta) => {
+    if(gotError(meta)){
+        return (<div className="invalid-feedback">{meta.error}</div>)
+    }
+}
 
 ////////////// SIMPLE FIELD
 
@@ -17,45 +28,41 @@ export const SimpleField = ({ children, meta, label }) => (
     </div>
 )
 
-
-
 // props -> { input, meta }
 
 // meta 
-// active: false
-// asyncValidating: false
-// autofilled: false
-// dirty: false
-// dispatch: ƒ ()
-// error: "Required"
-// form: "projetForm"
-// initial: "YOUSSEF PROJET"
-// invalid: true
-// pristine: true
-// submitFailed: false
-// submitting: false
-// touched: false
-// valid: false
-// visited: false
-// warning: undefined
+    // active: false
+    // asyncValidating: false
+    // autofilled: false
+    // dirty: false
+    // dispatch: ƒ ()
+    // error: "Required"
+    // form: "projetForm"
+    // initial: "YOUSSEF PROJET"
+    // invalid: true
+    // pristine: true
+    // submitFailed: false
+    // submitting: false
+    // touched: false
+    // valid: false
+    // visited: false
+    // warning: undefined
 
 // input 
-// name: "intitule"
-// onBlur: ƒ (event)
-// onChange: ƒ (event)
-// onDragStart: ƒ (event)
-// onDrop: ƒ (event)
-// onFocus: ƒ (event)
-// value: "..."
-
-
+    // name: "intitule"
+    // onBlur: ƒ (event)
+    // onChange: ƒ (event)
+    // onDragStart: ƒ (event)
+    // onDrop: ƒ (event)
+    // onFocus: ƒ (event)
+    // value: "..."
 
 
 ////////////// TEXT TEXTAREA
 
 export const TextField = (props) => {
 
-    const { input, meta, label, fieldType, autoCompleteApi } = props;
+    const { input, meta, label, fieldType, autoComplete } = props;
     // console.log('TextField', props);
 
     const fieldProps = {
@@ -67,14 +74,14 @@ export const TextField = (props) => {
 
         if (fieldType === 'input') {
 
-            // if( _autoComplete ){
+            if ( autoComplete ) {
 
-            //     return (
-            //         <AutoComplete 
+                return (
+                    <AutoComplete 
 
-            //         />
-            //     )
-            // }
+                    />
+                )
+            }
 
             return (<input type="text" {...fieldProps} autoComplete="off" />);
         }

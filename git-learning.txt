@@ -1,6 +1,21 @@
+//////////////
 
 git add .
 git commit -m "...."
+
+//////////////
+
 (we need an account in github)
 git push
 git pull
+
+//////////////
+
+git stash
+git pull origin master
+git stash pop
+
+//////////////
+
+git reset src/actions/autocomplete.js
+git checkout src/actions/autocomplete.js

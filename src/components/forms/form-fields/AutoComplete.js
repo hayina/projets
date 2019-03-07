@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 
 import useClickOutside from '../../hooks/useClickOutside';
 import {
-    toggleSuggestionsList, selectSuggestion, initActiveSuggestion, outsideClick,
+    selectSuggestion, initActiveSuggestion, outsideClick,
     setActiveSuggestion, handleKeyPressed, inputChanged, inputFocused } from '../../../actions/autocomplete'
 
-import { getLoadingStatus } from '../../../reducers/autocomplete'
+import { getLoadingStatus, getErrorsStatus } from '../../../reducers/autocomplete'
 
 import './autocomplete.css'
 
@@ -33,7 +33,7 @@ const AutoComplete = ({ autocomplete, dispatch }) => {
     const onMouseLeave = (e) => dispatch(initActiveSuggestion());
  
 
-    const { showSuggestions, suggestions, activeSuggestion, term, loading } = autocomplete;
+    const { showSuggestions, suggestions, activeSuggestion, term, loading, errors } = autocomplete;
 
     function renderSuggestionsList() {
 
@@ -52,7 +52,7 @@ const AutoComplete = ({ autocomplete, dispatch }) => {
                         {/* - ({i}) ({activeSuggestion}) */}
                     </li>
                 ))
-            } else {
+            } else if(!errors) {
                 suggestionsList = (<li className="no-suggestions">No results found</li>)
             }
             return (<ul className="suggestions-list" onMouseLeave={onMouseLeave}>{suggestionsList}</ul>)
@@ -82,6 +82,7 @@ const AutoComplete = ({ autocomplete, dispatch }) => {
 export default connect(
     (state) => ({
         autocomplete: state.autocomplete,
-        loadingStatus: getLoadingStatus(state) // selector
+        // loadingStatus: getLoadingStatus(state), // selector
+        // errorsStatus: getErrorsStatus(state) // selector
     })
 )(AutoComplete);

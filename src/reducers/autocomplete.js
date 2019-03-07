@@ -6,16 +6,17 @@ const STATE = {
     activeSuggestion: -1,
     term: '',
     loading: false,
-    apiRequestCount: 0
+    errors: false
 }
 
 export const getLoadingStatus = state => state.loading;
+export const getErrorsStatus = state => state.errors;
 
 export const autocomplete = (state=STATE, action) => {
 
     switch(action.type) {
 
-        case types.INPUT_CHANGED:
+        case types.SET_AC_INPUT:
             return { ...state, term: action.term };
 
         case types.SET_LOADER:
@@ -34,6 +35,9 @@ export const autocomplete = (state=STATE, action) => {
             return { ...state, suggestions: [] };
 
         case types.SET_SUGGESTIONS:
+            return { ...state, suggestions: action.suggestions };
+
+        case types.SUGGESTIONS_SET_ERRORS:
             return { ...state, suggestions: action.suggestions };
 
         default:

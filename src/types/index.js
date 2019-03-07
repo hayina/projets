@@ -6,7 +6,7 @@ const types = {
     SET_LOADER: '[ui] set loader',
     NEW_API_REQUEST: '[api] new api request ...',
     REQUEST_SUCCESS: '[api] success request',
-    INPUT_CHANGED: '[ui] SET AUTO_COMPLETE_INPUT',
+    SET_AC_INPUT: '[ui] SET AC_INPUT',
     SET_ACTIVE_SUGGESTION: '[ui] setting the active suggestion',
     INIT_ACTIVE_SUGGESTION: '[ui] init the active suggestion',
 
@@ -26,6 +26,7 @@ const types = {
     SUGGESTIONS_API_REQUEST: `${SUGGESTIONS} API_REQUEST`,
     SUGGESTIONS_API_SUCCESS: `${SUGGESTIONS} API_SUCCESS`,
     SUGGESTIONS_API_ERROR: `${SUGGESTIONS} API_ERROR`,
+    SUGGESTIONS_SET_ERRORS: `${SUGGESTIONS} SET_ERRORS`,
     
     API_REQUEST: 'API_REQUEST',
     API_SUCCESS: 'API_SUCCESS',
