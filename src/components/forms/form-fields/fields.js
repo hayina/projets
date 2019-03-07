@@ -62,7 +62,7 @@ export const SimpleField = ({ children, meta, label }) => (
 
 export const TextField = (props) => {
 
-    const { input, meta, label, fieldType, autoComplete } = props;
+    const { input, meta, label, fieldType, autoComplete, reduxForm } = props;
     // console.log('TextField', props);
 
     const fieldProps = {
@@ -75,18 +75,16 @@ export const TextField = (props) => {
         if (fieldType === 'input') {
 
             if ( autoComplete ) {
-
+                // change(form:String, field:String, value:any)
                 return (
-                    <AutoComplete 
-
-                    />
+                    <AutoComplete { ...(reduxForm && {reduxForm}) } />
                 )
             }
 
-            return (<input type="text" {...fieldProps} autoComplete="off" />);
+            return <input type="text" {...fieldProps} autoComplete="off" />
         }
         else if (fieldType === 'textarea') {
-            return (<textarea {...fieldProps} />)
+            return <textarea {...fieldProps} />
         }
     }
 

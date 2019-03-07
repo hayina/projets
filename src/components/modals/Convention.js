@@ -7,6 +7,8 @@ const onSubmit = (formValues, dispatch) => {
     dispatch(arrayPush('projetForm', 'partners', formValues));
 }
 
+const formName = 'conventionForm';
+
 class Convention extends React.Component {
 
     render() {
@@ -18,11 +20,12 @@ class Convention extends React.Component {
             <div className="conv-container">
                 <form onSubmit={ handleSubmit }>
                     <Field name="name" label="Partner" {...props} 
-                        autoComplete 
-                        
+                        reduxForm={{ form: formName, field: "name" }}
+                        autoComplete     
                     />
                     <Field name="montant" label="Montant" {...props} />
-                    {/* <Field name="signed" label="signature"  /> */}
+                    <Field name="signature" label="signature" 
+                    autoComplete {...props} reduxForm={{ form: formName, field: "signature" }}/>
                 </form >
             </div >
         )
@@ -31,7 +34,7 @@ class Convention extends React.Component {
 }
 
 Convention = reduxForm({
-    form: 'conventionForm', 
+    form: formName, 
     onSubmit
 })(Convention)
 

@@ -1,16 +1,30 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import useClickOutside from '../../hooks/useClickOutside';
 import {
-    selectSuggestion, initActiveSuggestion, outsideClick,
-    setActiveSuggestion, handleKeyPressed, inputChanged, inputFocused } from '../../../actions/autocomplete'
+    selectSuggestion, initActiveSuggestion, outsideClick, setReduxForm, autoCompleteInit, autoCompleteDestroy,
+    setActiveSuggestion, handleKeyPressed, inputChanged, inputFocused
+} from '../../../actions/autocomplete'
 
-import { getLoadingStatus, getErrorsStatus } from '../../../reducers/autocomplete'
+// import { getLoadingStatus, getErrorsStatus } from '../../../reducers/autocomplete'
 
 import './autocomplete.css'
 
-const AutoComplete = ({ autocomplete, dispatch }) => {
+const AutoComplete = ({ autocomplete, dispatch, reduxForm }) => {
+
+    useEffect(() => {
+        // ComponentDidMount
+        dispatch(autoCompleteInit());
+        // ComponentWillUnmount
+        return () => {
+            dispatch(autoCompleteDestroy());
+        }
+    }, [])
+
+    useEffect(() => {
+        if (reduxForm) dispatch(setReduxForm(reduxForm));
+    }, []);
 
     const inputEl = useRef(null);
 
@@ -31,7 +45,7 @@ const AutoComplete = ({ autocomplete, dispatch }) => {
 
     // leaving suggestions list
     const onMouseLeave = (e) => dispatch(initActiveSuggestion());
- 
+
 
     const { showSuggestions, suggestions, activeSuggestion, term, loading, errors } = autocomplete;
 
@@ -39,7 +53,7 @@ const AutoComplete = ({ autocomplete, dispatch }) => {
 
         let suggestionsList;
 
-        if (showSuggestions) {
+        if (showSuggestions && !errors) {
             if (suggestions.length > 0) {
                 suggestionsList = suggestions.map((suggestion, i) => (
                     <li
@@ -52,7 +66,7 @@ const AutoComplete = ({ autocomplete, dispatch }) => {
                         {/* - ({i}) ({activeSuggestion}) */}
                     </li>
                 ))
-            } else if(!errors) {
+            } else {
                 suggestionsList = (<li className="no-suggestions">No results found</li>)
             }
             return (<ul className="suggestions-list" onMouseLeave={onMouseLeave}>{suggestionsList}</ul>)
@@ -69,9 +83,9 @@ const AutoComplete = ({ autocomplete, dispatch }) => {
                     onKeyDown={onKeyDown}
                     value={term}
                 />
-                { loading && (<i className='fas fa-spinner ac-sppiner'></i>) }
+                {loading && (<i className='fas fa-spinner ac-sppiner'></i>)}
                 {/* <i className={`fas fa-spinner ac-sppiner ${ loading ? '' : 'hide' }`}></i> */}
-                
+
             </div>
 
             {renderSuggestionsList()}

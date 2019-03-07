@@ -4,15 +4,19 @@ const SUGGESTIONS = '[Suggestions]';
 const types = {
 
     SET_LOADER: '[ui] set loader',
+    SET_REDUX_FORM: '[redux-form] set',
     NEW_API_REQUEST: '[api] new api request ...',
     REQUEST_SUCCESS: '[api] success request',
     SET_AC_INPUT: '[ui] SET AC_INPUT',
+    PRE_SET_AC_INPUT: '[ui] (PRE) SET AC_INPUT',
     SET_ACTIVE_SUGGESTION: '[ui] setting the active suggestion',
     INIT_ACTIVE_SUGGESTION: '[ui] init the active suggestion',
 
     AC_INPUT_CHANGED: '[ui] AC_INPUT_CHANGED',
     AC_INPUT_FOCUSED: '[ui] AC_INPUT_FOCUSED',
     AC_OUTSIDE_CLICK: '[ui] AC_OUTSIDE_CLICK',
+    AC_INIT: '[ui] AC_INIT',
+    AC_DESTROY: '[ui] AC_DESTROY',
 
 
 

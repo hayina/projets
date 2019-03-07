@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-// import thunk from 'redux-thunk';
+import thunk from 'redux-thunk';
 
 import reducers from './reducers';
 import { autoCompleteMiddleware } from './middlewares/autocomplete';
@@ -8,7 +8,7 @@ import { loggerMiddleware } from './middlewares/logger';
 
 import * as actionCreators from './actions/autocomplete'
 
-const middlewares = [];
+const middlewares = [thunk];
 const coreMiddlewares = [apiMiddleware];
 const featureMiddlewares = [autoCompleteMiddleware];
 

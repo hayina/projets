@@ -6,7 +6,9 @@ const STATE = {
     activeSuggestion: -1,
     term: '',
     loading: false,
-    errors: false
+    errors: false,
+    isReduxForm: false,
+    reduxForm: {}
 }
 
 export const getLoadingStatus = state => state.loading;
@@ -15,6 +17,12 @@ export const getErrorsStatus = state => state.errors;
 export const autocomplete = (state=STATE, action) => {
 
     switch(action.type) {
+
+        case types.AC_INIT:
+            return STATE;
+
+        case types.AC_DESTROY:
+            return STATE;
 
         case types.SET_AC_INPUT:
             return { ...state, term: action.term };
@@ -38,7 +46,10 @@ export const autocomplete = (state=STATE, action) => {
             return { ...state, suggestions: action.suggestions };
 
         case types.SUGGESTIONS_SET_ERRORS:
-            return { ...state, suggestions: action.suggestions };
+            return { ...state, errors: action.state };
+
+        case types.SET_REDUX_FORM:
+            return { ...state, isReduxForm: true, reduxForm: action.reduxForm };
 
         default:
             return state;

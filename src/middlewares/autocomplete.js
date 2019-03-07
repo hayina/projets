@@ -1,6 +1,6 @@
 import types from '../types';
 import {
-    setACInput, setLoader, setSuggestions, toggleSuggestionsList, fetchSuggestions,
+    setACInput, setLoader, setSuggestions, toggleSuggestionsList, fetchSuggestions, autoCompleteInit, autoCompleteDestroy,
     initSuggestions, initActiveSuggestion, selectSuggestion, setActiveSuggestion, setErrors
 } from '../actions/autocomplete';
 import { apiRequest } from './api';
@@ -13,12 +13,21 @@ export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action
     next(action);
 
     const { term } = action;
-    const { suggestions, showSuggestions, activeSuggestion } = getState().autocomplete;
+    const { suggestions, showSuggestions, activeSuggestion, errors } = getState().autocomplete;
 
     switch (action.type) {
 
+        case types.AC_INIT:
+
+            break;
+
+
+        case types.AC_DESTROY:
+
+            break;
+
         case types.AC_INPUT_CHANGED:
-        
+
             // DEBOUNCE
             // const currentTime = Date.now();
             // if (!lastTime)
@@ -39,14 +48,14 @@ export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action
 
         case types.AC_INPUT_FOCUSED:
 
-            if (term && !showSuggestions) {
+            if ( term && !errors ) {
                 dispatch(toggleSuggestionsList(true));
                 //     dispatch(fetchSuggestions(term));
             }
             break;
 
         case types.AC_OUTSIDE_CLICK:
-            if (showSuggestions){
+            if (showSuggestions) {
                 dispatch(toggleSuggestionsList(false));
             }
             break;
@@ -55,6 +64,7 @@ export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action
         case types.FETCH_SUGGESTIONS:
 
             dispatch(setLoader(true));
+            dispatch(setErrors(false));
             dispatch(apiRequest({
                 url: '/get_partners', method: 'GET', params: { q: term },
                 feature: types.SUGGESTIONS,
@@ -79,7 +89,7 @@ export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action
         case types.SUGGESTIONS_API_ERROR:
             console.log(action.error);
             dispatch(setLoader(false));
-            dispatch(setErrors());
+            dispatch(setErrors(true));
             break;
 
         //// selecting a suggestion ...
@@ -111,7 +121,7 @@ export const autoCompleteMiddleware = ({ dispatch, getState }) => next => action
             }
             break;
 
-            default: break;
+        default: break;
 
     }
 
