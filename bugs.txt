@@ -9,3 +9,30 @@ is it good to just ignore them in success as i did ???
 - changing that axios, why
 no abort system
 if error is discard in sucess then it will be executed by catch
+
+
+---------------
+--- where putting the initial state (hooks) ?? the difference ??
+
+const STATE = {
+    suggestions: [],
+    ....
+}
+
+const AutoComplete = ({ autocomplete, dispatch, reduxForm }) => {
+const STATE = {
+    suggestions: [],
+    ....
+}
+...
+--------------
+
+wha happend when there is many setState (hooks) ??
+they update the ui one bye one or just once ??
+
+        // setState({ ...state, ... });
+        // if (term) {
+        //     setState({ ...state, ... });
+        // }
+
+--------------

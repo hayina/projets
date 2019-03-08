@@ -21,3 +21,17 @@ func(...args) -> func(args[0], arg[1], ...)
 <Componnent {...props}> -> <Compoenent prop1=.. prop2=... />
 
 -- obj[2+4] = 'foo' ----> { 6: 'foo' } useful when we want to deal with a object better than an array
+
+---
+
+const gotError = ({ touched, error, dirty }) => {
+    if( (dirty || touched) && error ) return true;
+    return false;
+}
+=>
+const gotError = ({ touched, error, dirty }) => {
+    return ( (dirty || touched) && error );
+}
+
+------
+

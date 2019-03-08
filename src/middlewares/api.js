@@ -32,35 +32,27 @@ export const apiMiddleware = ({ dispatch }) => next => async (action) => {
                 params
             });
 
-
-            // console.log(currentRequests, data);
-
-            if (race && idRequest !== currentRequests[requestType]) {
-                response.data = null;
-                console.log(`canceling request ---------> ${idRequest}`);
-            }
-            else
+            if (checkLastRequest(race, idRequest, requestType)) {
                 dispatch(apiSuccess(response.data, feature));
-
+            }
         } 
         
         catch (error) {
-
-            if (!race || idRequest === currentRequests[requestType]) {
+            if (checkLastRequest(race, idRequest, requestType)) {
                 dispatch(apiError(error, feature));
             }
         }
-
-
     }
-
-
 }
 
+const checkLastRequest = (race, idRequest, requestType) => {
+    return ( !race || idRequest === currentRequests[requestType] );
+}
 
 // request = { method, url, params, feature }
 export const apiRequest = (request) => (
     { type: `${request.feature} API_REQUEST`, payload: request }
 );
+
 const apiSuccess = (data, feature) => ({ type: `${feature} API_SUCCESS`, data });
 const apiError = (error, feature) => ({ type: `${feature} API_ERROR`, error });
