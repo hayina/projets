@@ -11,6 +11,8 @@ export const initialState  = {
 
 export const reducer = (state, action) => {
 
+    console.log(`auto-complete/${action.type}`);
+
     switch (action.type) {
 
         case 'TOGGLE_SUGGESTIONS':
@@ -35,7 +37,7 @@ export const reducer = (state, action) => {
             return { ...state  };
 
         case 'UP_DOWN_KEY_PRESSED':
-            return { ...initialState, activeSuggestion: action.activeSuggestion, term: action.term };
+            return { ...state, activeSuggestion: action.activeSuggestion };
 
         case 'INIT_AC':
             return { ...initialState  };

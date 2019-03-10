@@ -29,7 +29,7 @@ class Modal extends React.Component {
         }
     }
 
-    // i need this promise cauz the modal component when it toggle to false 
+    // i need this promise cauz when the modal component toggles to false 
     // it destroy the convention form so the sumbit function dont get called
     doSaving = (f) => new Promise((resolve, reject) => {
         f();

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Field, reduxForm, arrayPush } from 'redux-form';
 
-import {TextField} from '../forms/form-fields/fields'
+import { TextField } from '../forms/form-fields/fields'
+import Selected from '../forms/form-fields/Selected'
+import { onSelectAC } from '../../actions/autocomplete';
 
 const onSubmit = (formValues, dispatch) => {
     dispatch(arrayPush('projetForm', 'partners', formValues));
@@ -13,15 +15,23 @@ class Convention extends React.Component {
 
     render() {
 
-        const { handleSubmit } = this.props;
-        const props = { component: TextField, fieldType: 'input', cssClass: '' }
+        const { handleSubmit, dispatch } = this.props;
+        const props = { component: TextField, fieldType: 'input' }
 
         return (
             <div className="conv-container">
                 <form onSubmit={ handleSubmit }>
-                    <Field name="name" label="Partner" {...props} 
+
+                    <Selected label="Commune OUJDA ANGAD" value="3" />
+                    
+                    <Field name="name" label="Partenaire" {...props} 
                         reduxForm={{ form: formName, field: "name" }}
-                        autoComplete     
+                        autoComplete={{
+                            // name: 'partnerAC',
+                            onSelect: (suggestion) => {
+                                dispatch(onSelectAC(suggestion, 'partner'));
+                            }
+                        }}     
                     />
                     <Field name="montant" label="Montant" {...props} />
                     <Field name="signature" label="signature" 
@@ -33,9 +43,7 @@ class Convention extends React.Component {
 
 }
 
-Convention = reduxForm({
+export default Convention = reduxForm({
     form: formName, 
     onSubmit
 })(Convention)
-
-export default Convention;

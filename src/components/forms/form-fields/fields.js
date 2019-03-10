@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AutoComplete from './AutoComplete3';
+import AutoComplete from './autocomplete/AutoComplete';
 
 
 ////////////// helpers

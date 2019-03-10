@@ -9,7 +9,7 @@ import Convention from './modals/Convention';
 
 const App = (props) => {
 
-    const { dispatch, formModals } = props;
+    const { dispatch, projetForm } = props;
 
     return (
 
@@ -17,13 +17,13 @@ const App = (props) => {
 
             <ProjetForm />
 
-            { formModals.modal && (
+            { projetForm.modals.show && (
                 <Modal
-                    handleClick={() => dispatch(submit('conventionForm'))}
-                    title="ADD PARTNER"
+                    handleClick={ () => dispatch(submit('conventionForm')) }
+                    title="ajouter un partenaire"
                     modalName='convention'
                 >
-                    {formModals.convention && <Convention />}
+                    { projetForm.modals.convention && <Convention /> }
                 </Modal>
             )}
 
@@ -34,6 +34,6 @@ const App = (props) => {
 
 export default connect(
     (state) => ({
-        formModals: state.formModals
+        projetForm: state.projetForm
     })
 )(App);

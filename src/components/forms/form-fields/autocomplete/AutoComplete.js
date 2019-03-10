@@ -5,15 +5,11 @@ import axios from 'axios';
 
 import { reducer, initialState } from './acReducer';
 
-import useClickOutside from '../../hooks/useClickOutside';
+import useClickOutside from '../../../hooks/useClickOutside';
 
 // import { getLoadingStatus, getErrorsStatus } from '../../../reducers/autocomplete'
 
 import './autocomplete.css'
-
-
-
-
 
 
 const AutoComplete = ({ dispatch, reduxForm }) => {
@@ -41,7 +37,7 @@ const AutoComplete = ({ dispatch, reduxForm }) => {
 
         hooksDispatch({ type: 'SET_AC_INPUT', term: value });
 
-        reduxFormHandler(value);
+        // reduxFormHandler(value);
 
         if (value) {
             fetchSuggestions(value);
@@ -88,7 +84,12 @@ const AutoComplete = ({ dispatch, reduxForm }) => {
     const onMouseEnter = (e, activeSuggestion) => hooksDispatch({ type: 'SET_ACTIVE_SUGGESTION', activeSuggestion });
 
     // leaving suggestions list
-    const onMouseLeave = (e) => hooksDispatch({ type: 'SET_ACTIVE_SUGGESTION', activeSuggestion: -1 });
+    const onMouseLeave = (e) => {
+
+        if ( suggestions.length > 0 ) {
+            hooksDispatch({ type: 'SET_ACTIVE_SUGGESTION', activeSuggestion: -1 });
+        }
+    }
 
 
     //////// HELPERS 
@@ -127,18 +128,20 @@ const AutoComplete = ({ dispatch, reduxForm }) => {
     const selectSuggestion = (suggestion) => {
 
         hooksDispatch({ type: 'INIT_AC' });
-        hooksDispatch({ type: 'SET_AC_INPUT', term: suggestion.label });
 
-
-        reduxFormHandler(suggestion.label);
+        
+        
+        // hooksDispatch({ type: 'SET_AC_INPUT', term: suggestion.label });
+        // reduxFormHandler(suggestion.label);
     }
 
     const handlingUpDownKeys = (index) => {
 
         hooksDispatch({ type: 'UP_DOWN_KEY_PRESSED',
-            activeSuggestion: index, term: suggestions[index].label
+            activeSuggestion: index, 
+            // term: suggestions[index].label
         });
-        reduxFormHandler(suggestions[index].label);
+        // reduxFormHandler(suggestions[index].label);
     }
 
     const reduxFormHandler = (value) => {

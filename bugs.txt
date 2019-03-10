@@ -36,3 +36,6 @@ they update the ui one bye one or just once ??
         // }
 
 --------------
+
+state = { foo: ... } => state.foo= ... NO!!! => { ...state, foo: ... } OK
+state = { foo: { ... }, ... } => const newState = { ...state }, newState[foo]= ... ?? YES or NO ??

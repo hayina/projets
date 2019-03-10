@@ -19,3 +19,8 @@ git stash pop
 
 git reset src/actions/autocomplete.js
 git checkout src/actions/autocomplete.js
+
+
+/////
+
+git clean -d -f
