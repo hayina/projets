@@ -1,19 +1,19 @@
 import React from 'react';
 
 import AutoComplete from './autocomplete/AutoComplete';
-
+import SelectedAC from './SelectedAC'
 
 ////////////// helpers
 
 const fieldCss = (meta) => `form-control ${gotError(meta) ? 'is-invalid' : ''}`;
 
 const gotError = ({ touched, error, dirty }) => {
-    if( (dirty || touched) && error ) return true;
+    if ((dirty || touched) && error) return true;
     return false;
 }
 
 const renderErrorField = (meta) => {
-    if(gotError(meta)){
+    if (gotError(meta)) {
         return (<div className="invalid-feedback">{meta.error}</div>)
     }
 }
@@ -31,31 +31,31 @@ export const SimpleField = ({ children, meta, label }) => (
 // props -> { input, meta }
 
 // meta 
-    // active: false
-    // asyncValidating: false
-    // autofilled: false
-    // dirty: false
-    // dispatch: ƒ ()
-    // error: "Required"
-    // form: "projetForm"
-    // initial: "YOUSSEF PROJET"
-    // invalid: true
-    // pristine: true
-    // submitFailed: false
-    // submitting: false
-    // touched: false
-    // valid: false
-    // visited: false
-    // warning: undefined
+// active: false
+// asyncValidating: false
+// autofilled: false
+// dirty: false
+// dispatch: ƒ ()
+// error: "Required"
+// form: "projetForm"
+// initial: "YOUSSEF PROJET"
+// invalid: true
+// pristine: true
+// submitFailed: false
+// submitting: false
+// touched: false
+// valid: false
+// visited: false
+// warning: undefined
 
 // input 
-    // name: "intitule"
-    // onBlur: ƒ (event)
-    // onChange: ƒ (event)
-    // onDragStart: ƒ (event)
-    // onDrop: ƒ (event)
-    // onFocus: ƒ (event)
-    // value: "..."
+// name: "intitule"
+// onBlur: ƒ (event)
+// onChange: ƒ (event)
+// onDragStart: ƒ (event)
+// onDrop: ƒ (event)
+// onFocus: ƒ (event)
+// value: "..."
 
 
 ////////////// TEXT TEXTAREA
@@ -73,15 +73,21 @@ export const TextField = (props) => {
     const renderTextField = () => {
 
         if (fieldType === 'input') {
-
-            if ( autoComplete ) {
-                // change(form:String, field:String, value:any)
-                return (
-                    <AutoComplete { ...(reduxForm && {reduxForm}) } />
-                )
-            }
-
             return <input type="text" {...fieldProps} autoComplete="off" />
+        }
+
+        else if (fieldType === 'autoComplete') {
+
+            const acProps = { ...autoComplete, ...(reduxForm && { reduxForm }) }
+            
+            return ( autoComplete.el ?
+                <SelectedAC suggestion={autoComplete.el}
+                    deleteHandler={autoComplete.deleteHandler}
+                />
+                :
+                <AutoComplete {...acProps} />
+            )
+
         }
         else if (fieldType === 'textarea') {
             return <textarea {...fieldProps} />

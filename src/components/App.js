@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { submit } from 'redux-form';
+
 
 import ProjetForm from './forms/ProjetForm';
-import Modal from './modals/Modal';
-import Convention from './modals/Convention';
+import ModalRoot from './modals/ModalRoot';
+
 
 
 const App = (props) => {
@@ -17,7 +17,9 @@ const App = (props) => {
 
             <ProjetForm />
 
-            { projetForm.modals.show && (
+            <ModalRoot />
+
+            {/* { projetForm.modals.show && (
                 <Modal
                     handleClick={ () => dispatch(submit('conventionForm')) }
                     title="ajouter un partenaire"
@@ -25,7 +27,7 @@ const App = (props) => {
                 >
                     { projetForm.modals.convention && <Convention /> }
                 </Modal>
-            )}
+            )} */}
 
         </div>
 

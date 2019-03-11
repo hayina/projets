@@ -6,7 +6,7 @@ is it good to just ignore them in success as i did ???
 - where to call next in a middleware ?
 - how to set state in reducers ? one bye one or all in one like { ...state, p1, p2, p3, ... }
 
-- changing that axios, why
+- changing axios beacuase why
 no abort system
 if error is discard in sucess then it will be executed by catch
 
@@ -25,17 +25,15 @@ const STATE = {
     ....
 }
 ...
---------------
-
-wha happend when there is many setState (hooks) ??
-they update the ui one bye one or just once ??
-
-        // setState({ ...state, ... });
-        // if (term) {
-        //     setState({ ...state, ... });
-        // }
-
---------------
+------------------------------------
 
 state = { foo: ... } => state.foo= ... NO!!! => { ...state, foo: ... } OK
 state = { foo: { ... }, ... } => const newState = { ...state }, newState[foo]= ... ?? YES or NO ??
+
+-------
+considering this approch for modals
+https://stackoverflow.com/questions/35623656/
+
+-------
+need more comprehension
+const inputEl = useRef(null);

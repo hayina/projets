@@ -1,85 +1,63 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, { useRef } from 'react';
+import { connect } from 'react-redux';
 
-import { toggleModal } from '../../actions'
+import { hideModal } from '../../actions';
+import useClickOutside from '../hooks/useClickOutside';
 
 import './modal.css'
 
 
 
-class Modal extends React.Component {
+const Modal = ({ title, children, handleValidation, dispatch }) => {
 
+    const inputEl = useRef(null);
 
-    constructor(props) {
-        super(props);
-        this.modalDialogRef = React.createRef();
-    }
+    useClickOutside(inputEl.current, () => {
+        dispatch(hideModal());
+    });
 
-    componentDidMount() {
-        document.addEventListener('mousedown', this.handleClickOutside);
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('mousedown', this.handleClickOutside);
-    }
-
-    handleClickOutside = (event) => {
-        if (this.modalDialogRef.current && !this.modalDialogRef.current.contains(event.target)) {
-            this.props.toggleModal(this.props.modalName, false);
-        }
-    }
 
     // i need this promise cauz when the modal component toggles to false 
     // it destroy the convention form so the sumbit function dont get called
-    doSaving = (f) => new Promise((resolve, reject) => {
-        f();
-        resolve();
-    })
+    // const doSaving = (f) => new Promise((resolve, reject) => {
+    //     f();
+    //     resolve();
+    // })
 
-    handleClickValidation = () => {
-        const { toggleModal, handleClick, modalName } = this.props;
-        this.doSaving(handleClick).then(
-            () => toggleModal(modalName, false)
-        );
-    }
+    return (
+        <div className="pop-container">
 
-    render() {
+            <div className="pop-dialog" ref={inputEl}>
 
-        const { title, children, toggleModal, modalName } = this.props;
-
-        return (
-            <div className="pop-container">
-
-                <div className="pop-dialog" ref={this.modalDialogRef}>
-
-                    <div className="pop-header">
-                        <div className="pop-title">{title}</div>
-                    </div>
-
-                    <div className="pop-content">
-                        {children}
-                    </div>
-
-                    <div className="pop-validation">
-                        <button className="btn btn-secondary" 
-                            onClick={() => toggleModal(modalName, false)} >Annuler</button>
-                        <button type="submit" className="btn btn-primary"
-                            onClick={this.handleClickValidation} >Valider</button>
-                    </div>
+                <div className="pop-header">
+                    <h3 className="pop-title">{title}</h3>
                 </div>
 
+                <div className="pop-content">{children}</div>
+
+                <div className="pop-validation">
+
+                    <button className="btn btn-secondary"
+                        onClick={ () => dispatch(hideModal()) } >Annuler</button>
+
+                    <button type="submit" className="btn btn-primary"
+                        onClick={ handleValidation } >Valider</button>
+
+                    {/* <button type="submit" className="btn btn-primary"
+                        onClick={
+                            () => doSaving(handleClick)
+                                .then(() => hideModal())
+                        } >Valider</button> */}
+
+                </div>
             </div>
-        )
-    }
+
+        </div>
+    )
 }
 
 
-export default connect(
-    // map state to props function
-    null,
-    //map actions dispatch to props
-    { toggleModal }
-)(Modal);
+export default connect()(Modal);
 
 
 

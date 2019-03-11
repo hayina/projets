@@ -12,7 +12,7 @@ import useClickOutside from '../../../hooks/useClickOutside';
 import './autocomplete.css'
 
 
-const AutoComplete = ({ dispatch, reduxForm }) => {
+const AutoComplete = ({ dispatch, reduxForm, onSelect }) => {
 
 
     const [state, hooksDispatch] = useReducer(reducer, initialState);
@@ -129,10 +129,10 @@ const AutoComplete = ({ dispatch, reduxForm }) => {
 
         hooksDispatch({ type: 'INIT_AC' });
 
-        
+        onSelect(suggestion);
+        reduxFormHandler(suggestion);
         
         // hooksDispatch({ type: 'SET_AC_INPUT', term: suggestion.label });
-        // reduxFormHandler(suggestion.label);
     }
 
     const handlingUpDownKeys = (index) => {
@@ -145,7 +145,6 @@ const AutoComplete = ({ dispatch, reduxForm }) => {
     }
 
     const reduxFormHandler = (value) => {
-
         if (reduxForm) {
             dispatch(change(reduxForm.form, reduxForm.field, value));
         }

@@ -1,49 +1,72 @@
 import React from 'react';
-import { Field, reduxForm, arrayPush } from 'redux-form';
+import { connect } from 'react-redux';
+import { Field, reduxForm, arrayPush, submit } from 'redux-form';
 
+import { required, number, acElement } from '../forms/validator'
+import Modal from './Modal';
 import { TextField } from '../forms/form-fields/fields'
-import Selected from '../forms/form-fields/Selected'
-import { onSelectAC } from '../../actions/autocomplete';
+import { onSelectAC, onInitAC } from '../../actions/autocomplete';
+import { getPartnerAC } from '../../reducers/autoCompletes';
 
-const onSubmit = (formValues, dispatch) => {
-    dispatch(arrayPush('projetForm', 'partners', formValues));
-}
 
 const formName = 'conventionForm';
 
-class Convention extends React.Component {
+// const onSubmit = 
 
-    render() {
+let Convention = ({ handleSubmit, dispatch, partnerAC }) => {
 
-        const { handleSubmit, dispatch } = this.props;
-        const props = { component: TextField, fieldType: 'input' }
 
-        return (
+
+
+    return (
+
+        <Modal
+            handleValidation={() => dispatch(submit('conventionForm'))}
+            title="ajouter un partenaire"
+            modalName='convention'
+        >
             <div className="conv-container">
-                <form onSubmit={ handleSubmit }>
+                <form onSubmit={handleSubmit}>
 
-                    <Selected label="Commune OUJDA ANGAD" value="3" />
-                    
-                    <Field name="name" label="Partenaire" {...props} 
+
+                    <Field name="name" label="Partenaire" component={TextField} fieldType="autoComplete"
                         reduxForm={{ form: formName, field: "name" }}
                         autoComplete={{
-                            // name: 'partnerAC',
                             onSelect: (suggestion) => {
                                 dispatch(onSelectAC(suggestion, 'partner'));
-                            }
-                        }}     
+                            },
+                            deleteHandler: () => dispatch(onInitAC('partner')),
+                            el: partnerAC
+                        }}
+                        validate={[() => acElement(partnerAC)]}
                     />
-                    <Field name="montant" label="Montant" {...props} />
-                    <Field name="signature" label="signature" 
-                    autoComplete {...props} reduxForm={{ form: formName, field: "signature" }}/>
+
+                    <Field name="montant" label="Montant" component={TextField} fieldType="input"
+                        validate={[required, number]} />
+
                 </form >
             </div >
-        )
-    }
+        </Modal>
+    )
+
 
 }
 
-export default Convention = reduxForm({
-    form: formName, 
-    onSubmit
+
+Convention = reduxForm({
+
+    form: formName,
+    onSubmit: (formValues, dispatch) => {
+        console.log('projetForm', formValues)
+        dispatch(arrayPush('projetForm', 'partners', formValues));
+    }
+
 })(Convention)
+
+export default connect(
+
+    (state) => ({
+        partnerAC: getPartnerAC(state)
+    })
+    
+)(Convention)

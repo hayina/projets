@@ -22,12 +22,13 @@
 }
 
 .pop-header {
-    padding: 20px;
+    padding: 10px;
     border-bottom: 1px solid #e9ecef;
 }
 
 .pop-title {
-
+    text-transform: uppercase;
+    text-align: center;
 }
 
 

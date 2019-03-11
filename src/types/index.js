@@ -4,7 +4,12 @@ const SUGGESTIONS = '[Suggestions]';
 const types = {
 
     SET_REDUX_FORM: '[redux-form] SET',
-    AC_SELECT: '[AC] SELECT',
+    AC_SELECT: '[ac] SELECT',
+    AC_INIT: '[ac] INIT',
+
+    TOGGLE_MODAL: 'TOGGLE_MODAL',
+    SHOW_MODAL: 'SHOW_MODAL',
+    HIDE_MODAL: 'HIDE_MODAL',
 
     // SET_LOADER: '[ui] set loader',
     // NEW_API_REQUEST: '[api] new api request ...',
