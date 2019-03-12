@@ -11,6 +11,10 @@ const types = {
     SHOW_MODAL: 'SHOW_MODAL',
     HIDE_MODAL: 'HIDE_MODAL',
 
+
+    ADD_ITEM: '[external forms] ADD_ITEM',
+    DELETE_ITEM: '[external forms] DELETE_ITEM',
+
     // SET_LOADER: '[ui] set loader',
     // NEW_API_REQUEST: '[api] new api request ...',
     // REQUEST_SUCCESS: '[api] success request',

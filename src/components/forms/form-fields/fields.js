@@ -85,7 +85,9 @@ export const TextField = (props) => {
                     deleteHandler={autoComplete.deleteHandler}
                 />
                 :
-                <AutoComplete {...acProps} />
+                (<div className={fieldCss(meta)}>
+                    <AutoComplete {...acProps} />
+                </div>)
             )
 
         }

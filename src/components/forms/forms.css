@@ -23,7 +23,9 @@
 }
 
 .partner-name {
-
+    color: #07C;
+    font-weight: 600;
+    font-size: 11pt;
 }
 
 
@@ -32,13 +34,11 @@
 }
 
 .partner-info {
-    color: black;
-    font-weight: 300;
-    background-color: #cce5ff;
-    border-color: #b8daff;
-    padding: .75rem 1.25rem;
-    /* margin-bottom: 1rem; */
-    border: 1px solid transparent;
+    /* font-weight: 400; */
+    background-color: #dbedff;
+    padding: 6px 8px;
+    margin-bottom: 4px;
+    border: 1px solid #bedbfb;
     border-radius: .25rem;
 }
 
@@ -46,4 +46,13 @@
 .form-check-label, select {
     font-weight: 300;
     text-transform: uppercase;
+}
+
+.delete-item-list {
+    color: #ec4e4e;
+    cursor: pointer;
+    float: right;
+    border: 1px solid black;
+    width: 16px;
+    height: 16px;
 }

@@ -6,6 +6,8 @@ import { showModal } from '../../actions'
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, CheckboxField, RadioField, SelectField } from './form-fields/fields'
+import { getExtPartners } from '../../reducers/externalForms';
+import { arrayDeleting } from '../../actions';
 
 import './forms.css';
 
@@ -58,12 +60,21 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
             {partners && (
                 <div className="form-group">
-                    {partners.map((partner, i) => (
-                        <div className="partner-item" key={i}>
-                            <div className="form-label partner-label">partenaire {i + 1} :</div>
+                    {partners.map(({partner, montant}, i) => (
+                        <div className="partner-item" key={partner.id}>
+                            {/* <div className="form-label partner-label">partenaire {i + 1} :</div> */}
                             <div className="partner-info">
-                                <div className="partner-name">{partner.name}</div>
-                                <div className="partner-montant">{partner.montant}</div>
+                            
+                                <i className="fa delete-item-list" 
+                                    onClick={ () => dispatch(arrayDeleting('partners', i)) }></i>
+
+                                <i className="fa delete-item-list" 
+                                    onClick={ () => {
+                                        dispatch(showModal(modalTypes.ADD_CONVENTION, partners[i]))
+                                }}></i>
+
+                                <div className="partner-name">{i + 1}. {partner.label}</div>
+                                <div className="partner-montant">{montant} DH</div>
                             </div>
                         </div>
                     ))}
@@ -123,7 +134,7 @@ export default connect(
         {
             initialValues,
             isConvention: selector(state, 'isConvention'),
-            partners: selector(state, 'partners'),
+            partners: getExtPartners(state),
         }
     ),
 )(ProjetForm);
