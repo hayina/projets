@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, formValueSelector } from 'redux-form'
+import { Field, reduxForm, formValueSelector, initialize } from 'redux-form'
 
 import { showModal } from '../../actions'
 import { modalTypes } from '../modals/ModalRoot'
@@ -8,6 +8,7 @@ import { required, number, emptyArray } from './validator'
 import { TextField, CheckboxField, RadioField, SelectField } from './form-fields/fields'
 import { getExtPartners } from '../../reducers/externalForms';
 import { arrayDeleting } from '../../actions';
+import { formName as conventionFormName } from '../modals/Convention';
 
 import './forms.css';
 
@@ -54,24 +55,26 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
             {isConvention && (
                 <input type="button" className="btn btn-info show-modal show-modal-conv" value="ajouter un partenaire"
-                    onClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION))}
+                    onClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: false }))}
                 />
             )}
 
             {partners && (
                 <div className="form-group">
-                    {partners.map(({partner, montant}, i) => (
+                    {partners.map(({ partner, montant }, i) => (
                         <div className="partner-item" key={partner.id}>
                             {/* <div className="form-label partner-label">partenaire {i + 1} :</div> */}
                             <div className="partner-info">
-                            
-                                <i className="fa delete-item-list" 
-                                    onClick={ () => dispatch(arrayDeleting('partners', i)) }></i>
 
-                                <i className="fa delete-item-list" 
-                                    onClick={ () => {
-                                        dispatch(showModal(modalTypes.ADD_CONVENTION, partners[i]))
-                                }}></i>
+                                <i className="fa delete-item-list"
+                                    onClick={() => dispatch(arrayDeleting('partners', i))}></i>
+
+                                <i className="fa delete-item-list fa-edit-partner"
+                                    onClick={() => {
+                                        dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: true, index: i }))
+                                        dispatch(initialize(conventionFormName, partners[i]))
+                                    }} 
+                                />
 
                                 <div className="partner-name">{i + 1}. {partner.label}</div>
                                 <div className="partner-montant">{montant} DH</div>
@@ -106,37 +109,25 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 }
 
 
-// connecting with the redux-form hoc
 ProjetForm = reduxForm({
     form: 'projetForm'
 })(ProjetForm)
 
-
-//setting initial values
-
-const initialValues = {
-
-    intitule: 'YOUSSEF PROJET',
-    montant: 300000,
-    secteur: 1,
-    isConvention: true,
-    communes: [2, 3],
-    partners: [],
-
-}
-
 const selector = formValueSelector('projetForm');
 
-// connecting with the redux hoc
 export default connect(
-    // MapStateToProps
-    (state) => (
-        {
-            initialValues,
-            isConvention: selector(state, 'isConvention'),
-            partners: getExtPartners(state),
-        }
-    ),
+    (state) => ({
+        initialValues: {
+            intitule: 'YOUSSEF PROJET',
+            montant: 300000,
+            secteur: 1,
+            isConvention: true,
+            communes: [2, 3],
+            partners: [],
+        },
+        isConvention: selector(state, 'isConvention'),
+        partners: getExtPartners(state),
+    }),
 )(ProjetForm);
 
 

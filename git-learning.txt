@@ -24,3 +24,9 @@ git checkout src/actions/autocomplete.js
 /////
 
 git clean -d -f
+
+////////
+
+add except file
+git add -u
+git reset -- main/dontcheckmein.txt

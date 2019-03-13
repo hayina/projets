@@ -1,5 +1,6 @@
 
-const SUGGESTIONS = '[Suggestions]';
+// const SUGGESTIONS = '[Suggestions]';
+const externalForms = '[external forms]';
 
 const types = {
 
@@ -12,8 +13,9 @@ const types = {
     HIDE_MODAL: 'HIDE_MODAL',
 
 
-    ADD_ITEM: '[external forms] ADD_ITEM',
-    DELETE_ITEM: '[external forms] DELETE_ITEM',
+    ADD_ITEM: `${externalForms} ADD_ITEM`,
+    DELETE_ITEM: `${externalForms} DELETE_ITEM`,
+    UPDATE_ITEM: `${externalForms} UPDATE_ITEM`,
 
     // SET_LOADER: '[ui] set loader',
     // NEW_API_REQUEST: '[api] new api request ...',

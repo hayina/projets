@@ -10,7 +10,7 @@ import { externalForms } from './externalForms';
 // the big store
 export default combineReducers({
     form: formReducer,
-    autoCompletes,
+    // autoCompletes,
     modals,
     externalForms,
 })

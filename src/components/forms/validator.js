@@ -20,5 +20,3 @@ export const alphaNumeric = value =>
 
 export const emptyArray = array =>
     array && array.length === 0 ? 'Required ...' : undefined
-
-export const acElement = (suggestion) => suggestion ? undefined : 'Choisir un choix'

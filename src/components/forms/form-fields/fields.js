@@ -62,7 +62,7 @@ export const SimpleField = ({ children, meta, label }) => (
 
 export const TextField = (props) => {
 
-    const { input, meta, label, fieldType, autoComplete, reduxForm } = props;
+    const { input, meta, label, fieldType } = props;
     // console.log('TextField', props);
 
     const fieldProps = {
@@ -76,21 +76,6 @@ export const TextField = (props) => {
             return <input type="text" {...fieldProps} autoComplete="off" />
         }
 
-        else if (fieldType === 'autoComplete') {
-
-            const acProps = { ...autoComplete, ...(reduxForm && { reduxForm }) }
-            
-            return ( autoComplete.el ?
-                <SelectedAC suggestion={autoComplete.el}
-                    deleteHandler={autoComplete.deleteHandler}
-                />
-                :
-                (<div className={fieldCss(meta)}>
-                    <AutoComplete {...acProps} />
-                </div>)
-            )
-
-        }
         else if (fieldType === 'textarea') {
             return <textarea {...fieldProps} />
         }
@@ -103,6 +88,26 @@ export const TextField = (props) => {
     )
 }
 
+
+////////////// AUTO COMPLETE
+
+export const AutoCompleteField = ({ input, meta, label, onSelect, onDelete, suggestion }) => {
+
+    // const acProps = { ...ac, meta }
+
+    return (
+        <SimpleField label={label} meta={meta} >
+            { suggestion ?
+                <SelectedAC suggestion={suggestion} onDelete={onDelete} />
+                :
+                <AutoComplete onSelect={onSelect} /> 
+                // fieldCss(meta)
+            }
+        </SimpleField>
+    )
+
+
+}
 
 ////////////// CHECKBOX
 
