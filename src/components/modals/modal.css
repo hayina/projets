@@ -34,6 +34,7 @@
 }
 
 .pop-title {
+    text-shadow: 1px 1px 1px #6c757d;
     text-transform: uppercase;
     text-align: center;
     font-weight: 600;

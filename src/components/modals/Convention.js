@@ -31,17 +31,19 @@ const onSubmit = (formValues, dispatch, { editMode, index, partnerValue, partner
     }
 }
 
-let Convention = ({ handleSubmit, dispatch, partnerValue, partners, editMode, index }) => {
+let Convention = ({ handleSubmit, dispatch, partnerValue, editMode }) => {
 
     return (
 
         <Modal
             handleValidation={() => {
-                dispatch(submit('conventionForm')).then(
-                    () => dispatch(hideModal())
-                );
+                dispatch(submit('conventionForm'));
+                dispatch(hideModal());
+                // dispatch(submit('conventionForm')).then(
+                //     () => dispatch(hideModal())
+                // );
             }}
-            title="ajouter un partenaire"
+            title={ `${ editMode ? 'editer' : 'ajouter' } un partenaire` }
             modalName='convention'
         >
             <div className="conv-container">

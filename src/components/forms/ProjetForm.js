@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm, formValueSelector, initialize } from 'redux-form'
 
@@ -7,7 +7,7 @@ import useApi from '../hooks/useApi';
 import { showModal } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
-import { TextField, CheckboxField, RadioField, SelectField } from './form-fields/fields'
+import { TextField, CheckboxField, RadioField, SelectField, SimpleField } from './form-fields/fields'
 import { getExtPartners } from '../../reducers/externalForms';
 import { arrayDeleting } from '../../actions';
 // import { formName as conventionFormName } from '../modals/Convention';
@@ -20,15 +20,20 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
 
 
-    const { data, loading, error} = useApi({ 
+    const { data, loading, error } = useApi({
         url: '/localisation/getCommunesWithFractions',
-        method: 'GET'
+        method: 'GET',
+        success: (data) => {
+            // dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
+        }
     })
 
+    console.log('useApi', data)
 
-    useEffect(() => {
-        dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
-    }, [])
+
+    // useEffect(() => {
+    //     dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
+    // }, [data])
 
     const onSubmit = (formValues) => {
         console.log(formValues)
@@ -84,12 +89,12 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
                                 <i className="fa delete-item-list fa-edit-partner"
                                     onClick={() => {
-                                        dispatch(showModal(modalTypes.ADD_CONVENTION, { 
-                                            editMode: true, index: i, initialValues: partners[i] 
+                                        dispatch(showModal(modalTypes.ADD_CONVENTION, {
+                                            editMode: true, index: i, initialValues: partners[i]
                                         }))
                                         // dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: true, index: i }))
                                         // dispatch(initialize(conventionFormName, partners[i]))
-                                    }} 
+                                    }}
                                 />
 
                                 <div className="partner-name">{i + 1}. {partner.label}</div>
@@ -108,14 +113,22 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
                 validate={[required]}
             />
 
-            <Field
+            {/* <Field
                 name="communes"
                 component={CheckboxField}
                 label="communes"
                 options={[{ label: 'taourirt', value: 1 }, { label: 'el aioun', value: 2 },
                 { label: 'debdou', value: 3 }]}
                 validate={[emptyArray]}
-            />
+            /> */}
+
+            <SimpleField label={'localisation'}>
+                <input type="button" className="btn btn-info show-modal" value="ajouter une localisation"
+                    onClick={() => dispatch(showModal(modalTypes.ADD_CHECKLIST, { nodes: data }))}
+                />
+            </SimpleField>
+
+
 
             <button type="submit" className="btn btn-primary">Submit</button>
 

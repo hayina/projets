@@ -11,22 +11,7 @@ git pull
 
 //////////////
 
-git stash
-git pull origin master
-git stash pop
+to override all local changes
 
-//////////////
-
-git reset src/actions/autocomplete.js
-git checkout src/actions/autocomplete.js
-
-
-/////
-
-git clean -d -f
-
-////////
-
-add except file
-git add -u
-git reset -- main/dontcheckmein.txt
+git reset --hard
+git pull

@@ -43,10 +43,7 @@
 }
 
 
-.form-check-label, select {
-    font-weight: 300;
-    text-transform: uppercase;
-}
+
 
 .delete-item-list {
     color: #ec4e4e;

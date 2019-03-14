@@ -1,0 +1,5 @@
+.form-check-label, select {
+    font-weight: 300;
+    text-transform: uppercase;
+    cursor: pointer;
+}

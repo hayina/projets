@@ -1,36 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { connect } from 'react-redux';
 
 import Modal from './Modal';
 import { hideModal } from '../../actions';
 
+import CheckListNode from '../CheckListNode';
+
 import './checkList.css';
 
 
-let CheckList = ({ list, dispatch }) => {
+let CheckList = ({ nodes, dispatch }) => {
+
+    // console.log('CheckList', list);
+    const [ items, setItems ] = useState([])
 
     return (
 
         <Modal
-            handleValidation={() => dispatch(hideModal())  }
+            handleValidation={() => dispatch(hideModal())}
             title="Choisir la localisation du projet"
         >
-            <div className="check-list-container">
-
-
-                LIST ({list})
-            {/* {   list.map((el) => (
-                    <div className="form-check" key={el.id}>
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                        />
-                        <label className="form-check-label">{el.nom}</label>
-                    </div>
-                )) 
-            } */}
-
-            </div>
+            <CheckListNode nodes={nodes} />
         </Modal>
     )
 }

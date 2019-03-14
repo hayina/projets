@@ -14,6 +14,7 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
 
     useClickOutside(inputEl.current, () => {
         dispatch(hideModal());
+        console.log('useClickOutside DETECTED !!!')
     });
 
 
@@ -38,10 +39,10 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
                 <div className="pop-validation">
 
                     <button className="btn btn-secondary"
-                        onClick={ () => dispatch(hideModal()) } >Annuler</button>
+                        onClick={ () => dispatch(hideModal()) }>Annuler</button>
 
                     <button type="submit" className="btn btn-primary"
-                        onClick={ handleValidation } >Valider</button>
+                        onClick={ handleValidation }>Valider</button>
 
                     {/* <button type="submit" className="btn btn-primary"
                         onClick={

@@ -23,8 +23,8 @@ const renderErrorField = (meta) => {
 export const SimpleField = ({ children, meta, label }) => (
     <div className="form-group">
         <label className="form-label">{label}</label>
-        {children}
-        {renderErrorField(meta)}
+        { children }
+        { meta && renderErrorField(meta) }
     </div>
 )
 
@@ -70,20 +70,20 @@ export const TextField = (props) => {
         className: fieldCss(meta),
     };
 
-    const renderTextField = () => {
+    let renderTextField;
 
-        if (fieldType === 'input') {
-            return <input type="text" {...fieldProps} autoComplete="off" />
-        }
-
-        else if (fieldType === 'textarea') {
-            return <textarea {...fieldProps} />
-        }
+    if (fieldType === 'input') {
+        renderTextField = <input type="text" {...fieldProps} autoComplete="off" />
     }
+
+    else if (fieldType === 'textarea') {
+        renderTextField = <textarea {...fieldProps} />
+    }
+    
 
     return (
         <SimpleField label={label} meta={meta} >
-            {renderTextField()}
+            { renderTextField }
         </SimpleField>
     )
 }

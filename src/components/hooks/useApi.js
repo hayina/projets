@@ -24,7 +24,7 @@ const reducer = (state, action) => {
     }
 }
 
-const useApi = ({ url, method, params, feature }) => {
+const useApi = ({ url, method, params, success, feature }) => {
 
     console.log('USE API HOOK ---->', url)
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -46,9 +46,10 @@ const useApi = ({ url, method, params, feature }) => {
                 method,
                 params
             })
-            .then((response) => {
+            .then(({ data }) => {
 
-                dispatch({ type: 'API_SUCCESS', data: response.data })
+                dispatch({ type: 'API_SUCCESS', data });
+                success(data);
 
             })
             .catch((error) => {
