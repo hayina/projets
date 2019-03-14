@@ -30,7 +30,7 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
             <div className="pop-dialog" ref={inputEl}>
 
                 <div className="pop-header">
-                    <h3 className="pop-title">{title}</h3>
+                    <h5 className="pop-title">{title}</h5>
                 </div>
 
                 <div className="pop-content">{children}</div>

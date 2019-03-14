@@ -23,5 +23,8 @@ fellow = sharing a particular activity, quality, or condition with someone or so
 pace = rythme, allure, vitesse
 stash = a secret store of something -> planque, mettre à l’abri, cacher
 overlay = covering
+showcase = exhibit, display => exposer ou presenter en vitrine
+stumble = trip or momentarily lose one's balance; almost fall. => trébucher
+workaround = solution de contournement
 
 

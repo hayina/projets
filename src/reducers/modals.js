@@ -1,6 +1,6 @@
 
 const initialState = {
-    modalType: null,
+    modalType: undefined,
     modalProps: {}
 }
 

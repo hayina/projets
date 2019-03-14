@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm, formValueSelector, initialize } from 'redux-form'
 
-import { showModal } from '../../actions'
+import useApi from '../hooks/useApi';
+
+import { showModal } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, CheckboxField, RadioField, SelectField } from './form-fields/fields'
 import { getExtPartners } from '../../reducers/externalForms';
 import { arrayDeleting } from '../../actions';
-import { formName as conventionFormName } from '../modals/Convention';
+// import { formName as conventionFormName } from '../modals/Convention';
 
 import './forms.css';
 
@@ -16,6 +18,17 @@ import './forms.css';
 let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
 
+
+
+    const { data, loading, error} = useApi({ 
+        url: '/localisation/getCommunesWithFractions',
+        method: 'GET'
+    })
+
+
+    useEffect(() => {
+        dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
+    }, [])
 
     const onSubmit = (formValues) => {
         console.log(formValues)
@@ -59,7 +72,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
                 />
             )}
 
-            {partners && (
+            {(isConvention && partners) && (
                 <div className="form-group">
                     {partners.map(({ partner, montant }, i) => (
                         <div className="partner-item" key={partner.id}>
