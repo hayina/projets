@@ -100,7 +100,9 @@ export const AutoCompleteField = ({ input, meta, label, onSelect, onDelete, sugg
             { suggestion ?
                 <SelectedAC suggestion={suggestion} onDelete={onDelete} />
                 :
-                <AutoComplete onSelect={onSelect} /> 
+                <div className={`${fieldCss(meta)}`}>
+                    <AutoComplete onSelect={onSelect} /> 
+                </div>
                 // fieldCss(meta)
             }
         </SimpleField>

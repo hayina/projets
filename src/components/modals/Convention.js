@@ -1,26 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, submit, change, formValueSelector } from 'redux-form';
+import { Field, reduxForm, submit, change, SubmissionError, formValueSelector } from 'redux-form';
 
 import { required, number } from '../forms/validator'
 import Modal from './Modal';
 import { TextField, AutoCompleteField } from '../forms/form-fields/fields'
 import { arrayPushing, arrayUpdating } from '../../actions';
+import { getExtPartners } from '../../reducers/externalForms';
 
 
 export const formName = 'conventionForm';
 
-const onSubmit = (formValues, dispatch, { editMode, index }) => {
+const onSubmit = (formValues, dispatch, { editMode, index, partnerValue, partners }) => {
     // console.log('projetForm', formValues)
 
-    if (!editMode)
+    if (!editMode) {
+        if (partners.some((el) => el.partner.id === partnerValue.id)) {
+    
+            throw new SubmissionError({
+                partner: 'Vous avez déjà ajouter ce partenaire',
+                // _error: 'Login failed!'
+            })
+    
+        }
         dispatch(arrayPushing('partners', formValues));
-    else
+    }
+    else {
         dispatch(arrayUpdating('partners', formValues, index));
+    }
+
+
 
 }
 
-let Convention = ({ handleSubmit, dispatch, partnerValue, editMode, index }) => {
+let Convention = ({ handleSubmit, dispatch, partnerValue, partners, editMode, index }) => {
 
     console.log('editMode', editMode)
     console.log('index', index)
@@ -69,5 +82,6 @@ const selector = formValueSelector(formName);
 export default connect(
     (state) => ({
         partnerValue: selector(state, 'partner'),
+        partners: getExtPartners(state),
     })
 )(Convention)

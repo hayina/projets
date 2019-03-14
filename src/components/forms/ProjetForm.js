@@ -71,8 +71,11 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
                                 <i className="fa delete-item-list fa-edit-partner"
                                     onClick={() => {
-                                        dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: true, index: i }))
-                                        dispatch(initialize(conventionFormName, partners[i]))
+                                        dispatch(showModal(modalTypes.ADD_CONVENTION, { 
+                                            editMode: true, index: i, initialValues: partners[i] 
+                                        }))
+                                        // dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: true, index: i }))
+                                        // dispatch(initialize(conventionFormName, partners[i]))
                                     }} 
                                 />
 
