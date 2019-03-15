@@ -1,5 +1,31 @@
+
+
 .form-check-label, select {
     font-weight: 300;
     text-transform: uppercase;
     cursor: pointer;
+}
+
+
+.form-checked-fa {
+
+}
+
+
+.form-not-checked-fa {
+
+}
+
+.form-checkbox-fa {
+    font-size: 18px;
+}
+
+
+.checked {
+    color: #007bff;
+}
+
+
+.indeterminate {
+    color: #007bff9e;
 }

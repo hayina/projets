@@ -26,5 +26,7 @@ overlay = covering
 showcase = exhibit, display => exposer ou presenter en vitrine
 stumble = trip or momentarily lose one's balance; almost fall. => trébucher
 workaround = solution de contournement
+for recall = pour rappel
+actually = en fait ...
 
 

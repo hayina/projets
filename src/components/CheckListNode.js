@@ -1,68 +1,95 @@
 import React, { useState } from 'react';
 
-const initialState = [
-    {
-        path: '.',
-        values: [1, 2]
-    },
-    {
-        path: '.1.',
-        values: [5, 8]
-    },
-    {
-        path: '.5.',
-        values: [3, 12]
-    },
-];
+const initialState = {
+    // '.': [2],
+    // '.1.': [1, 3],
+    // '.3.': [3, 2, 5],
+}
 
 
 
 
 let CheckListNode = ({ nodes }) => {
 
-    // console.log('CheckList', list);
-    const [selected, setSelected] = useState([]);
+    
+    const [selected, setSelected] = useState(initialState);
+    const [indeterminate, setIndeterminate] = useState([]);
 
-    const checkListNode = (nodes, path='.') => {
+    const renderCheckList = ({ nodes=[], path = '.', isParentChecked=false }) => {
 
-
-
+        
         return (
 
             <div className="check-list-container">
 
-                => ( {selected.map((i) => `${i} - `)} )
-        
-        {nodes.map((node, index) => (
 
-                    <div className="form-check" key={node.id}>
+                { console.log(`selected ---->`, selected) }
+                { console.log(`indeterminate ---->`, indeterminate) }
+                
+
+                {nodes.map((node, index) => {
+
+                    // const pathKey = [path]
+                    let values = [ ...(selected[path] || []) ];
+                    const indexOf = values.indexOf(node.value);
+                    const checked = isParentChecked || ( indexOf !== -1 );
+                    
+                    return (
+
+                    <div className="form-check" key={node.value}>
                         <input
-                            id={`${node.nom}`}
+                            id={`${node.label}`}
                             className="form-check-input"
                             type="checkbox"
-                            checked={selected.indexOf(node.id) !== -1}
+                            checked={ checked }
 
                             onChange={(e) => {
 
                                 if (e.target.checked) {
-                                    setSelected([...selected, node.id]);
+                                    values.push(node.value);
                                 } else {
-                                    selected.splice(selected.indexOf(node.id), 1);
-                                    setSelected([...selected]);
+                                    values.splice(indexOf, 1);
                                 }
+
+                                if( values.length === 0 ){ // supprimer ce path 
+                                    let { [path]: tempVal, ...newSelected } = selected;
+                                    setSelected(newSelected);
+                                } else {
+                                    setSelected({ ...selected, [path]: values });
+
+                                }
+
+
+                                setIndeterminate([ ...indeterminate, path ])
+                                
                             }}
                         />
-                        <label className="form-check-label" htmlFor={`${node.nom}`}>{node.id} - {node.nom}</label>
 
-                        {node.fractions && checkListNode(node.fractions, path)}
+                        <label className="form-check-label" htmlFor={`${node.label}`}>{node.value} - {node.label}</label>
+
+
+                        <i className={`far fa-check-square form-checkbox-fa form-checked-fa ${
+                            checked ? 'checked' : ''
+                        }`}></i>
+                        <i className={`far fa-square form-checkbox-fa form-not-checked-fa`}></i>
+
+                        { node.children && 
+                            renderCheckList({
+                                nodes: node.children, 
+                                path: `${path}${node.value}.`,
+                                isParentChecked: checked
+                            })
+                        }
                     </div>
-                ))}
+                )}
+                
+                )}
 
             </div>
         )
     }
 
-    return checkListNode(nodes);
+    return renderCheckList({ nodes });
 }
 
 

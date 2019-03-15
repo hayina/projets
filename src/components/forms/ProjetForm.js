@@ -19,16 +19,16 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
 
 
+    const data = [];
+    // const { data, loading, error } = useApi({
+    //     url: '/localisation/getCommunesWithFractions',
+    //     method: 'GET',
+    //     success: (data) => {
+    //         // dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
+    //     }
+    // })
 
-    const { data, loading, error } = useApi({
-        url: '/localisation/getCommunesWithFractions',
-        method: 'GET',
-        success: (data) => {
-            // dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
-        }
-    })
-
-    console.log('useApi', data)
+    // console.log('useApi', data)
 
 
     // useEffect(() => {
@@ -84,10 +84,10 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
                             {/* <div className="form-label partner-label">partenaire {i + 1} :</div> */}
                             <div className="partner-info">
 
-                                <i className="fa delete-item-list"
+                                <i className="fa fa-times delete-item-list"
                                     onClick={() => dispatch(arrayDeleting('partners', i))}></i>
 
-                                <i className="fa delete-item-list fa-edit-partner"
+                                <i className="fa fa-edit edit-item-list fa-edit-partner"
                                     onClick={() => {
                                         dispatch(showModal(modalTypes.ADD_CONVENTION, {
                                             editMode: true, index: i, initialValues: partners[i]

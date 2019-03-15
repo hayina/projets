@@ -49,7 +49,10 @@
     color: #ec4e4e;
     cursor: pointer;
     float: right;
-    border: 1px solid black;
-    width: 16px;
-    height: 16px;
+}
+
+.edit-item-list {
+    color: #007bff;
+    cursor: pointer;
+    float: right;
 }
