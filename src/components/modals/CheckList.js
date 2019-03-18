@@ -14,8 +14,19 @@ const nodes = [
         children: [
             { value: 1, label: 'Lion' },
             { value: 2, label: 'Leopard' },
-            { value: 3, label: 'Guepard' },
-            { value: 4, label: 'Tiger' },
+            // { value: 3, label: 'Guepard' },
+            // { value: 4, label: 'Tiger' },
+            { 
+                value: 5, label: 'Chien',
+                children: [
+                    { value: 1, label: 'Pitbull' },
+                    { value: 2, label: 'Berger' },
+                    { value: 3, label: 'Labrador' },
+                    // { value: 4, label: 'Chiwawa' },
+                    // { value: 5, label: 'Dobermann' },
+                    // { value: 6, label: 'Caniche' },
+                ]
+            },
         ]
     },
     {
@@ -26,26 +37,26 @@ const nodes = [
             { value: 3, label: 'Requin Marteau' },
         ]
     },
-    {
-        value: 3, label: 'Canidae',
-        children: [
-            { value: 1, label: 'Loup' },
-            { value: 2, label: 'Lycaon' },
-            { value: 3, label: 'Renard' },
-            { value: 4, label: 'Coyote' },
-            { 
-                value: 5, label: 'Chien',
-                children: [
-                    { value: 1, label: 'Pitbull' },
-                    { value: 2, label: 'Berger' },
-                    { value: 3, label: 'Labrador' },
-                    { value: 4, label: 'Chiwawa' },
-                    { value: 5, label: 'Dobermann' },
-                    { value: 6, label: 'Caniche' },
-                ]
-            },
-        ]
-    },
+    // {
+    //     value: 3, label: 'Canidae',
+    //     children: [
+    //         { value: 1, label: 'Loup' },
+    //         { value: 2, label: 'Lycaon' },
+    //         { value: 3, label: 'Renard' },
+    //         { value: 4, label: 'Coyote' },
+    //         { 
+    //             value: 5, label: 'Chien',
+    //             children: [
+    //                 { value: 1, label: 'Pitbull' },
+    //                 { value: 2, label: 'Berger' },
+    //                 { value: 3, label: 'Labrador' },
+    //                 { value: 4, label: 'Chiwawa' },
+    //                 { value: 5, label: 'Dobermann' },
+    //                 { value: 6, label: 'Caniche' },
+    //             ]
+    //         },
+    //     ]
+    // },
 ]
 let CheckList = ({ dispatch }) => {
 

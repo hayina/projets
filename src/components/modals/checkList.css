@@ -7,12 +7,16 @@
 }
 
 
-.form-checked-fa {
+.form-check-fa {
 
 }
 
 
-.form-not-checked-fa {
+.form-empty-fa {
+
+}
+
+.form-minus-fa {
 
 }
 
@@ -27,5 +31,14 @@
 
 
 .indeterminate {
-    color: #007bff9e;
+    /* color: #007bff9e; */
+    color: #007bff;
+}
+
+
+.reset-checkbox {
+    cursor: pointer;
+    color: #007bff;
+    font-size: 20px;
+    text-shadow: 1px 1px 1px #dae0e5;
 }

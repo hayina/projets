@@ -5,3 +5,6 @@ Ctrl+/          = Comment code
 Shift+Alt       = Duplicate code up or down
 Ctrl+D          = Multi Selecte
 
+
+Ctrl+K, Ctrl+D  = to skip selection (after Ctrl+D)
+

@@ -31,9 +31,9 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
     // console.log('useApi', data)
 
 
-    // useEffect(() => {
-    //     dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
-    // }, [data])
+    useEffect(() => {
+        dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
+    }, [data])
 
     const onSubmit = (formValues) => {
         console.log(formValues)
