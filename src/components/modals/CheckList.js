@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Modal from './Modal';
 import { hideModal } from '../../actions';
 
-import CheckListNode from '../CheckListNode';
+import CheckListNode from '../checkboxTree/CheckListNode2';
 
 import './checkList.css';
 

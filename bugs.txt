@@ -37,3 +37,6 @@ https://stackoverflow.com/questions/35623656/
 -------
 need more comprehension
 const inputEl = useRef(null);
+
+-------------
+splice & slice & split ....
