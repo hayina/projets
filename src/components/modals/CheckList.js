@@ -8,7 +8,15 @@ import CheckListNode from '../checkboxTree/CheckListNode2';
 
 import './checkList.css';
 
-const nodes = [
+
+const mapItems = (items) => {
+
+
+    return items
+}
+
+
+const items = [
     {
         value: 1, label: 'Big cats', 
         children: [
@@ -61,7 +69,7 @@ const nodes = [
 let CheckList = ({ dispatch }) => {
 
     // console.log('CheckList', list);
-    const [items, setItems] = useState([])
+    // const [items, setItems] = useState([])
 
     return (
 
@@ -69,7 +77,7 @@ let CheckList = ({ dispatch }) => {
             handleValidation={() => dispatch(hideModal())}
             title="Choisir la localisation du projet"
         >
-            <CheckListNode nodes={nodes} />
+            <CheckListNode items={mapItems(items)} />
         </Modal>
     )
 }

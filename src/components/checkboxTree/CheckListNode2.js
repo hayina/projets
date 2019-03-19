@@ -2,15 +2,11 @@ import React, { useState, useReducer } from 'react';
 
 import { reducer, initialState } from './reducer';
 
-let CheckListNode = ({ nodes }) => {
-
+const CheckListNode = ({ items }) => {
 
     const [selection, dispatch] = useReducer(reducer, initialState);
 
-
-    const renderCheckList = ({
-        nodes = [], parentPath = '.', isParentChecked=false
-    }) => {
+    const renderCheckList = ({ nodes = [], parentPath = '', isParentChecked=false }) => {
 
         console.log(`Selection ---->`, selection)
         // console.log(`isParentChecked ---->`, isParentChecked)
@@ -21,7 +17,7 @@ let CheckListNode = ({ nodes }) => {
 
                 {nodes.map((node, index) => {
 
-                    const path = `${parentPath}${node.value}.`;
+                    const path = `${parentPath}${node.value}`;
                     const { children } = node;
 
                     // let selection = selection || [];
@@ -57,7 +53,9 @@ let CheckListNode = ({ nodes }) => {
                                         dispatch({
                                             type: 'ADD_VALUE',
                                             path,
-                                            node
+                                            parentPath,
+                                            node,
+                                            items
                                         })
                                     }
 
@@ -88,7 +86,7 @@ let CheckListNode = ({ nodes }) => {
                             {children &&
                                 renderCheckList({
                                     nodes: children,
-                                    parentPath: path,
+                                    parentPath: `${path}.`,
                                     isParentChecked: checked,
                                 })
                             }
@@ -110,7 +108,7 @@ let CheckListNode = ({ nodes }) => {
                     dispatch({ type: 'INIT_SELECTION' });
                 }}
             />
-            {renderCheckList({ nodes })}
+            {renderCheckList({ nodes: items })}
         </React.Fragment>
     )
 }

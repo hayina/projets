@@ -4,7 +4,7 @@ export const initialState = []
 export const reducer = (state, action) => {
 
 
-    const { type, path, node } = action
+    const { type, path, node, items, parentPath } = action
 
 
     console.log(type,`"${path}"`)
@@ -60,6 +60,27 @@ export const reducer = (state, action) => {
     }
 }
 
+const getPathToSelect = (path, parentPath, items, stateItems) => {
+
+    // path = "1.5.3"
+    // parentPath = "1.5"
+    // stateItems = ["1.1", "1.2", "1.5.1", "1.5.2"]
+    const parentPathArray = parentPath.split(".") // [ '1', '5' ]
+    // const pathArray = path.split(".") // [ '1', '5', '3' ]
+
+    parentPathArray.forEach((p) => {
+
+    })
+
+
+    // paths = [ "1", "1.5", "1.5.3"]
+    let pathV = ""
+    paths.forEach((p) => {
+        let pathV = pathV + ""
+
+    })
+
+}
 
 const allDescendantLeafs = (node) => {
     let leafs = []
