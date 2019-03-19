@@ -1,0 +1,5 @@
+-Building a Treeview component (Part II)
+https://medium.com/vuetify/building-a-treeview-component-part-ii-4bb0d2f74d07
+
+-Selectors in Redux are a MUST
+https://hackernoon.com/selectors-in-redux-are-a-must-d6b0637c79b7

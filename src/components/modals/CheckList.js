@@ -11,6 +11,31 @@ import './checkList.css';
 
 const mapItems = (items) => {
 
+    const addParent = ({ items, parent=null, parentPath='' }) => {
+
+        items.forEach(element => {
+
+            if( parent ){
+                element.parentValue = parent.value
+                element.path = `${parentPath}.${element.value}`
+                element.parentPath = parentPath
+            } else {
+                element.path = `${element.value}`
+            }
+
+            if( element.children ){
+                addParent({
+                    items: element.children, 
+                    parent: element,
+                    parentPath: `${element.path}`
+                })
+            }
+        });
+
+    }
+
+    addParent({ items })
+    console.log(items)
 
     return items
 }

@@ -79,7 +79,7 @@ const CheckListNode = ({ items }) => {
                                 className={`form-check-label ${checkClass} ${ checkedInState ? 'font-weight-bold':'' }`} 
                                 htmlFor={`${node.label}`}
                             >
-                                {node.value} - {node.label}
+                                {node.value} - {node.label} - "{node.path}"
                             </label>
 
 

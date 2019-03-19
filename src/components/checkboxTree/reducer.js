@@ -7,7 +7,7 @@ export const reducer = (state, action) => {
     const { type, path, node, items, parentPath } = action
 
 
-    console.log(type,`"${path}"`)
+    console.log(type, `"${path}"`)
 
 
     let newState = []
@@ -15,94 +15,108 @@ export const reducer = (state, action) => {
     switch (type) {
 
         case 'INIT_SELECTION':
-            return [ ...initialState ];
+            return [...initialState];
 
         case 'ADD_VALUE':
-            
 
-            ///
-            if( hasChildren(node) ) {
+            newState = [...state, path]
+            let pathToSelect = getPathToSelect(items, path, parentPath, newState)
 
-                // deselect all children
-                newState = state.filter( p => ! p.startsWith(path) )
+            newState = newState.filter(p => !p.startsWith(`${pathToSelect}.`))
 
-                //
-                newState.push(path)
-            }
-            else {
-                newState = [ ...state, path ]
-            }
-
-            ///
+            if( pathToSelect !== path )
+                newState.push(pathToSelect)
 
             return newState;
 
-
-
         case 'DELETE_VALUE':
 
-            newState = [ ...state ]
+            newState = [...state]
             let indexOf = newState.indexOf(path)
 
-            if( indexOf !== -1 ){ // the parent is not checked
+            if (indexOf !== -1) { // the parent is not checked
                 newState.splice(indexOf, 1)
             }
             else { // the parent is checked instead
                 // let ancestors = getPathsStartedWith(path)
+
+
             }
 
 
-            return newState;
-
-
-
-
+            return newState
     }
 }
 
-const getPathToSelect = (path, parentPath, items, stateItems) => {
 
-    // path = "1.5.3"
-    // parentPath = "1.5"
-    // stateItems = ["1.1", "1.2", "1.5.1", "1.5.2"]
-    const parentPathArray = parentPath.split(".") // [ '1', '5' ]
-    // const pathArray = path.split(".") // [ '1', '5', '3' ]
+const getSelectParent = (items, path, statePaths) => {
 
-    parentPathArray.forEach((p) => {
-
-    })
+    items.forEach((item) => {
 
 
-    // paths = [ "1", "1.5", "1.5.3"]
-    let pathV = ""
-    paths.forEach((p) => {
-        let pathV = pathV + ""
+        if(path.startsWith(item.path)) {
 
+            if( statePaths.indexOf(item.path) !== -1 ) {
+                statePaths.splice( statePaths.indexOf(item.path), 1 )
+            }
+
+            /// and now what ??
+
+        }
     })
 
 }
 
-const allDescendantLeafs = (node) => {
-    let leafs = []
-    let searchTree = node => {
-        const { children } = node
-        if( children && children.length ) {
-            searchTree(children)
-        }
-        else {
-            leafs.push(node)
-        }
+const getPathToSelect = (items, pathToSelect, path, statePaths) => {
+
+    let leafs;
+    // let pathToSelect;
+
+    const updateLeafs = (parent) => {
+        parent.children.forEach((item) => {
+            if ( item.children ) { updateLeafs(item) }
+            else { leafs.push(item.path) }
+        })
     }
-    searchTree(node);
-    return leafs
+
+    const isAllChildrenSelected = ({children}) =>  children.every( ({path}) => statePaths.indexOf(path) !== -1 )
+    const isAllLeafsSelected = () => leafs.every( leaf => statePaths.indexOf(leaf) !== -1 )
+
+    const searchTree = (items) => {
+
+        items.forEach((item) => {
+
+            if (path.startsWith(item.path)) {
+
+                console.log('---------> startsWith ->', item.path)
+
+                if (item.children) {
+                    leafs = []
+                    updateLeafs(item)
+                    console.log('Leafs ->', leafs)
+
+                    // console.log("isAllLeafsSelected -> ", isAllLeafsSelected, `"${item.path}"`)
+                    // console.log("isAllChildrenSelected -> ", x)
+                    if( isAllChildrenSelected(item) || isAllLeafsSelected() ){
+
+                        pathToSelect = item.path
+                        // statePaths = statePaths.filter(p => !p.startsWith(`${item.path}.`))
+                        // statePaths.push(item.path)
+                    } else {
+                        searchTree(item.children)
+                    }
+                }
+            }
+        })
+    }
+
+    searchTree(items)
+
+    console.log('pathToSelect -------->', pathToSelect)
+
+    return pathToSelect;
 }
 
 
-const allDescendantLeafsSelected = (node) => {
 
-    return node.children
-}
 
-const hasChildren = ({ children }) => {
-    return children && children.length > 0
-}
