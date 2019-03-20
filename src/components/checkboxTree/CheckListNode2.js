@@ -1,6 +1,8 @@
-import React, { useState, useReducer } from 'react';
+import React, { useReducer } from 'react';
 
 import { reducer, initialState } from './reducer';
+
+import './checkList.css';
 
 const CheckListNode = ({ items }) => {
 
@@ -64,6 +66,7 @@ const CheckListNode = ({ items }) => {
                                         dispatch({
                                             type: 'DELETE_VALUE',
                                             path,
+                                            items
                                         })
                                     }
 
@@ -76,7 +79,7 @@ const CheckListNode = ({ items }) => {
 
 
                             <label 
-                                className={`form-check-label ${checkClass} ${ checkedInState ? 'font-weight-bold':'' }`} 
+                                className={`form-check-label ${checkClass} ${ checkedInState ? 'bold-label':'' }`} 
                                 htmlFor={`${node.label}`}
                             >
                                 {node.value} - {node.label} - "{node.path}"

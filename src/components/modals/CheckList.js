@@ -6,7 +6,7 @@ import { hideModal } from '../../actions';
 
 import CheckListNode from '../checkboxTree/CheckListNode2';
 
-import './checkList.css';
+
 
 
 const mapItems = (items) => {
@@ -47,17 +47,25 @@ const items = [
         children: [
             { value: 1, label: 'Lion' },
             { value: 2, label: 'Leopard' },
-            // { value: 3, label: 'Guepard' },
-            // { value: 4, label: 'Tiger' },
             { 
                 value: 5, label: 'Chien',
                 children: [
                     { value: 1, label: 'Pitbull' },
-                    { value: 2, label: 'Berger' },
-                    { value: 3, label: 'Labrador' },
-                    // { value: 4, label: 'Chiwawa' },
-                    // { value: 5, label: 'Dobermann' },
-                    // { value: 6, label: 'Caniche' },
+                    { value: 2, label: 'Labrador' },
+                    { 
+                        value: 3, label: 'Berger',
+                        children: [
+                            { value: 1, label: 'Berger allmend' },
+                            { value: 2, label: 'Chien de berger' },
+                        ] 
+                    },
+                    { 
+                        value: 4, label: 'Slouguiya',
+                        children: [
+                            { value: 1, label: 'Slouguiya 1' },
+                            { value: 2, label: 'Slouguiya 2' },
+                        ] 
+                    },
                 ]
             },
         ]

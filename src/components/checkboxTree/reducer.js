@@ -32,15 +32,19 @@ export const reducer = (state, action) => {
         case 'DELETE_VALUE':
 
             newState = [...state]
-            let indexOf = newState.indexOf(path)
 
-            if (indexOf !== -1) { // the parent is not checked
+            let indexOf = newState.indexOf(path)
+            if (indexOf !== -1) { // this path is the one checked (exist in state)
                 newState.splice(indexOf, 1)
             }
             else { // the parent is checked instead
-                // let ancestors = getPathsStartedWith(path)
-
-
+ 
+                // Looking for the Parent path and all its leafs
+                const {pathsToSelect, selectedParent} = getSelectParent(items, path, newState)
+                // add all parent leafs to state
+                newState.push(...pathsToSelect)
+                // deselect parent path
+                newState.splice(newState.indexOf(selectedParent), 1)
             }
 
 
@@ -51,20 +55,76 @@ export const reducer = (state, action) => {
 
 const getSelectParent = (items, path, statePaths) => {
 
-    items.forEach((item) => {
+    // let leafs = [];
+    let pathsToSelect = [];
+
+    let selectedParent;
 
 
-        if(path.startsWith(item.path)) {
+    // const selectLeafs = (parent) => {
+    //     parent.children.forEach((item) => {
+    //         if ( item.children ) { selectLeafs(item) }
+    //         else { leafs.push(item.path) }
+    //     })
+    // }
 
-            if( statePaths.indexOf(item.path) !== -1 ) {
-                statePaths.splice( statePaths.indexOf(item.path), 1 )
+    let checkedFound = false;
+    const selectLeafs = (parent) => {
+
+
+        parent.children.forEach((item) => {
+            console.log(`forEach --------->`, item.path)
+
+            if( item.path !== path ) {
+
+                if( checkedFound || ! path.startsWith(item.path) || item.children === undefined )  {
+                    pathsToSelect.push(item.path)
+                } else {
+                    selectLeafs(item) 
+                }
+                // if(checkedFound) {
+                //     pathsToSelect.push(item.path)
+                // } else {
+
+                //     if( path.startsWith(item.path) && item.children ){
+                //         selectLeafs(item) 
+                //     } else {
+                //         pathsToSelect.push(item.path)
+                //     }
+                // }
+
+
+            } else {
+                checkedFound = true
             }
 
-            /// and now what ??
+        })
+    }
 
-        }
-    })
+    const searchTree = (items) => {
 
+        items.forEach((item) => {
+            
+            console.log('searchTree ---->', item.path)
+
+            if(path.startsWith(item.path)) {
+
+                let indexOf = statePaths.indexOf(item.path)
+                if( indexOf !== -1 ) { // THIS IS THE PARENT
+                    console.log('THIS IS THE PARENT ---->', item.path)
+                    selectedParent = item.path;
+                    selectLeafs(item)
+                } else {
+                    searchTree(item.children)
+                }
+
+            }
+        })
+    }
+
+    searchTree(items)
+    console.log('Leafs to be selected ---->', pathsToSelect)
+    return { pathsToSelect, selectedParent }
 }
 
 const getPathToSelect = (items, pathToSelect, path, statePaths) => {
@@ -95,13 +155,8 @@ const getPathToSelect = (items, pathToSelect, path, statePaths) => {
                     updateLeafs(item)
                     console.log('Leafs ->', leafs)
 
-                    // console.log("isAllLeafsSelected -> ", isAllLeafsSelected, `"${item.path}"`)
-                    // console.log("isAllChildrenSelected -> ", x)
                     if( isAllChildrenSelected(item) || isAllLeafsSelected() ){
-
                         pathToSelect = item.path
-                        // statePaths = statePaths.filter(p => !p.startsWith(`${item.path}.`))
-                        // statePaths.push(item.path)
                     } else {
                         searchTree(item.children)
                     }

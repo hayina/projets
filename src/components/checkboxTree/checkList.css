@@ -42,3 +42,8 @@
     font-size: 20px;
     text-shadow: 1px 1px 1px #dae0e5;
 }
+
+
+.bold-label {
+    font-weight: 500 !important;
+}
