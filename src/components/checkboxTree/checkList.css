@@ -1,7 +1,10 @@
 
+.form-check-input {
+    display: none;
+}
 
-.form-check-label, select {
-    font-weight: 300;
+.form-check-label {
+    font-weight: 400;
     text-transform: uppercase;
     cursor: pointer;
 }
@@ -45,9 +48,9 @@
 
 
 .bold-label {
-    font-weight: 500 !important;
+    /* font-weight: 500 !important; */
 }
 
 .checbox-bold {
-    font-weight: 800 !important;
+    /* font-weight: 800 !important; */
 }

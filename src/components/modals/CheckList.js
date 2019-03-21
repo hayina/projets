@@ -11,7 +11,7 @@ import CheckListNode from '../checkboxTree/CheckListNode2';
 
 const mapItems = (items) => {
 
-    const addParent = ({ items, parent=null, parentPath='', rootPath }) => {
+    const mapProperties = ({ items, parent=null, parentPath='', rootPath }) => {
 
         items.forEach(element => {
 
@@ -28,7 +28,7 @@ const mapItems = (items) => {
             element.leaf = element.children ? false : true
 
             if( element.children ){
-                addParent({
+                mapProperties({
                     items: element.children, 
                     parent: element,
                     parentPath: `${element.path}`,
@@ -39,9 +39,7 @@ const mapItems = (items) => {
 
     }
 
-    addParent({ items })
-    console.log(items)
-
+    mapProperties({ items })
     return items
 }
 
@@ -52,34 +50,6 @@ const items = [
         children: [
             { value: 1, label: 'Lion' },
             { value: 2, label: 'Leopard' },
-            { 
-                value: 3, label: 'Chien',
-                children: [
-                    { value: 1, label: 'Pitbull' },
-                    { value: 2, label: 'Labrador' },
-                    { 
-                        value: 3, label: 'Berger',
-                        children: [
-                            { value: 1, label: 'Berger allmend' },
-                            { value: 2, label: 'Chien de berger' },
-                            { 
-                                value: 3, label: 'Chiwawa',
-                                children: [
-                                    { value: 1, label: 'Chiwawa 1' },
-                                    { value: 2, label: 'Chiwawa 2' },
-                                ] 
-                            },
-                        ] 
-                    },
-                    { 
-                        value: 4, label: 'Slouguiya',
-                        children: [
-                            { value: 1, label: 'Slouguiya 1' },
-                            { value: 2, label: 'Slouguiya 2' },
-                        ] 
-                    },
-                ]
-            },
             { value: 4, label: 'Guepard' },
         ]
     },
@@ -91,36 +61,16 @@ const items = [
             { value: 3, label: 'Requin Marteau' },
         ]
     },
-    // {
-    //     value: 3, label: 'Canidae',
-    //     children: [
-    //         { value: 1, label: 'Loup' },
-    //         { value: 2, label: 'Lycaon' },
-    //         { value: 3, label: 'Renard' },
-    //         { value: 4, label: 'Coyote' },
-    //         { 
-    //             value: 5, label: 'Chien',
-    //             children: [
-    //                 { value: 1, label: 'Pitbull' },
-    //                 { value: 2, label: 'Berger' },
-    //                 { value: 3, label: 'Labrador' },
-    //                 { value: 4, label: 'Chiwawa' },
-    //                 { value: 5, label: 'Dobermann' },
-    //                 { value: 6, label: 'Caniche' },
-    //             ]
-    //         },
-    //     ]
-    // },
 ]
 let CheckList = ({ dispatch }) => {
 
-    // console.log('CheckList', list);
-    // const [items, setItems] = useState([])
 
     return (
 
         <Modal
-            handleValidation={() => dispatch(hideModal())}
+            handleValidation={() => {
+                dispatch(hideModal())
+            }}
             title="Choisir la localisation du projet"
         >
             <CheckListNode items={mapItems(items)} />
