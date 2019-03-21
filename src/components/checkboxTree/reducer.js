@@ -1,16 +1,10 @@
 export const initialState = []
 
 
-export const reducer = (state, action) => {
+export const reducer = (state = [], action) => {
 
-
-    const { type, path, node, items, parentPath } = action
-
-
-    console.log(type, `"${path}"`)
-
-
-    let newState = []
+    const { type, node, items } = action
+    console.log(type, ` ---> "${node.path}"`)
 
     switch (type) {
 
@@ -19,157 +13,73 @@ export const reducer = (state, action) => {
 
         case 'ADD_VALUE':
 
-            newState = [...state, path]
-            let pathToSelect = getPathToSelect(items, path, parentPath, newState)
-
-            newState = newState.filter(p => !p.startsWith(`${pathToSelect}.`))
-
-            if( pathToSelect !== path )
-                newState.push(pathToSelect)
-
-            return newState;
+            return selectPath(items, node, [...state])
 
         case 'DELETE_VALUE':
 
-            newState = [...state]
-
-            let indexOf = newState.indexOf(path)
-            if (indexOf !== -1) { // this path is the one checked (exist in state)
-                newState.splice(indexOf, 1)
-            }
-            else { // the parent is checked instead
- 
-                // Looking for the Parent path and all its leafs
-                const {pathsToSelect, selectedParent} = getSelectParent(items, path, newState)
-                // add all parent leafs to state
-                newState.push(...pathsToSelect)
-                // deselect parent path
-                newState.splice(newState.indexOf(selectedParent), 1)
-            }
-
-
-            return newState
+            return [...initialState];
     }
 }
 
 
-const getSelectParent = (items, path, statePaths) => {
+const selectPath = (items, node, statePaths) => {
 
-    // let leafs = [];
-    let pathsToSelect = [];
-
-    let selectedParent;
-
-
-    // const selectLeafs = (parent) => {
-    //     parent.children.forEach((item) => {
-    //         if ( item.children ) { selectLeafs(item) }
-    //         else { leafs.push(item.path) }
-    //     })
-    // }
-
-    let checkedFound = false;
-    const selectLeafs = (parent) => {
-
-
-        parent.children.forEach((item) => {
-            console.log(`forEach --------->`, item.path)
-
-            if( item.path !== path ) {
-
-                if( checkedFound || ! path.startsWith(item.path) || item.children === undefined )  {
-                    pathsToSelect.push(item.path)
-                } else {
-                    selectLeafs(item) 
-                }
-                // if(checkedFound) {
-                //     pathsToSelect.push(item.path)
-                // } else {
-
-                //     if( path.startsWith(item.path) && item.children ){
-                //         selectLeafs(item) 
-                //     } else {
-                //         pathsToSelect.push(item.path)
-                //     }
-                // }
-
-
-            } else {
-                checkedFound = true
-            }
-
-        })
-    }
-
-    const searchTree = (items) => {
-
-        items.forEach((item) => {
-            
-            console.log('searchTree ---->', item.path)
-
-            if(path.startsWith(item.path)) {
-
-                let indexOf = statePaths.indexOf(item.path)
-                if( indexOf !== -1 ) { // THIS IS THE PARENT
-                    console.log('THIS IS THE PARENT ---->', item.path)
-                    selectedParent = item.path;
-                    selectLeafs(item)
-                } else {
-                    searchTree(item.children)
-                }
-
-            }
-        })
-    }
-
-    searchTree(items)
-    console.log('Leafs to be selected ---->', pathsToSelect)
-    return { pathsToSelect, selectedParent }
-}
-
-const getPathToSelect = (items, pathToSelect, path, statePaths) => {
-
-    let leafs;
-    // let pathToSelect;
-
-    const updateLeafs = (parent) => {
-        parent.children.forEach((item) => {
-            if ( item.children ) { updateLeafs(item) }
+    
+    const findNodeLeafs = (node) => {
+        node.children.forEach((item) => {
+            if (item.children) { findNodeLeafs(item) }
             else { leafs.push(item.path) }
         })
     }
-
-    const isAllChildrenSelected = ({children}) =>  children.every( ({path}) => statePaths.indexOf(path) !== -1 )
     const isAllLeafsSelected = () => leafs.every( leaf => statePaths.indexOf(leaf) !== -1 )
 
-    const searchTree = (items) => {
-
-        items.forEach((item) => {
-
-            if (path.startsWith(item.path)) {
-
-                console.log('---------> startsWith ->', item.path)
-
-                if (item.children) {
-                    leafs = []
-                    updateLeafs(item)
-                    console.log('Leafs ->', leafs)
-
-                    if( isAllChildrenSelected(item) || isAllLeafsSelected() ){
-                        pathToSelect = item.path
-                    } else {
-                        searchTree(item.children)
-                    }
-                }
-            }
-        })
+    let leafs = []
+    const selectLeafs = () => {
+        // PARENT
+        if (node.children) {
+            
+            findNodeLeafs(node)
+            leafs.forEach((leaf) => {
+                if( statePaths.indexOf(leaf, 1) === -1 )
+                    statePaths.push(leaf)
+            })
+            
+        }
+        // LEAF
+        else {
+            statePaths.push(node.path)
+        }
     }
 
-    searchTree(items)
 
-    console.log('pathToSelect -------->', pathToSelect)
+    selectLeafs()
 
-    return pathToSelect;
+
+    return statePaths
+
+    // items.forEach((item) => {
+
+    //     if ( `${item.path}.`.startsWith(`${uiRootPath}.`) ) {
+
+
+    //         // PARENT
+    //         if (item.children) {
+        
+    //             let isChecked = statePaths.indexOf(item.path, 1) !== -1
+    //             if( !isChecked) {
+    //                 selectAllLeafs(node)
+    //             }
+                
+    //         }
+    //         // LEAF
+    //         else {
+        
+    //         }
+
+    //     }
+        
+    // })
+
 }
 
 

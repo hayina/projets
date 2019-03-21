@@ -8,7 +8,7 @@ const CheckListNode = ({ items }) => {
 
     const [selection, dispatch] = useReducer(reducer, initialState);
 
-    const renderCheckList = ({ nodes = [], parentPath = '', isParentChecked=false }) => {
+    const renderCheckList = ({ nodes = [], isParentChecked=false }) => {
 
         console.log(`Selection ---->`, selection)
         // console.log(`isParentChecked ---->`, isParentChecked)
@@ -19,8 +19,8 @@ const CheckListNode = ({ items }) => {
 
                 {nodes.map((node, index) => {
 
-                    const path = `${parentPath}${node.value}`;
-                    const { children } = node;
+                    // const path = `${parentPath}${node.value}`;
+                    const { children, path } = node;
 
                     // let selection = selection || [];
                     let indexOf = selection.indexOf(path);
@@ -35,7 +35,9 @@ const CheckListNode = ({ items }) => {
                         checkFontAwesome = ` fa-square form-empty-fa`
                     }
 
-                    checkFontAwesome = <i className={`far form-checkbox-fa ${checkFontAwesome} ${checkClass}`} />
+                    checkFontAwesome = <i className={
+                        `far form-checkbox-fa ${checkFontAwesome} ${checkClass} ${ checkedInState ? 'checbox-bold':'' }`
+                    }/>
 
 
                     return (
@@ -54,8 +56,6 @@ const CheckListNode = ({ items }) => {
                                         // pathValues.push(node.value);
                                         dispatch({
                                             type: 'ADD_VALUE',
-                                            path,
-                                            parentPath,
                                             node,
                                             items
                                         })
@@ -89,7 +89,7 @@ const CheckListNode = ({ items }) => {
                             {children &&
                                 renderCheckList({
                                     nodes: children,
-                                    parentPath: `${path}.`,
+                                    // parentPath: `${path}.`,
                                     isParentChecked: checked,
                                 })
                             }

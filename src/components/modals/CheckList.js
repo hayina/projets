@@ -11,7 +11,7 @@ import CheckListNode from '../checkboxTree/CheckListNode2';
 
 const mapItems = (items) => {
 
-    const addParent = ({ items, parent=null, parentPath='' }) => {
+    const addParent = ({ items, parent=null, parentPath='', rootPath }) => {
 
         items.forEach(element => {
 
@@ -19,15 +19,20 @@ const mapItems = (items) => {
                 element.parentValue = parent.value
                 element.path = `${parentPath}.${element.value}`
                 element.parentPath = parentPath
+                element.rootPath = rootPath
             } else {
                 element.path = `${element.value}`
+                rootPath = element.path
             }
+
+            element.leaf = element.children ? false : true
 
             if( element.children ){
                 addParent({
                     items: element.children, 
                     parent: element,
-                    parentPath: `${element.path}`
+                    parentPath: `${element.path}`,
+                    rootPath
                 })
             }
         });
@@ -48,7 +53,7 @@ const items = [
             { value: 1, label: 'Lion' },
             { value: 2, label: 'Leopard' },
             { 
-                value: 5, label: 'Chien',
+                value: 3, label: 'Chien',
                 children: [
                     { value: 1, label: 'Pitbull' },
                     { value: 2, label: 'Labrador' },
@@ -57,6 +62,13 @@ const items = [
                         children: [
                             { value: 1, label: 'Berger allmend' },
                             { value: 2, label: 'Chien de berger' },
+                            { 
+                                value: 3, label: 'Chiwawa',
+                                children: [
+                                    { value: 1, label: 'Chiwawa 1' },
+                                    { value: 2, label: 'Chiwawa 2' },
+                                ] 
+                            },
                         ] 
                     },
                     { 
@@ -68,6 +80,7 @@ const items = [
                     },
                 ]
             },
+            { value: 4, label: 'Guepard' },
         ]
     },
     {
