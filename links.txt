@@ -3,3 +3,8 @@ https://medium.com/vuetify/building-a-treeview-component-part-ii-4bb0d2f74d07
 
 -Selectors in Redux are a MUST
 https://hackernoon.com/selectors-in-redux-are-a-must-d6b0637c79b7
+
+-useReducer 
+https://stackoverflow.com/questions/54892403/usereducer-action-dispatched-twice
+https://stackoverflow.com/questions/55055793/react-usereducer-hook-fires-twice-how-to-pass-props-to-reducer
+https://stackoverflow.com/questions/54646553/usestate-vs-usereducer?rq=1

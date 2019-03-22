@@ -6,6 +6,8 @@ const initialState = {
 
 export const modals = (state = initialState, action) => {
 
+    // console.log('SHOW_MODAL', action.modalType)
+
     switch (action.type) {
         case 'SHOW_MODAL':
             return {

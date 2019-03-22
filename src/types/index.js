@@ -13,6 +13,9 @@ const types = {
     HIDE_MODAL: 'HIDE_MODAL',
 
 
+    ADD_ITEM_LOCALISATION: `${externalForms} ADD_ITEM_LOCALISATION`,
+    INIT_LOCALISATION: `${externalForms} INIT_LOCALISATION`,
+
     ADD_ITEM: `${externalForms} ADD_ITEM`,
     DELETE_ITEM: `${externalForms} DELETE_ITEM`,
     UPDATE_ITEM: `${externalForms} UPDATE_ITEM`,

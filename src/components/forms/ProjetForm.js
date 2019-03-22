@@ -8,14 +8,14 @@ import { showModal } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, CheckboxField, RadioField, SelectField, SimpleField } from './form-fields/fields'
-import { getExtPartners } from '../../reducers/externalForms';
+import { getExtPartners, getLocalisations } from '../../reducers/externalForms';
 import { arrayDeleting } from '../../actions';
 // import { formName as conventionFormName } from '../modals/Convention';
 
 import './forms.css';
 
 
-let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
+let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatch }) => {
 
 
 
@@ -24,7 +24,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
     //     url: '/localisation/getCommunesWithFractions',
     //     method: 'GET',
     //     success: (data) => {
-    //         // dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
+    //         // dispatch(showModal(modalTypes.ADD_LOCALISATION, { list: data }));
     //     }
     // })
 
@@ -32,7 +32,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
 
     useEffect(() => {
-        dispatch(showModal(modalTypes.ADD_CHECKLIST, { list: data }));
+        dispatch(showModal(modalTypes.ADD_LOCALISATION, { nodes: data }));
     }, [data])
 
     const onSubmit = (formValues) => {
@@ -124,9 +124,17 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, dispatch }) => {
 
             <SimpleField label={'localisation'}>
                 <input type="button" className="btn btn-info show-modal" value="ajouter une localisation"
-                    onClick={() => dispatch(showModal(modalTypes.ADD_CHECKLIST, { nodes: data }))}
+                    onClick={() => dispatch(showModal(modalTypes.ADD_LOCALISATION, { nodes: data }))}
                 />
             </SimpleField>
+
+            <div className="localisations-wr">
+            { localisations.map((path, i) => (
+                <div className="localisation-item" key={path}>
+                    {i} -> {path}
+                </div>
+            ))}
+            </div>
 
 
 
@@ -156,6 +164,7 @@ export default connect(
         },
         isConvention: selector(state, 'isConvention'),
         partners: getExtPartners(state),
+        localisations: getLocalisations(state),
     }),
 )(ProjetForm);
 

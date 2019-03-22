@@ -2,17 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Convention from './Convention';
-import CheckList from './CheckList';
+import Localisation from './Localisation';
 
 
 export const modalTypes = {
     ADD_CONVENTION: 'ADD_CONVENTION',
-    ADD_CHECKLIST: 'ADD_CHECKLIST',
+    ADD_LOCALISATION: 'ADD_LOCALISATION',
 }
 
 const MODAL_COMPONENTS = {
     [modalTypes.ADD_CONVENTION]: Convention,
-    [modalTypes.ADD_CHECKLIST]: CheckList,
+    [modalTypes.ADD_LOCALISATION]: Localisation,
 }
 
 const ModalRoot = ({ modalType, modalProps }) => {

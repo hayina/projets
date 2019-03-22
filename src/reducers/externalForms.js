@@ -24,10 +24,13 @@ const initialState = {
           },
           montant: '10000000'
         }
-      ]
+      ],
+    
+    localisation: []
 }
 
 export const getExtPartners = (state) => state.externalForms.partners;
+export const getLocalisations = (state) => state.externalForms.localisation;
 
 export const externalForms = (state = initialState, action) => {
 
@@ -35,10 +38,13 @@ export const externalForms = (state = initialState, action) => {
 
     switch (action.type) {
 
+        // PARTENAIRES
         case types.ADD_ITEM:
             return { ...state, [arrName]: [ ...state[arrName], item ] }
 
         case types.UPDATE_ITEM:
+
+
 
                 // WORONG !! STATE MUTATION
             // let arr = state[arrName];
@@ -65,6 +71,14 @@ export const externalForms = (state = initialState, action) => {
             let arrDel = [ ...state[arrName] ];
             arrDel.splice(index, 1);
             return { ...state, [arrName]: arrDel };
+
+
+        // LOCALISATION
+        case types.ADD_ITEM_LOCALISATION:
+            console.log('ADD_ITEM_LOCALISATION', [ ...state.localisation, action.path ])
+            return { ...state, localisation: [ ...state.localisation, action.path ] }
+        case types.INIT_LOCALISATION:
+            return { ...state, localisation: [] }
 
         default:
             return state;
