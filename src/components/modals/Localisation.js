@@ -1,12 +1,11 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import { addLocalisation, initLocalisation } from '../../actions';
-import { getLocalisations } from '../../reducers/externalForms';
 import Modal from './Modal';
 import { hideModal } from '../../actions';
 
-import CheckList, { allDescendantLeafsSelected } from '../checkboxTree/CheckList';
+import CheckList, { allDescendantLeafsSelected, nestedTree } from '../checkboxTree/CheckList';
 
 
 
@@ -40,7 +39,7 @@ const items = [
         children: [
             { value: 1, label: 'Lion' },
             { value: 2, label: 'Leopard' },
-            { value: 4, label: 'Guepard' },
+            { value: 3, label: 'Guepard' },
         ]
     },
     {
@@ -49,26 +48,18 @@ const items = [
             { value: 1, label: 'Great white shark' },
             { value: 2, label: 'Tiger shark' },
             { value: 3, label: 'Requin Marteau' },
-        ]
-    },
-    {
-        value: 3, label: 'Requins',
-        children: [
-            { value: 1, label: 'Great white shark' },
-            { value: 2, label: 'Tiger shark' },
-            { value: 3, label: 'Requin Marteau' },
             {
-                value: 4, label: 'Requins',
+                value: 4, label: 'Chiens',
                 children: [
-                    { value: 1, label: 'Great white shark' },
-                    { value: 2, label: 'Tiger shark' },
-                    { value: 3, label: 'Requin Marteau' },
+                    { value: 1, label: 'Berger' },
+                    { value: 2, label: 'Dobermann' },
+                    { value: 3, label: 'Chiwawa' },
                     {
-                        value: 4, label: 'Requins',
+                        value: 4, label: 'Aigles',
                         children: [
-                            { value: 1, label: 'Great white shark' },
-                            { value: 2, label: 'Tiger shark' },
-                            { value: 3, label: 'Requin Marteau' },
+                            { value: 1, label: 'Serf' },
+                            { value: 2, label: 'Flaman Rose' },
+                            { value: 3, label: 'Hiboux' },
                         ]
                     },
                 ]
@@ -76,39 +67,27 @@ const items = [
         ]
     },
     {
-        value: 4, label: 'Requins',
+        value: 3, label: 'Oiseaux',
         children: [
-            { value: 1, label: 'Great white shark' },
-            { value: 2, label: 'Tiger shark' },
-            { value: 3, label: 'Requin Marteau' },
+            { value: 1, label: 'Peroquet' },
+            { value: 2, label: 'Moinaux' },
+            { value: 3, label: 'Phenyx' },
         ]
     },
 ]
 
 
 const mappedItems = mapItems(items)
-const reducer = (state, action) => {
-    if( action.type === 'ADD_VALUE') {
 
-        console.log(`Normalized selection IN REDUCER`, [...state, action.path])
-        return [...state, action.path]
-    }
-    else if( action.type === 'INIT') {
-        return []
-    }
-        
-}
-let Localisation = ({ dispatch, localisations }) => {
+let Localisation = ({ dispatch }) => {
 
     const [selection, setSelection] = useState([])
-    const [normalizedSelection, selectionDispatch] = useReducer(reducer, [])
+    // const checkListEl = useRef(null);
         
-
-
-
     const normalizeSelection = () => {
 
-        dispatch(initLocalisation())
+        // console.log('checkListEl.getSelection() ->', checkListEl.current.getSelection())
+        dispatch(initLocalisation(selection))
 
         const searchTree = (items) => {
             items.forEach((item) => {
@@ -127,6 +106,8 @@ let Localisation = ({ dispatch, localisations }) => {
         
     }
 
+
+
     return (
 
 
@@ -135,7 +116,7 @@ let Localisation = ({ dispatch, localisations }) => {
             handleValidation={() => {
                 normalizeSelection()
  
-
+                nestedTree(selection, mappedItems)
                 // dispatch(hideModal())
             }}
             title="Choisir la localisation du projet"
@@ -143,6 +124,7 @@ let Localisation = ({ dispatch, localisations }) => {
 
             <CheckList items={mappedItems}
                 updateSelection={(paths) => setSelection(paths)}
+                // ref={checkListEl}
             />
         </Modal>
     )
@@ -150,7 +132,7 @@ let Localisation = ({ dispatch, localisations }) => {
 
 
 export default connect(    
-    (state) => ({
-        localisations: getLocalisations(state),
-    })
+    // (state) => ({
+    //     localisations: getLocalisations(state),
+    // })
 )(Localisation)

@@ -3,28 +3,10 @@ import types from '../types';
 
 const initialState = {
     partners: [
-        {
-          partner: {
-            id: 2,
-            label: 'ONEE - Branche Eau'
-          },
-          montant: '890000'
-        },
-        {
-          partner: {
-            id: 4,
-            label: 'Commune Mestegmeur'
-          },
-          montant: '640000'
-        },
-        {
-          partner: {
-            id: 30,
-            label: 'Ministère de l\'Habitat et de la Politique de la Ville'
-          },
-          montant: '10000000'
-        }
-      ],
+        { partner: { id: 2, label: 'ONEE - Branche Eau' }, montant: '890000' },
+        { partner: { id: 4, label: 'Commune Mestegmeur' }, montant: '640000' },
+        { partner: { id: 30, label: 'Ministère de l\'Habitat et de la Politique de la Ville' }, montant: '10000000' }
+    ],
     
     localisation: []
 }
@@ -75,10 +57,18 @@ export const externalForms = (state = initialState, action) => {
 
         // LOCALISATION
         case types.ADD_ITEM_LOCALISATION:
-            console.log('ADD_ITEM_LOCALISATION', [ ...state.localisation, action.path ])
-            return { ...state, localisation: [ ...state.localisation, action.path ] }
+            
+            // console.log('ADD_ITEM_LOCALISATION', [ ...state.localisation, action.path ])
+            // return { ...state, localisation: [ ...state.localisation, action.path ] }
+            let newLoc = state.localisation.filter((loc) => !`${loc}.`.startsWith(`${action.path}.`)) 
+            newLoc.push(action.path)
+            console.log('ADD_ITEM_LOCALISATION', newLoc)
+            return {  
+              ...state, 
+              localisation: newLoc 
+            }
         case types.INIT_LOCALISATION:
-            return { ...state, localisation: [] }
+            return { ...state, localisation: action.intialState }
 
         default:
             return state;

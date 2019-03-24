@@ -10,6 +10,7 @@ import { required, number, emptyArray } from './validator'
 import { TextField, CheckboxField, RadioField, SelectField, SimpleField } from './form-fields/fields'
 import { getExtPartners, getLocalisations } from '../../reducers/externalForms';
 import { arrayDeleting } from '../../actions';
+import { nestedTree } from '../checkboxTree/CheckList';
 // import { formName as conventionFormName } from '../modals/Convention';
 
 import './forms.css';
@@ -105,6 +106,28 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
                 </div>
             )}
 
+
+            <SimpleField label={'localisation'}>
+                <input type="button" className="btn btn-info show-modal" value="ajouter une localisation"
+                    onClick={() => dispatch(showModal(modalTypes.ADD_LOCALISATION, { nodes: data }))}
+                />
+            </SimpleField>
+
+            <div className="localisations-wr">
+                { nestedTree(localisations, mappedItems).map((path, i) => (
+                    <div className="localisation-item" key={path}>
+                        {i} -> {path}
+                    </div>
+                ))}
+            </div>
+            {/* <div className="localisations-wr">
+                { localisations.map((path, i) => (
+                    <div className="localisation-item" key={path}>
+                        {i} -> {path}
+                    </div>
+                ))}
+            </div> */}
+
             <Field
                 name="secteur"
                 component={SelectField}
@@ -122,19 +145,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
                 validate={[emptyArray]}
             /> */}
 
-            <SimpleField label={'localisation'}>
-                <input type="button" className="btn btn-info show-modal" value="ajouter une localisation"
-                    onClick={() => dispatch(showModal(modalTypes.ADD_LOCALISATION, { nodes: data }))}
-                />
-            </SimpleField>
 
-            <div className="localisations-wr">
-            { localisations.map((path, i) => (
-                <div className="localisation-item" key={path}>
-                    {i} -> {path}
-                </div>
-            ))}
-            </div>
 
 
 

@@ -3,6 +3,7 @@ import React, { useReducer, useState } from 'react';
 import './checkList.css';
 
 export const reducer = (state = [], action) => {
+    // eslint-disable-next-line default-case
     switch (action.type) {
         case 'INIT_SELECTION':
             action.updateSelection([])
@@ -27,7 +28,31 @@ const selectPath = (uiNode, statePaths, checked) => {
     return statePaths
 }
 
-export const allDescendantLeafsSelected = (node, selection) => allDescendantLeafs(node).every(leaf => selection.indexOf(leaf) !== -1)
+export const nestedTree = (selection, items) => {   
+    const uiNestedTree = []
+    const searchTree = (items, parent) => {
+        items.forEach((item) => {
+            if ( selection.some((loc) => `${loc}.`.startsWith(`${item.path}.`)) ) {
+
+                let node = { value : item.value, label: item.label }
+
+                if( parent ) { parent.children.push(node) } 
+                else { uiNestedTree.push(node) }
+
+                if (item.children) {
+                    node.children = []
+                    searchTree(item.children, node)
+                }
+            }
+        })
+    }
+    searchTree(items)
+    console.log(`Nested Tree ----->`, uiNestedTree)
+    return uiNestedTree
+}
+
+export const allDescendantLeafsSelected = (node, selection) => 
+                            allDescendantLeafs(node).every(leaf => selection.indexOf(leaf) !== -1)
 export const allDescendantLeafs = (node) => {
     let leafs = []
     const searchTree = ({ children, path }) => {
@@ -37,12 +62,15 @@ export const allDescendantLeafs = (node) => {
     searchTree(node);
     return leafs;
 }
-export const someDescendantLeafsSelected = (node, selection) => allDescendantLeafs(node).some(leaf => selection.indexOf(leaf) !== -1)
+export const someDescendantLeafsSelected = (node, selection) => 
+                            allDescendantLeafs(node).some(leaf => selection.indexOf(leaf) !== -1)
 
 const CheckList = ({ items, updateSelection }) => {
 
     const [selection, dispatch] = useReducer(reducer, []);
     const [expand, setExpand] = useState([])
+
+    const getSelection = () => selection
 
     console.log(`selection`, selection)
     console.log(`expand`, expand)
@@ -88,6 +116,7 @@ const CheckList = ({ items, updateSelection }) => {
                     />
                     <div className="fa-container">
                         {node.children &&
+                        <span className="fa-wr">
                             <i
                                 className={`fas fa-angle fa-checkbox ${ showChildren ? 'fa-angle-down' : 'fa-angle-right' }`}
                                 onClick={() => {
@@ -101,6 +130,7 @@ const CheckList = ({ items, updateSelection }) => {
 
                                 }}
                             />
+                        </span>
                         }
 
                         {checkFontAwesome}

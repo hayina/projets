@@ -12,10 +12,10 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
 
     const inputEl = useRef(null);
 
-    useClickOutside(inputEl.current, () => {
-        dispatch(hideModal());
-        console.log('useClickOutside DETECTED !!!')
-    });
+    // useClickOutside(inputEl.current, () => {
+    //     dispatch(hideModal());
+    //     console.log('useClickOutside DETECTED !!!')
+    // });
 
 
     // i need this promise cauz when the modal component toggles to false 
