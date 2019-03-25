@@ -18,7 +18,9 @@ const types = {
     INIT_LOCALISATION: `${externalForms} INIT_LOCALISATION`,
 
     ADD_ITEM: `${externalForms} ADD_ITEM`,
-    DELETE_ITEM: `${externalForms} DELETE_ITEM`,
+    DELETE_ITEM_BY_INDEX: `${externalForms} DELETE_ITEM_BY_INDEX`,
+    DELETE_ITEM_BY_VALUE: `${externalForms} DELETE_ITEM_BY_VALUE`,
+    DELETE_ITEM_BY_PATH: `${externalForms} DELETE_ITEM_BY_PATH`,
     UPDATE_ITEM: `${externalForms} UPDATE_ITEM`,
     SET_ARRAY: `${externalForms} SET_ARRAY`,
 

@@ -17,7 +17,9 @@ export const addLocalisation = (path) => ({ type: types.ADD_ITEM_LOCALISATION, p
 export const initLocalisation = (intialState) => ({ type: types.INIT_LOCALISATION, intialState })
 
 export const arrayPushing = (arrName, item) => ({ type: types.ADD_ITEM, arrName, item })
-export const arrayDeleting = (arrName, index) => ({ type: types.DELETE_ITEM, arrName, index })
+export const arrayDeletingByIndex = (arrName, index) => ({ type: types.DELETE_ITEM_BY_INDEX, arrName, index })
+export const arrayDeletingByValue = (arrName, value) => ({ type: types.DELETE_ITEM_BY_VALUE, arrName, value })
+export const arrayDeletingByPath = (arrName, path) => ({ type: types.DELETE_ITEM_BY_PATH, arrName, path })
 export const arrayUpdating = (arrName, item, index) => ({ type: types.UPDATE_ITEM, arrName, index, item })
 export const arraySetting = (arrName, arrayVal) => ({ type: types.SET_ARRAY, arrName, arrayVal })
 

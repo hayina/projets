@@ -40,3 +40,15 @@ dispatch will not be available directly as a prop if we use map dispatch to stat
 --------
 
 can't .... undefinedalways check function if params are okey
+
+
+------------
+                // WORONG !! STATE MUTATION
+            // let arr = state[arrName];
+            // arr[index] = item;
+            // let newState = { ...state, [arrName]: [...arr] }
+
+            // GOOD !! STATE MUTATION
+            let arr = [ ...state[arrName] ];
+            arr[index] = item;
+            return { ...state, [arrName]: arr }

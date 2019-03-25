@@ -44,7 +44,7 @@ export const CheckList = ({ items, selection, setSelection }) => {
 
                     <input
                         id={`${node.path}`}
-                        className="form-check-input"
+                        className="hide"
                         type="checkbox"
                         checked={checked}
                         onChange={ (e) => {
@@ -103,17 +103,20 @@ export const CheckList = ({ items, selection, setSelection }) => {
 }
 
 
-export const NestedTree = ({items}) => 
+export const NestedTree = ({items, onDelete}) => 
 
-    items.map((item) => 
+    items.map((item, i) => 
 
-        <div key={item.path} className="item-wr item-info" >
-            <i className="fa fa-times delete-item-list"
-                onClick={() => console.log(item.path)}></i>
-
+        <div key={item.path} className="item-tree-wr" >
             <i className="fas fa-angle fa-checkbox fa-angle-right"></i>
-            <span className="item-label">{item.label} </span>
-            { item.children && <NestedTree items={item.children} /> }
+            <span className="leaf-info">
+                <i className="fa fa-times delete-item-list" 
+                    onClick={ () => onDelete(item.path) }
+                />
+                <span className="item-label">{item.label} </span>
+            </span>
+
+            { item.children && <NestedTree items={item.children} onDelete={onDelete} /> }
         </div>
 
     )

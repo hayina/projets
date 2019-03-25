@@ -9,8 +9,8 @@ import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, CheckboxField, RadioField, SelectField, SimpleField } from './form-fields/fields'
 import { getExtPartners, getLocalisations } from '../../reducers/externalForms';
-import { arrayDeleting } from '../../actions';
-import { nestedTree } from '../checkboxTree/helpers';
+import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
+import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
 import { NestedTree } from '../checkboxTree/CheckList';
 // import { formName as conventionFormName } from '../modals/Convention';
 
@@ -83,25 +83,23 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
                 <div className="form-group">
                     {partners.map(({ partner, montant }, i) => (
                         <div className="partner-item" key={partner.id}>
-                            {/* <div className="form-label partner-label">partenaire {i + 1} :</div> */}
-                            <div className="partner-info">
 
-                                <i className="fa fa-times delete-item-list"
-                                    onClick={() => dispatch(arrayDeleting('partners', i))}></i>
+                            <i className="fa fa-times delete-item-list"
+                                onClick={() => dispatch(arrayDeletingByIndex('partners', i))}></i>
 
-                                <i className="fa fa-edit edit-item-list fa-edit-partner"
-                                    onClick={() => {
-                                        dispatch(showModal(modalTypes.ADD_CONVENTION, {
-                                            editMode: true, index: i, initialValues: partners[i]
-                                        }))
-                                        // dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: true, index: i }))
-                                        // dispatch(initialize(conventionFormName, partners[i]))
-                                    }}
-                                />
+                            <i className="fa fa-edit edit-item-list fa-edit-partner"
+                                onClick={() => {
+                                    dispatch(showModal(modalTypes.ADD_CONVENTION, {
+                                        editMode: true, index: i, initialValues: partners[i]
+                                    }))
+                                    // dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: true, index: i }))
+                                    // dispatch(initialize(conventionFormName, partners[i]))
+                                }}
+                            />
 
-                                <div className="partner-name">{i + 1}. {partner.label}</div>
-                                <div className="partner-montant">{montant} DH</div>
-                            </div>
+                            <div className="partner-name">{i+1}. {partner.label}</div>
+                            <div className="partner-montant">{montant} DH</div>
+
                         </div>
                     ))}
                 </div>
@@ -110,18 +108,25 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
             
 
             <SimpleField label={'localisation'}>
-                <input type="button" className="btn btn-info show-modal" value="ajouter une localisation"
+                <input type="button" className="btn btn-info show-modal" 
+                    value={ localisations.length > 0 ? `Editer` : `Ajouter`}
+                    style={{ float: 'right' }}
                     onClick={
                         () => {
-                            dispatch(showModal(modalTypes.ADD_LOCALISATION, { items }))
+                            dispatch(showModal(modalTypes.ADD_LOCALISATION, 
+                                { items, initialSelection: convertToSelectionByLeafs(localisations, items) }
+                            ))
                             
                         }
                     }
                 />
             </SimpleField>
-
-            <div className="localisations-wr">
-                <NestedTree items={ nestedTree(localisations, items) } /> 
+                    {/* { localisations.map(el => <div>{el}</div>) } */}
+            <div className="localisations-wr tree-wr">
+                <NestedTree 
+                    items={ nestedTree(localisations, items) }
+                    onDelete= { (path) => dispatch(arrayDeletingByPath('localisation', path)) }
+                /> 
             </div>
 
             {/* <div className="localisations-wr">

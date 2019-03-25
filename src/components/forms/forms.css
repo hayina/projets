@@ -8,6 +8,8 @@
 .show-modal {
     font-weight: 100;
     text-transform: uppercase;
+    padding: 4px 28px;
+    font-size: 11pt;
 }
 
 
@@ -25,7 +27,7 @@
 .partner-name {
     color: #07C;
     font-weight: 600;
-    font-size: 11pt;
+    font-size: 15px;
 }
 
 
@@ -33,13 +35,15 @@
 
 }
 
-.partner-info, .item-info {
+.partner-item {
+
+    margin-bottom: 8px;
     /* font-weight: 400; */
-    background-color: #dbedff;
-    padding: 6px 8px;
-    margin-bottom: 4px;
-    border: 1px solid #bedbfb;
-    border-radius: .25rem;
+    /* background-color: #dbedff; */
+    /* padding: 6px 0px;
+    margin-bottom: 4px; */
+    /* border: 1px solid #bedbfb; */
+    /* border-radius: .25rem; */
 }
 
 

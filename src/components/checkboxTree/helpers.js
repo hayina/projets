@@ -13,17 +13,55 @@ export const findSelectedLeafs = (uiNode, statePaths, checked) => {
     return statePaths
 }
 
-export const normalizeSelectionByParent = (leafsSelection, items) => {
 
-    let selectionByParent = [ ...leafsSelection ] || []
+// ["1.1", "1.2", "1.3"] => ["1"]
+export const convertToSelectionByParent = (leafsSelection, items) => {
+
+    if( leafsSelection === undefined || leafsSelection.length === 0 ) return []
+
+    let selection = [ ...leafsSelection ]
+
+    const searchTree = (items) => {
+        items.forEach((item) => {
+            // on peut optimiser par just who startWith ...
+            if( selection.some(sPath => `${sPath}.`.startsWith(`${item.path}.`)) ) {
+            
+                if (item.children) {
+                    if (allDescendantLeafsSelected(item, selection)) {
+                        // we delete the leafs
+                        selection = selection.filter(path => !`${path}.`.startsWith(`${item.path}.`)) 
+                        // we add the parent
+                        selection.push(item.path)
+                    } else {
+                        searchTree(item.children)
+                    }
+                }
+            }
+        })
+    }
+
+    searchTree(items)
+    return selection 
+}
+
+// ["1"] => ["1.1", "1.2", "1.3"]
+export const convertToSelectionByLeafs = (parentSelection, items) => {
+
+    if( parentSelection === undefined || parentSelection.length === 0 ) return []
+
+    let selection = [ ...parentSelection ] 
 
     const searchTree = (items) => {
         items.forEach((item) => {
             if (item.children) {
-                if (allDescendantLeafsSelected(item, selectionByParent)) {
-                    selectionByParent = selectionByParent
-                                                .filter(path => !`${path}.`.startsWith(`${item.path}.`)) 
-                    selectionByParent.push(item.path)
+
+                let indexOf = selection.indexOf(item.path)
+                // if the parent is checked
+                if ( indexOf !== -1 ) {
+                    // we delete the parent
+                    selection.splice(indexOf, 1)
+                    // we add his descendant leafs
+                    selection.push(...allDescendantLeafs(item))
                 } else {
                     searchTree(item.children)
                 }
@@ -32,7 +70,7 @@ export const normalizeSelectionByParent = (leafsSelection, items) => {
     }
 
     searchTree(items)
-    return selectionByParent 
+    return selection 
 }
 
 

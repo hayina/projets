@@ -6,7 +6,7 @@ import Modal from './Modal';
 import { hideModal } from '../../actions';
 
 import { CheckList } from '../checkboxTree/CheckList';
-import { normalizeSelectionByParent } from '../checkboxTree/helpers';
+import { convertToSelectionByParent, convertToSelectionByLeafs } from '../checkboxTree/helpers';
 
 
 
@@ -15,9 +15,9 @@ import { normalizeSelectionByParent } from '../checkboxTree/helpers';
 
 
 
-let Localisation = ({ dispatch, items }) => {
+let Localisation = ({ dispatch, items, initialSelection=[] }) => {
 
-    const [selection, setSelection] = useState([])
+    const [selection, setSelection] = useState(initialSelection)
 
    
 
@@ -26,7 +26,7 @@ let Localisation = ({ dispatch, items }) => {
         <Modal
             handleValidation={() => {
                 dispatch(
-                    arraySetting('localisation', normalizeSelectionByParent(selection, items))
+                    arraySetting('localisation', convertToSelectionByParent(selection, items))
                 )
  
                 // nestedTree(selection, mappedItems)
