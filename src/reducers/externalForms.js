@@ -8,7 +8,7 @@ const initialState = {
         { partner: { id: 30, label: 'Ministère de l\'Habitat et de la Politique de la Ville' }, montant: '10000000' }
     ],
     
-    localisation: []
+    localisation:  ["3.2", "3.3", "1.1", "1.2", "2.4.4.2", "2.4.4.3", "3.1"]
 }
 
 export const getExtPartners = (state) => state.externalForms.partners;
@@ -25,26 +25,10 @@ export const externalForms = (state = initialState, action) => {
             return { ...state, [arrName]: [ ...state[arrName], item ] }
 
         case types.UPDATE_ITEM:
-
-
-
                 // WORONG !! STATE MUTATION
             // let arr = state[arrName];
             // arr[index] = item;
             // let newState = { ...state, [arrName]: [...arr] }
-
-                // GOOD APPROCH
-            // let arr = [ ...state[arrName] ];
-            // arr[index] = item;
-            // let newState = { ...state, [arrName]: arr }
-            // console.log(`Mutation --------------------> (${index})`)
-            // // console.log(`[${arrName}]`, state[arrName] === newState[arrName])
-            // console.log(`[${arrName}][$[index]]`, state[arrName][index] === newState[arrName][index])
-            // console.log(`Mutation --------------------> (0)`)
-            // // console.log(`[${arrName}]`, state[arrName] === newState[arrName])
-            // console.log(`[${arrName}][$[index]]`, state[arrName][0] === newState[arrName][0])
-            // return newState
-
             let arr = [ ...state[arrName] ];
             arr[index] = item;
             return { ...state, [arrName]: arr }
@@ -56,19 +40,10 @@ export const externalForms = (state = initialState, action) => {
 
 
         // LOCALISATION
-        case types.ADD_ITEM_LOCALISATION:
-            
-            // console.log('ADD_ITEM_LOCALISATION', [ ...state.localisation, action.path ])
-            // return { ...state, localisation: [ ...state.localisation, action.path ] }
-            let newLoc = state.localisation.filter((loc) => !`${loc}.`.startsWith(`${action.path}.`)) 
-            newLoc.push(action.path)
-            console.log('ADD_ITEM_LOCALISATION', newLoc)
-            return {  
-              ...state, 
-              localisation: newLoc 
-            }
-        case types.INIT_LOCALISATION:
-            return { ...state, localisation: action.intialState }
+        case types.SET_ARRAY:
+
+            return { ...state, [arrName]: action.arrayVal }
+
 
         default:
             return state;

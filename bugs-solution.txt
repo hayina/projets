@@ -36,3 +36,7 @@ const gotError = ({ touched, error, dirty }) => {
 ------
 
 dispatch will not be available directly as a prop if we use map dispatch to state ???
+
+--------
+
+can't .... undefinedalways check function if params are okey

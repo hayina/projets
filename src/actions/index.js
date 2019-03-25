@@ -19,6 +19,18 @@ export const initLocalisation = (intialState) => ({ type: types.INIT_LOCALISATIO
 export const arrayPushing = (arrName, item) => ({ type: types.ADD_ITEM, arrName, item })
 export const arrayDeleting = (arrName, index) => ({ type: types.DELETE_ITEM, arrName, index })
 export const arrayUpdating = (arrName, item, index) => ({ type: types.UPDATE_ITEM, arrName, index, item })
+export const arraySetting = (arrName, arrayVal) => ({ type: types.SET_ARRAY, arrName, arrayVal })
+
+
+export const setCheckboxProp = (values, checkboxType, checkboxProp) => ({ 
+        type: types.SET_CHECKBOX_PROP, 
+        values, 
+        checkboxType,
+        checkboxProp
+})
+
+
+
 
 
 

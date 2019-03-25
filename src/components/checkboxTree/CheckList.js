@@ -1,84 +1,21 @@
-import React, { useReducer, useState } from 'react';
+import React, { useState } from 'react';
+
+import { allDescendantLeafsSelected, someDescendantLeafsSelected, findSelectedLeafs } from './helpers';
 
 import './checkList.css';
 
-export const reducer = (state = [], action) => {
-    // eslint-disable-next-line default-case
-    switch (action.type) {
-        case 'INIT_SELECTION':
-            action.updateSelection([])
-            return [];
-        case 'ON_CHANGE':
-            let newState = selectPath(action.node, [...state], action.checked)
-            action.updateSelection(newState) // for the modal parent
-            return newState
-    }
-}
 
-const selectPath = (uiNode, statePaths, checked) => {
-    const selectLeafs = ({ children, path }) => {
-        if (children) { children.forEach(item => selectLeafs(item)) }
-        else {
-            let indexOf = statePaths.indexOf(path)
-            if (!checked) { statePaths.splice(indexOf, 1) }
-            else if (indexOf === -1) { statePaths.push(path) }
-        }
-    }
-    selectLeafs(uiNode)
-    return statePaths
-}
+export const CheckList = ({ items, selection, setSelection }) => {
 
-export const nestedTree = (selection, items) => {   
-    const uiNestedTree = []
-    const searchTree = (items, parent) => {
-        items.forEach((item) => {
-            if ( selection.some((loc) => `${loc}.`.startsWith(`${item.path}.`)) ) {
-
-                let node = { value : item.value, label: item.label }
-
-                if( parent ) { parent.children.push(node) } 
-                else { uiNestedTree.push(node) }
-
-                if (item.children) {
-                    node.children = []
-                    searchTree(item.children, node)
-                }
-            }
-        })
-    }
-    searchTree(items)
-    console.log(`Nested Tree ----->`, uiNestedTree)
-    return uiNestedTree
-}
-
-export const allDescendantLeafsSelected = (node, selection) => 
-                            allDescendantLeafs(node).every(leaf => selection.indexOf(leaf) !== -1)
-export const allDescendantLeafs = (node) => {
-    let leafs = []
-    const searchTree = ({ children, path }) => {
-        if (children) children.forEach(item => searchTree(item))
-        else leafs.push(path)
-    }
-    searchTree(node);
-    return leafs;
-}
-export const someDescendantLeafsSelected = (node, selection) => 
-                            allDescendantLeafs(node).some(leaf => selection.indexOf(leaf) !== -1)
-
-const CheckList = ({ items, updateSelection }) => {
-
-    const [selection, dispatch] = useReducer(reducer, []);
     const [expand, setExpand] = useState([])
 
-    const getSelection = () => selection
-
+    
     console.log(`selection`, selection)
     console.log(`expand`, expand)
 
+    const renderCheckList = ({ items }) => {
 
-    const renderCheckList = ({ nodes = [] }) => (
-
-        nodes.map((node, index) => {
+        return items.map((node, index) => {
 
             const checkedInState = selection.indexOf(node.path) !== -1
             const checked = checkedInState || allDescendantLeafsSelected(node, selection)
@@ -99,64 +36,86 @@ const CheckList = ({ items, updateSelection }) => {
             } />
 
             let showChildren = expand.includes(node.path)
-
+   
 
             return (
 
-                <div className="form-check item-check" key={node.value}>
+                <div className="form-check item-check" key={node.path}>
+
                     <input
                         id={`${node.path}`}
                         className="form-check-input"
                         type="checkbox"
                         checked={checked}
-                        onChange={(e) => dispatch({
-                            type: 'ON_CHANGE', node, checked: e.target.checked,
-                            updateSelection
-                        })}
+                        onChange={ (e) => {
+                            setSelection(findSelectedLeafs(node, [...selection], e.target.checked))
+                        }}
                     />
-                    <div className="fa-container">
-                        {node.children &&
-                        <span className="fa-wr">
-                            <i
-                                className={`fas fa-angle fa-checkbox ${ showChildren ? 'fa-angle-down' : 'fa-angle-right' }`}
-                                onClick={() => {
-                                    let iExp = expand.indexOf(node.path)
-                                    if (iExp !== -1) {
-                                        expand.splice(iExp, 1)
-                                        setExpand([...expand])
-                                    } else {
-                                        setExpand([...expand, node.path])
-                                    }
 
-                                }}
-                            />
-                        </span>
+                    <div className="fa-container">
+                        { node.children &&
+                            <span className="fa-wr">
+                                <i
+                                    className={`fas fa-angle fa-checkbox ${ showChildren ? 'fa-angle-down' : 'fa-angle-right' }`}
+                                    onClick={() => {
+
+                                        let iExp = expand.indexOf(node.path)
+                                        let newExpand = [...expand]
+
+                                        if (iExp !== -1) { newExpand.splice(iExp, 1) } 
+                                        else { newExpand.push(node.path) }
+
+                                        setExpand(newExpand) 
+                                    }}
+                                />
+                            </span>
                         }
 
                         {checkFontAwesome}
+
                     </div>
+
                     <label className={`form-check-label ${checkClass} ${checkedInState ? 'bold-label' : ''}`}
                         htmlFor={`${node.path}`}>
                         {node.label} - {node.path}
                     </label>
-                    {node.children && showChildren && renderCheckList({ nodes: node.children })}
+
+                    {node.children && showChildren && renderCheckList({ items: node.children })}
+
                 </div>
             )
         })
 
 
 
-    )
+    }
 
     return (
         <div className="check-list-container">
-            <i className="fas fa-redo-alt reset-checkbox"
-                onClick={() => dispatch({ type: 'INIT_SELECTION', updateSelection })}
-            />
-            {renderCheckList({ nodes: items })}
-            </div>
+
+            <i  className="fas fa-redo-alt reset-checkbox" onClick={ () => setSelection([]) } />
+            <i  className="fas fa-redo-alt reset-checkbox" onClick={ () => setExpand([]) } />
+
+            { renderCheckList({ items }) }
+
+        </div>
     )
 }
 
 
-export default CheckList    
+export const NestedTree = ({items}) => 
+
+    items.map((item) => 
+
+        <div key={item.path} className="item-wr item-info" >
+            <i className="fa fa-times delete-item-list"
+                onClick={() => console.log(item.path)}></i>
+
+            <i className="fas fa-angle fa-checkbox fa-angle-right"></i>
+            <span className="item-label">{item.label} </span>
+            { item.children && <NestedTree items={item.children} /> }
+        </div>
+
+    )
+
+

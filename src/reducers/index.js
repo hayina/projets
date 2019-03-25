@@ -5,6 +5,7 @@ import { reducer as formReducer } from 'redux-form';
 import { autoCompletes } from './autoCompletes';
 import { modals } from './modals';
 import { externalForms } from './externalForms';
+import { checkList } from './checkList';
 
 
 // the big store
@@ -13,4 +14,5 @@ export default combineReducers({
     // autoCompletes,
     modals,
     externalForms,
+    // checkList
 })

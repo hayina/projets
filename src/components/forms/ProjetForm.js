@@ -10,7 +10,8 @@ import { required, number, emptyArray } from './validator'
 import { TextField, CheckboxField, RadioField, SelectField, SimpleField } from './form-fields/fields'
 import { getExtPartners, getLocalisations } from '../../reducers/externalForms';
 import { arrayDeleting } from '../../actions';
-import { nestedTree } from '../checkboxTree/CheckList';
+import { nestedTree } from '../checkboxTree/helpers';
+import { NestedTree } from '../checkboxTree/CheckList';
 // import { formName as conventionFormName } from '../modals/Convention';
 
 import './forms.css';
@@ -32,9 +33,9 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
     // console.log('useApi', data)
 
 
-    useEffect(() => {
-        dispatch(showModal(modalTypes.ADD_LOCALISATION, { nodes: data }));
-    }, [data])
+    // useEffect(() => {
+    //     dispatch(showModal(modalTypes.ADD_LOCALISATION, { items }));
+    // }, [data])
 
     const onSubmit = (formValues) => {
         console.log(formValues)
@@ -106,20 +107,23 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
                 </div>
             )}
 
+            
 
             <SimpleField label={'localisation'}>
                 <input type="button" className="btn btn-info show-modal" value="ajouter une localisation"
-                    onClick={() => dispatch(showModal(modalTypes.ADD_LOCALISATION, { nodes: data }))}
+                    onClick={
+                        () => {
+                            dispatch(showModal(modalTypes.ADD_LOCALISATION, { items }))
+                            
+                        }
+                    }
                 />
             </SimpleField>
 
             <div className="localisations-wr">
-                { nestedTree(localisations, mappedItems).map((path, i) => (
-                    <div className="localisation-item" key={path}>
-                        {i} -> {path}
-                    </div>
-                ))}
+                <NestedTree items={ nestedTree(localisations, items) } /> 
             </div>
+
             {/* <div className="localisations-wr">
                 { localisations.map((path, i) => (
                     <div className="localisation-item" key={path}>
@@ -179,4 +183,73 @@ export default connect(
     }),
 )(ProjetForm);
 
+
+const mapItems = (items) => {
+
+    console.log(`Mapping items -------------------------------------> !!!`)
+
+    const mapProperties = ({ items, parentPath }) => {
+
+        items.forEach(el => {
+
+            if (parentPath) el.path = `${parentPath}.${el.value}`
+            else el.path = `${el.value}`
+
+            if (el.children)
+                mapProperties({ items: el.children, parentPath: `${el.path}` })
+        });
+
+    }
+
+    mapProperties({ items })
+    return items
+}
+
+
+
+let items = [
+    {
+        value: 1, label: 'Big cats',
+        children: [
+            { value: 1, label: 'Lion' },
+            { value: 2, label: 'Leopard' },
+            { value: 3, label: 'Guepard' },
+        ]
+    },
+    {
+        value: 2, label: 'Requins',
+        children: [
+            { value: 1, label: 'Great white shark' },
+            { value: 2, label: 'Tiger shark' },
+            { value: 3, label: 'Requin Marteau' },
+            {
+                value: 4, label: 'Chiens',
+                children: [
+                    { value: 1, label: 'Berger' },
+                    { value: 2, label: 'Dobermann' },
+                    { value: 3, label: 'Chiwawa' },
+                    {
+                        value: 4, label: 'Aigles',
+                        children: [
+                            { value: 1, label: 'Serf' },
+                            { value: 2, label: 'Flaman Rose' },
+                            { value: 3, label: 'Hiboux' },
+                        ]
+                    },
+                ]
+            },
+        ]
+    },
+    {
+        value: 3, label: 'Oiseaux',
+        children: [
+            { value: 1, label: 'Peroquet' },
+            { value: 2, label: 'Moinaux' },
+            { value: 3, label: 'Phenyx' },
+        ]
+    },
+]
+
+
+items = mapItems(items)
 

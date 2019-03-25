@@ -1,6 +1,7 @@
 
 // const SUGGESTIONS = '[Suggestions]';
 const externalForms = '[external forms]';
+const checkbox = '[checkbox]';
 
 const types = {
 
@@ -19,6 +20,10 @@ const types = {
     ADD_ITEM: `${externalForms} ADD_ITEM`,
     DELETE_ITEM: `${externalForms} DELETE_ITEM`,
     UPDATE_ITEM: `${externalForms} UPDATE_ITEM`,
+    SET_ARRAY: `${externalForms} SET_ARRAY`,
+
+
+    SET_CHECKBOX_PROP: `${checkbox} SET_PROP`,
 
     // SET_LOADER: '[ui] set loader',
     // NEW_API_REQUEST: '[api] new api request ...',

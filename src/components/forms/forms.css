@@ -33,7 +33,7 @@
 
 }
 
-.partner-info {
+.partner-info, .item-info {
     /* font-weight: 400; */
     background-color: #dbedff;
     padding: 6px 8px;
