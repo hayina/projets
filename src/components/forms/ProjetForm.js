@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, formValueSelector, initialize } from 'redux-form'
+import { Field, reduxForm, formValueSelector, initialize, change } from 'redux-form'
 
 import useApi from '../hooks/useApi';
 
 import { showModal } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
-import { TextField, CheckboxField, RadioField, SelectField, SimpleField } from './form-fields/fields'
-import { getExtPartners, getLocalisations } from '../../reducers/externalForms';
+import { TextField, RadioField, SelectField, SimpleField, 
+    AutoCompleteField, ToggleField } from './form-fields/fields'
+import { getExtPartners, getLocalisations, getPointsFocaux } from '../../reducers/externalForms';
 import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
 import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
 import { NestedTree } from '../checkboxTree/CheckList';
@@ -17,7 +18,10 @@ import { NestedTree } from '../checkboxTree/CheckList';
 import './forms.css';
 
 
-let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatch }) => {
+
+const formName = 'projetForm'
+
+let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, dispatch }) => {
 
 
 
@@ -44,10 +48,11 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
 
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form id={formName} className="form-wr" onSubmit={handleSubmit(onSubmit)}>
 
-            <h1>PROJET FORMULAIRE</h1>
+            <div className="form-title">PROJET FORMULAIRE</div>
 
+            <div className="form-content">
             <Field
                 name="intitule"
                 component={TextField}
@@ -114,7 +119,10 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
                     onClick={
                         () => {
                             dispatch(showModal(modalTypes.ADD_LOCALISATION, 
-                                { items, initialSelection: convertToSelectionByLeafs(localisations, items) }
+                                { 
+                                    items: localisationItems, 
+                                    initialSelection: convertToSelectionByLeafs(localisations, localisationItems) 
+                                }
                             ))
                             
                         }
@@ -124,18 +132,74 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
                     {/* { localisations.map(el => <div>{el}</div>) } */}
             <div className="localisations-wr tree-wr">
                 <NestedTree 
-                    items={ nestedTree(localisations, items) }
+                    items={ nestedTree(localisations, localisationItems) }
                     onDelete= { (path) => dispatch(arrayDeletingByPath('localisation', path)) }
                 /> 
             </div>
 
-            {/* <div className="localisations-wr">
-                { localisations.map((path, i) => (
-                    <div className="localisation-item" key={path}>
-                        {i} -> {path}
-                    </div>
-                ))}
-            </div> */}
+
+            <Field name="maitreOuvrage" label="maître d'ouvrage" component={AutoCompleteField}
+
+                url='/get_acheteurs'
+                onSelect={(suggestion) => {
+                    dispatch(change(formName, 'maitreOuvrage', suggestion));
+                }}
+                onDelete={() => {
+                    dispatch(change(formName, 'maitreOuvrage', null))
+                }}
+                // suggestion={maitreOuvrage}
+                // validate={[required]}
+            />
+
+            <Field name="isMaitreOuvrageDel" label="ajouter un maître d'ouvrage délégué" component={ToggleField}
+            />
+
+            { isMaitreOuvrageDel &&
+            <Field name="maitreOuvrageDel" label="maître d'ouvrage délégué" component={AutoCompleteField}
+
+                url='/get_acheteurs'
+                onSelect={(suggestion) => {
+                    dispatch(change(formName, 'maitreOuvrageDel', suggestion));
+                }}
+                onDelete={() => {
+                    dispatch(change(formName, 'maitreOuvrageDel', null))
+                }}
+                // suggestion={maitreOuvrage}
+                // validate={[required]}
+            />
+            }
+
+
+
+            {/* /////////////// Chargé du Suivi */}
+
+            <SimpleField label={'Chargé du Suivi'}>
+                <input type="button" className="btn btn-info show-modal" 
+                    value={ pointsFocaux.length > 0 ? `Editer` : `Ajouter`}
+                    style={{ float: 'right' }}
+                    onClick={
+                        () => {
+                            dispatch(showModal(modalTypes.ADD_LOCALISATION, 
+                                { 
+                                    items: pointsFocauxItems, 
+                                    initialSelection: convertToSelectionByLeafs(pointsFocaux, pointsFocauxItems) 
+                                }
+                            ))
+                            
+                        }
+                    }
+                />
+            </SimpleField>
+
+            
+            <div className="points-focaux-wr tree-wr">
+                <NestedTree 
+                    items={ nestedTree(pointsFocaux, pointsFocauxItems) }
+                    onDelete= { (path) => dispatch(arrayDeletingByPath('pointsFocaux', path)) }
+                /> 
+            </div>
+
+            {/* /////////////// secteur */}
 
             <Field
                 name="secteur"
@@ -145,20 +209,11 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
                 validate={[required]}
             />
 
-            {/* <Field
-                name="communes"
-                component={CheckboxField}
-                label="communes"
-                options={[{ label: 'taourirt', value: 1 }, { label: 'el aioun', value: 2 },
-                { label: 'debdou', value: 3 }]}
-                validate={[emptyArray]}
-            /> */}
+            </div>
 
-
-
-
-
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <div className="form-validation">
+                <button type="submit" className="btn btn-primary">Submit</button>
+            </div>
 
         </form>
     )
@@ -167,7 +222,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, dispatc
 
 
 ProjetForm = reduxForm({
-    form: 'projetForm'
+    form: formName
 })(ProjetForm)
 
 const selector = formValueSelector('projetForm');
@@ -181,10 +236,14 @@ export default connect(
             isConvention: true,
             communes: [2, 3],
             partners: [],
+            isMaitreOuvrageDel: false,
         },
         isConvention: selector(state, 'isConvention'),
+        isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
+        // maitreOuvrage: selector(state, 'maitreOuvrage'),
         partners: getExtPartners(state),
         localisations: getLocalisations(state),
+        pointsFocaux: getPointsFocaux(state),
     }),
 )(ProjetForm);
 
@@ -210,9 +269,17 @@ const mapItems = (items) => {
     return items
 }
 
+let pointsFocauxItems = [
+    { value: 1, label: 'DAS', },
+    { value: 2, label: 'DBM', },
+    { value: 3, label: 'DE', },
+    { value: 4, label: 'DAR', },
+    { value: 5, label: 'CAB', },
+    { value: 6, label: 'DAEC', },
+]
 
 
-let items = [
+let localisationItems = [
     {
         value: 1, label: 'Big cats',
         children: [
@@ -256,5 +323,5 @@ let items = [
 ]
 
 
-items = mapItems(items)
+localisationItems = mapItems(localisationItems)
 

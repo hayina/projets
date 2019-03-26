@@ -21,7 +21,7 @@ const renderErrorField = (meta) => {
 ////////////// SIMPLE FIELD
 
 export const SimpleField = ({ children, meta, label }) => (
-    <div className="form-group">
+    <div className="form-group simple-field-wr">
         <label className="form-label">{label}</label>
         { children }
         { meta && renderErrorField(meta) }
@@ -91,18 +91,19 @@ export const TextField = (props) => {
 
 ////////////// AUTO COMPLETE
 
-export const AutoCompleteField = ({ input, meta, label, onSelect, onDelete, suggestion }) => {
+export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete }) => {
 
     // const acProps = { ...ac, meta }
 
     return (
         <SimpleField label={label} meta={meta} >
-            { suggestion ?
-                <SelectedAC suggestion={suggestion} onDelete={onDelete} />
+            { input.value ?
+                <SelectedAC suggestion={input.value} onDelete={onDelete} />
+                // <SelectedAC suggestion={suggestion} onDelete={onDelete} />
                 :
-                <div className={`${fieldCss(meta)}`}>
-                    <AutoComplete onSelect={onSelect} /> 
-                </div>
+                // <div className={`${fieldCss(meta)}`}>
+                    <AutoComplete onSelect={onSelect} url={url} /> 
+                // </div>
                 // fieldCss(meta)
             }
         </SimpleField>
@@ -162,13 +163,20 @@ export const RadioField = ({ input, meta, label, options }) => {
             {options.map((option) => (
                 <div className="form-check" key={option.value}>
                     <input
+                        id={`${option.value}`}
+                        style={{ display: 'none' }}
                         className="form-check-input"
                         type="radio"
                         value={option.value}
                         checked={option.value === input.value}
                         onChange={(e) => input.onChange(option.value)}
                     />
-                    <label className="form-check-label">
+                    {   option.value === input.value ? 
+                        <i className="fas fa-dot-circle"></i>
+                        :
+                        <i className="far fa-dot-circle"></i>
+                    }
+                    <label htmlFor={`${option.value}`} className="form-check-label">
                         {option.label}
                     </label>
                 </div>
@@ -198,5 +206,33 @@ export const SelectField = ({ input, meta, label, options }) => {
     )
 }
 
+
+/////////////////// TOGGLE
+
+export const ToggleField = ({label, meta, input}) => {
+
+    return (
+        <div className="form-group simple-field-wr">
+            <input 
+                id={`toggle-field`}
+                type="checkbox"
+                className="hide"
+                onChange={(e) => {
+                    input.onChange(e.target.checked)
+                }}
+            />
+            <i className={
+                `fa-${ input.value ? 'check-square checked fas' : 'square far' }`
+            } />
+
+            <label 
+                className={`form-check-label`}
+                htmlFor={`toggle-field`}
+            >
+                {label}
+            </label>
+        </div>
+    )
+}
 
 

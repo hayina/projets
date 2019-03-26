@@ -108,17 +108,23 @@ export const NestedTree = ({items, onDelete}) =>
     items.map((item, i) => 
 
         <div key={item.path} className="item-tree-wr" >
+
             <i className="fas fa-angle fa-checkbox fa-angle-right"></i>
             <span className="leaf-info">
-                <i className="fa fa-times delete-item-list" 
+                <i  
+                    className="fa fa-times delete-item-list" 
                     onClick={ () => onDelete(item.path) }
                 />
-                <span className="item-label">{item.label} </span>
+                <span className="item-label">{item.label}</span>
             </span>
 
             { item.children && <NestedTree items={item.children} onDelete={onDelete} /> }
+
         </div>
 
     )
+
+
+
 
 

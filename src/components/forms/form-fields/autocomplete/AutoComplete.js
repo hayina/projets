@@ -12,7 +12,7 @@ import useClickOutside from '../../../hooks/useClickOutside';
 import './autocomplete.css'
 
 
-const AutoComplete = ({ onSelect }) => {
+const AutoComplete = ({ onSelect, url }) => {
 
 
     const [state, hooksDispatch] = useReducer(reducer, initialState);
@@ -105,7 +105,7 @@ const AutoComplete = ({ onSelect }) => {
                 "Access-Control-Allow-Origin": "*"
             },
             // PASSED PARAMS
-            url: '/get_partners',
+            url,
             method: 'GET',
             params: { q }
         })

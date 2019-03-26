@@ -8,11 +8,13 @@ const initialState = {
         { partner: { id: 30, label: 'Ministère de l\'Habitat et de la Politique de la Ville' }, montant: '10000000' }
     ],
     
-    localisation:  ["1.1", "1.2", "2.4.4.2", "2.4.4.3", "3"]
+    localisation:  ["1.1", "1.2", "2.4.4.2", "2.4.4.3", "3"],
+    pointsFocaux: []
 }
 
 export const getExtPartners = (state) => state.externalForms.partners;
 export const getLocalisations = (state) => state.externalForms.localisation;
+export const getPointsFocaux = (state) => state.externalForms.pointsFocaux;
 
 export const externalForms = (state = initialState, action) => {
 
