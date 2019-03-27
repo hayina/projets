@@ -326,6 +326,30 @@ let localisationItems = [
             { value: 3, label: 'Phenyx' },
         ]
     },
+    {
+        value: 4, label: 'Requins',
+        children: [
+            { value: 1, label: 'Great white shark' },
+            { value: 2, label: 'Tiger shark' },
+            { value: 3, label: 'Requin Marteau' },
+            {
+                value: 4, label: 'Chiens',
+                children: [
+                    { value: 1, label: 'Berger' },
+                    { value: 2, label: 'Dobermann' },
+                    { value: 3, label: 'Chiwawa' },
+                    {
+                        value: 4, label: 'Aigles',
+                        children: [
+                            { value: 1, label: 'Serf' },
+                            { value: 2, label: 'Flaman Rose' },
+                            { value: 3, label: 'Hiboux' },
+                        ]
+                    },
+                ]
+            },
+        ]
+    },
 ]
 
 

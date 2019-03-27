@@ -105,6 +105,37 @@ export const nestedTree = (selection, items) => {
 
 
 
+export const findTreeParents = (items) => {
+    let parents = []
+    const searchTree = (items) => {
+        items.forEach((item) => {
+            if(item.children){
+                parents.push(item.path)
+                searchTree(item.children)
+            }
+        })
+    }
+    searchTree(items);
+    console.log('findTreeParents', parents)
+    return parents;
+}
+
+export const findTreeLeafs = (items) => {
+    let leafs = []
+    const searchTree = (items) => {
+        items.forEach((item) => {
+            if(item.children){
+                searchTree(item.children)
+            } else {
+                leafs.push(item.path)
+            }
+        })
+    }
+    searchTree(items);
+    console.log('findTreeLeafs', leafs)
+    return leafs;
+}
+
 export const allDescendantLeafs = (node) => {
     let leafs = []
     const searchTree = ({ children, path }) => {

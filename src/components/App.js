@@ -4,16 +4,17 @@ import { connect } from 'react-redux';
 
 import ProjetForm from './forms/ProjetForm';
 import ModalRoot from './modals/ModalRoot';
+import { isModal } from '../reducers/modals';
 
 
 
-const App = (props) => {
+const App = () => {
 
     // const { dispatch, projetForm } = props;
 
     return (
 
-        <div className="app-container">
+        <div className={`app-container`}>
 
             <ProjetForm />
 
@@ -35,7 +36,7 @@ const App = (props) => {
 }
 
 export default connect(
-    (state) => ({
-        projetForm: state.projetForm
-    })
+    // (state) => ({
+    //     modal: isModal(state)
+    // })
 )(App);

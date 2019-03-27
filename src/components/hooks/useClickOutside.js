@@ -8,7 +8,7 @@ const useClickOutside = (nodeElement, f) => {
         // console.log('event.target -->', event.target)
         console.log('nodeElement -->', nodeElement)
         // console.log(nodeElement && !nodeElement.contains(event.target))
-        if (nodeElement && !nodeElement.contains(event.target)) {
+        if (nodeElement.current && !nodeElement.current.contains(event.target)) {
 
             // console.log(f)
             f();
@@ -18,7 +18,7 @@ const useClickOutside = (nodeElement, f) => {
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () =>  document.removeEventListener('mousedown', handleClickOutside);
-    }, [nodeElement]);
+    }, []);
     
 } 
 

@@ -12,17 +12,13 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
 
     const modalRef = useRef(null);
 
-    console.log('modalRef -------->', modalRef)
-
+    document.body.classList.add('modal-on')
     useEffect(() => {
-        // console.log('useEffect modalRef -------->', modalRef)
-
+        return () => document.body.classList.remove('modal-on')
     }, [])
 
-    useClickOutside(modalRef.current, () => {
-        console.log('Modal Callback Function')
+    useClickOutside(modalRef, () => {
         dispatch(hideModal());
-        console.log('useClickOutside DETECTED !!!')
     });
 
 
@@ -34,17 +30,17 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
     // })
 
     return (
-        <div className="pop-container">
+        <div className="modal-container">
 
-            <div className="pop-dialog" ref={modalRef}>
+            <div className="modal-dialog" ref={modalRef}>
 
-                <div className="pop-header">
-                    <h5 className="pop-title">{title}</h5>
+                <div className="modal-header">
+                    <h5 className="modal-title">{title}</h5>
                 </div>
 
-                <div className="pop-content">{children}</div>
+                <div className="modal-content">{children}</div>
 
-                <div className="pop-validation">
+                <div className="modal-validation">
 
                     <button className="btn btn-secondary"
                         onClick={ () => dispatch(hideModal()) }>Annuler</button>

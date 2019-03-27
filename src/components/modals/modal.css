@@ -1,4 +1,4 @@
-.pop-container {
+.modal-container {
 
     background-color: rgba(0, 0, 0, 0.35);
 
@@ -7,10 +7,11 @@
     right: 0;
     bottom: 0;
     left: 0;
+    overflow-y: scroll;
 
 }
 
-.pop-dialog {
+.modal-dialog {
 
     background-color: white;
     margin: 20px auto;
@@ -21,7 +22,7 @@
 
 }
 
-.pop-header {
+.modal-header {
     padding: 18px 5px;
     border-bottom: 1px solid #e9ecef;
     background-color: #0062cc;
@@ -33,7 +34,7 @@
     /* font-weight: 800; */
 }
 
-.pop-title {
+.modal-title {
     text-shadow: 1px 1px 1px #6c757d;
     text-transform: uppercase;
     text-align: center;
@@ -44,17 +45,17 @@
 }
 
 
-.pop-content {
+.modal-content {
     padding: 20px;
 }
 
-.pop-validation {
+.modal-validation {
     display: flex;
     justify-content: flex-end;
     border-top: 1px solid #e9ecef;
     padding: 12px;
 }
-.pop-validation .btn {
+.modal-validation .btn {
     margin-left: 10px;
     font-weight: 300;
     font-size: 18px;

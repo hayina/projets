@@ -24,7 +24,7 @@ const AutoComplete = ({ onSelect, url }) => {
     //////// EVENT HANDLERS
 
     // custom hook
-    useClickOutside(autocompleteRef.current, () => {
+    useClickOutside(autocompleteRef, () => {
         console.log('autoComplete Callback Function !!!', url)
         if (showSuggestions) {
             hooksDispatch({ type: 'TOGGLE_SUGGESTIONS', toggle: false });

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-import { allDescendantLeafsSelected, someDescendantLeafsSelected, findSelectedLeafs } from './helpers';
+import { allDescendantLeafsSelected, someDescendantLeafsSelected, findSelectedLeafs, findTreeParents, findTreeLeafs } from './helpers';
 
 import './checkTree.css';
 
 
 export const CheckTree = ({ items, selection, setSelection }) => {
 
-    const [expand, setExpand] = useState([])
+    const [expand, setExpand] = useState(["1", "2", "2.4", "2.4.4", "3", "4", "4.4", "4.4.4"])
 
     
     console.log(`selection`, selection)
@@ -94,7 +94,9 @@ export const CheckTree = ({ items, selection, setSelection }) => {
         <div className="check-list-container">
 
             <i  className="fas fa-redo-alt reset-checkbox" onClick={ () => setSelection([]) } />
+            <i  className="fas fa-redo-alt reset-checkbox" onClick={ () => setSelection(findTreeLeafs(items)) } />
             <i  className="fas fa-redo-alt reset-checkbox" onClick={ () => setExpand([]) } />
+            <i  className="fas fa-redo-alt reset-checkbox" onClick={ () => setExpand(findTreeParents(items)) } />
 
             { renderCheckTree({ items }) }
 
