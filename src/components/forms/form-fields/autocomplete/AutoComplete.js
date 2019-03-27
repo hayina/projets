@@ -25,11 +25,11 @@ const AutoComplete = ({ onSelect, url }) => {
 
     // custom hook
     useClickOutside(autocompleteRef, () => {
-        console.log('autoComplete Callback Function !!!', url)
+        // console.log('autoComplete useClickOutside !!!', url, state)
         if (showSuggestions) {
             hooksDispatch({ type: 'TOGGLE_SUGGESTIONS', toggle: false });
         }
-    });
+    }, [showSuggestions]);
 
 
     const onChange = (e) => {
