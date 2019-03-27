@@ -1,4 +1,4 @@
-.modal-container {
+.modals-container {
 
     background-color: rgba(0, 0, 0, 0.35);
 
@@ -11,7 +11,7 @@
 
 }
 
-.modal-dialog {
+.modals-dialog {
 
     background-color: white;
     margin: 20px auto;
@@ -22,7 +22,7 @@
 
 }
 
-.modal-header {
+.modals-header {
     padding: 18px 5px;
     border-bottom: 1px solid #e9ecef;
     background-color: #0062cc;
@@ -34,7 +34,7 @@
     /* font-weight: 800; */
 }
 
-.modal-title {
+.modals-title {
     text-shadow: 1px 1px 1px #6c757d;
     text-transform: uppercase;
     text-align: center;
@@ -45,17 +45,17 @@
 }
 
 
-.modal-content {
+.modals-content {
     padding: 20px;
 }
 
-.modal-validation {
+.modals-validation {
     display: flex;
     justify-content: flex-end;
     border-top: 1px solid #e9ecef;
     padding: 12px;
 }
-.modal-validation .btn {
+.modals-validation .btn {
     margin-left: 10px;
     font-weight: 300;
     font-size: 18px;

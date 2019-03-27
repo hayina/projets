@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useLayoutEffect  } from 'react';
 import { connect } from 'react-redux';
 
 import { hideModal } from '../../actions';
@@ -12,8 +12,8 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
 
     const modalRef = useRef(null);
 
-    document.body.classList.add('modal-on')
-    useEffect(() => {
+    useLayoutEffect(() => {
+        document.body.classList.add('modal-on')
         return () => document.body.classList.remove('modal-on')
     }, [])
 
@@ -30,17 +30,17 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
     // })
 
     return (
-        <div className="modal-container">
+        <div className="modals-container">
 
-            <div className="modal-dialog" ref={modalRef}>
+            <div className="modals-dialog" ref={modalRef}>
 
-                <div className="modal-header">
-                    <h5 className="modal-title">{title}</h5>
+                <div className="modals-header">
+                    <h5 className="modals-title">{title}</h5>
                 </div>
 
-                <div className="modal-content">{children}</div>
+                <div className="modals-content">{children}</div>
 
-                <div className="modal-validation">
+                <div className="modals-validation">
 
                     <button className="btn btn-secondary"
                         onClick={ () => dispatch(hideModal()) }>Annuler</button>
