@@ -105,3 +105,8 @@
 .leaf-info {
     
 }
+
+
+.checked .check-color {
+    color: #007bff;
+}

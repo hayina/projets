@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { hideModal } from '../../actions';
@@ -10,12 +10,20 @@ import './modal.css'
 
 const Modal = ({ title, children, handleValidation, dispatch }) => {
 
-    const inputEl = useRef(null);
+    const modalRef = useRef(null);
 
-    // useClickOutside(inputEl.current, () => {
-    //     dispatch(hideModal());
-    //     console.log('useClickOutside DETECTED !!!')
-    // });
+    console.log('modalRef -------->', modalRef)
+
+    useEffect(() => {
+        // console.log('useEffect modalRef -------->', modalRef)
+
+    }, [])
+
+    useClickOutside(modalRef.current, () => {
+        console.log('Modal Callback Function')
+        dispatch(hideModal());
+        console.log('useClickOutside DETECTED !!!')
+    });
 
 
     // i need this promise cauz when the modal component toggles to false 
@@ -28,7 +36,7 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
     return (
         <div className="pop-container">
 
-            <div className="pop-dialog" ref={inputEl}>
+            <div className="pop-dialog" ref={modalRef}>
 
                 <div className="pop-header">
                     <h5 className="pop-title">{title}</h5>

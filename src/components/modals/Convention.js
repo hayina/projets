@@ -14,11 +14,10 @@ import { getExtPartners } from '../../reducers/externalForms';
 
 export const formName = 'conventionForm';
 
-const onSubmit = (formValues, dispatch, { editMode, index, partnerValue, partners }) => {
-    // console.log('projetForm', formValues)
+const onSubmit = (formValues, dispatch, { editMode, index, partners }) => {
 
     if (!editMode) {
-        if ( partners.some((el) => el.partner.id === partnerValue.id) ) {
+        if ( partners.some((el) => el.partner.id === formValues.partner.id) ) {
             throw new SubmissionError({
                 partner: 'Vous avez déjà ajouter ce partenaire',
                 // _error: 'Login failed!'
@@ -31,20 +30,21 @@ const onSubmit = (formValues, dispatch, { editMode, index, partnerValue, partner
     }
 }
 
-let Convention = ({ handleSubmit, dispatch, partnerValue, editMode }) => {
+let Convention = ({ handleSubmit, dispatch, editMode }) => {
 
+    console.log('----> Convention Rendering .........................')
     return (
 
         <Modal
             handleValidation={() => {
                 dispatch(submit('conventionForm'));
-                dispatch(hideModal());
+                // dispatch(hideModal());
                 // dispatch(submit('conventionForm')).then(
                 //     () => dispatch(hideModal())
                 // );
             }}
             title={ `${ editMode ? 'editer' : 'ajouter' } un partenaire` }
-            modalName='convention'
+            // modalName='convention'
         >
             <div className="conv-container">
                 <form onSubmit={handleSubmit}>
@@ -79,11 +79,10 @@ Convention = reduxForm({
     onSubmit
 })(Convention)
 
-const selector = formValueSelector(formName);
+// const selector = formValueSelector(formName);
 
 export default connect(
     (state) => ({
-        partnerValue: selector(state, 'partner'),
         partners: getExtPartners(state),
     })
 )(Convention)

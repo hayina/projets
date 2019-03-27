@@ -5,11 +5,8 @@ import { arraySetting } from '../../actions';
 import Modal from './Modal';
 import { hideModal } from '../../actions';
 
-import { CheckList } from '../checkboxTree/CheckList';
-import { convertToSelectionByParent, convertToSelectionByLeafs } from '../checkboxTree/helpers';
-
-
-
+import { CheckTree } from '../checkboxTree/CheckTree';
+import { convertToSelectionByParent } from '../checkboxTree/helpers';
 
 
 
@@ -19,7 +16,7 @@ let Localisation = ({ dispatch, items, initialSelection=[] }) => {
 
     const [selection, setSelection] = useState(initialSelection)
 
-   
+    console.log('----> Localisation Rendering .........................')
 
     return (
 
@@ -35,7 +32,7 @@ let Localisation = ({ dispatch, items, initialSelection=[] }) => {
             title="Choisir la localisation du projet"
         >
 
-            <CheckList 
+            <CheckTree 
                 items={items} 
                 setSelection={setSelection} 
                 selection={selection} 
@@ -50,3 +47,5 @@ export default connect(
     //     localisations: getLocalisations(state),
     // })
 )(Localisation)
+
+

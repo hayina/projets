@@ -4,7 +4,7 @@ import { Field, reduxForm, formValueSelector, initialize, change } from 'redux-f
 
 import useApi from '../hooks/useApi';
 
-import { showModal } from '../../actions';
+import { showModal, arraySetting } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, RadioField, SelectField, SimpleField, 
@@ -12,10 +12,12 @@ import { TextField, RadioField, SelectField, SimpleField,
 import { getExtPartners, getLocalisations, getPointsFocaux } from '../../reducers/externalForms';
 import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
 import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
-import { NestedTree } from '../checkboxTree/CheckList';
+import { NestedTree } from '../checkboxTree/CheckTree';
+import CheckListModal from '../modals/CheckListModal';
 // import { formName as conventionFormName } from '../modals/Convention';
 
 import './forms.css';
+import SimpleList from './SimpleList';
 
 
 
@@ -114,7 +116,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
 
             <SimpleField label={'localisation'}>
                 <input type="button" className="btn btn-info show-modal" 
-                    value={ localisations.length > 0 ? `Editer` : `Ajouter`}
+                    value={ localisations.length > 0 ? `Editer` : `Choisir`}
                     style={{ float: 'right' }}
                     onClick={
                         () => {
@@ -175,14 +177,18 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
 
             <SimpleField label={'Chargé du Suivi'}>
                 <input type="button" className="btn btn-info show-modal" 
-                    value={ pointsFocaux.length > 0 ? `Editer` : `Ajouter`}
+                    value={ pointsFocaux.length > 0 ? `Editer` : `Choisir`}
                     style={{ float: 'right' }}
                     onClick={
                         () => {
-                            dispatch(showModal(modalTypes.ADD_LOCALISATION, 
+                            dispatch(showModal(modalTypes.ADD_CHECK_LIST_MODAL, 
                                 { 
+                                    title: 'Choisir un chargé du suivi',
                                     items: pointsFocauxItems, 
-                                    initialSelection: convertToSelectionByLeafs(pointsFocaux, pointsFocauxItems) 
+                                    initialSelection: pointsFocaux,
+                                    vHandler: (selection) => {
+                                        dispatch(arraySetting('pointsFocaux', selection))
+                                    }
                                 }
                             ))
                             
@@ -192,12 +198,12 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
             </SimpleField>
 
             
-            <div className="points-focaux-wr tree-wr">
-                <NestedTree 
-                    items={ nestedTree(pointsFocaux, pointsFocauxItems) }
-                    onDelete= { (path) => dispatch(arrayDeletingByPath('pointsFocaux', path)) }
-                /> 
-            </div>
+            
+            <SimpleList
+                items={ pointsFocaux }
+                onDelete= { (index) => dispatch(arrayDeletingByIndex('pointsFocaux', index)) }
+            /> 
+     
 
             {/* /////////////// secteur */}
 

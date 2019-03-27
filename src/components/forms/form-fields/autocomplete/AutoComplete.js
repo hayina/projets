@@ -19,12 +19,13 @@ const AutoComplete = ({ onSelect, url }) => {
 
     const { showSuggestions, suggestions, activeSuggestion, term, loading, errors } = state;
 
-    const inputEl = useRef(null);
+    const autocompleteRef = useRef(null);
 
     //////// EVENT HANDLERS
 
     // custom hook
-    useClickOutside(inputEl.current, () => {
+    useClickOutside(autocompleteRef.current, () => {
+        console.log('autoComplete Callback Function !!!', url)
         if (showSuggestions) {
             hooksDispatch({ type: 'TOGGLE_SUGGESTIONS', toggle: false });
         }
@@ -174,7 +175,7 @@ const AutoComplete = ({ onSelect, url }) => {
     }
 
     return (
-        <div className="autocomplete-wrapper" ref={inputEl}>
+        <div className="autocomplete-wrapper" ref={autocompleteRef}>
             <div className="oc-input-wr">
                 <input type="text" className={`form-control autocomplete-input`}
                     onChange={onChange}
