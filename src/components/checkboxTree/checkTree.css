@@ -11,11 +11,6 @@
     /* display: none; */
 }
 
-.form-check-label {
-    font-weight: 500;
-    text-transform: uppercase;
-    cursor: pointer;
-}
 
 
 .form-check-fa {
@@ -89,7 +84,7 @@
 }
 
 .tree-wr {
-
+    margin-bottom: 20px;
 }
 
 .tree-wr > .item-tree-wr {

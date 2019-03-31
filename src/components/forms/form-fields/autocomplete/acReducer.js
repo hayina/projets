@@ -6,7 +6,7 @@ export const initialState  = {
     showSuggestions: false,
     activeSuggestion: -1,
     loading: false,
-    errors: false
+    errors: false,
 }
 
 export const reducer = (state, action) => {

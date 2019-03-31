@@ -76,7 +76,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
                 name="isConvention"
                 component={RadioField}
                 label="conventionné"
-                options={[{ label: 'oui', value: true }, { label: 'non', value: false }]}
+                options={[{ label: 'Oui', value: true }, { label: 'Non', value: false }]}
             />
 
 

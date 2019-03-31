@@ -1,4 +1,4 @@
-import React, { useRef, useReducer } from 'react';
+import React, { useRef, useReducer, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import axios from 'axios';
@@ -10,12 +10,14 @@ import useClickOutside from '../../../hooks/useClickOutside';
 // import { getLoadingStatus, getErrorsStatus } from '../../../reducers/autocomplete'
 
 import './autocomplete.css'
+import useApi from '../../../hooks/useApi';
+import useAjaxFetch from '../../../hooks/useAjaxFetch';
 
 
 const AutoComplete = ({ onSelect, url }) => {
 
 
-    const [state, hooksDispatch] = useReducer(reducer, initialState);
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     const { showSuggestions, suggestions, activeSuggestion, term, loading, errors } = state;
 
@@ -27,33 +29,31 @@ const AutoComplete = ({ onSelect, url }) => {
     useClickOutside(autocompleteRef, () => {
         // console.log('autoComplete useClickOutside !!!', url, state)
         if (showSuggestions) {
-            hooksDispatch({ type: 'TOGGLE_SUGGESTIONS', toggle: false });
+            dispatch({ type: 'TOGGLE_SUGGESTIONS', toggle: false });
         }
     }, [showSuggestions]);
 
 
+    const lastTypedTerm = useRef('')
     const onChange = (e) => {
 
         const { value } = e.target;
+        lastTypedTerm.current = value
 
-        hooksDispatch({ type: 'SET_AC_INPUT', term: value });
-
-        // reduxFormHandler(value);
+        dispatch({ type: 'SET_AC_INPUT', term: value });
 
         if (value) {
             fetchSuggestions(value);
         }
         else {
-            // setState({ ...state, loading: false, showSuggestions: false, suggestions: [] });
-            hooksDispatch({ type: 'INIT_AC' });
+            dispatch({ type: 'INIT_AC' });
         }
     }
 
     const onFocus = (e) => {
-        const { value } = e.target;
-        if (value && !errors) {
-            hooksDispatch({ type: 'TOGGLE_SUGGESTIONS', toggle: true });
-            //     fetchSuggestions(value);
+        // const { value } = e.target;
+        if ( e.target.value && !errors ) {
+            dispatch({ type: 'TOGGLE_SUGGESTIONS', toggle: true });
         }
     }
 
@@ -82,13 +82,13 @@ const AutoComplete = ({ onSelect, url }) => {
     const onClick = (e, suggestion) => selectSuggestion(suggestion);
 
     // hover on suggestion
-    const onMouseEnter = (e, activeSuggestion) => hooksDispatch({ type: 'SET_ACTIVE_SUGGESTION', activeSuggestion });
+    const onMouseEnter = (e, activeSuggestion) => dispatch({ type: 'SET_ACTIVE_SUGGESTION', activeSuggestion });
 
     // leaving suggestions list
     const onMouseLeave = (e) => {
 
         if ( suggestions.length > 0 ) {
-            hooksDispatch({ type: 'SET_ACTIVE_SUGGESTION', activeSuggestion: -1 });
+            dispatch({ type: 'SET_ACTIVE_SUGGESTION', activeSuggestion: -1 });
         }
     }
 
@@ -96,8 +96,8 @@ const AutoComplete = ({ onSelect, url }) => {
     //////// HELPERS 
 
     const fetchSuggestions = (q) => {
-
-        hooksDispatch({ type: 'AC_API_CALL' });
+        
+        dispatch({ type: 'AC_API_CALL' });
 
         axios({
             // SETUP PARAMS
@@ -110,39 +110,33 @@ const AutoComplete = ({ onSelect, url }) => {
             method: 'GET',
             params: { q }
         })
-            .then((response) => {
-
-                // if (state.term) { // it must be the current TERM and not the one been sent to the api server
-                hooksDispatch({
+        .then((response) => {
+            // if( q !== lastTypedTerm.current ) console.log(`Canceling for -----------------> "${q}"`)
+            if ( q === lastTypedTerm.current ) { 
+                dispatch({
                     type: 'AC_API_SUCCESS',
-                    suggestions: response.data.map((s) => ({ id: s.id, label: s.label }))
+                    suggestions: response.data //.map((s) => ({ id: s.id, label: s.label }))
                 });
-                // }
-            })
-            .catch((error) => {
+            }
+        })
+        .catch((error) => {
+            if ( q === lastTypedTerm.current ) { 
                 console.log(error);
-                hooksDispatch({ type: 'AC_API_ERROR' });
-            })
-
+                dispatch({ type: 'AC_API_ERROR' });
+            }
+        })
     }
 
+
     const selectSuggestion = (suggestion) => {
-
-        hooksDispatch({ type: 'INIT_AC' });
-
+        dispatch({ type: 'INIT_AC' });
         onSelect(suggestion);
-        // reduxFormHandler(suggestion);
-        
-        // hooksDispatch({ type: 'SET_AC_INPUT', term: suggestion.label });
     }
 
     const handlingUpDownKeys = (index) => {
-
-        hooksDispatch({ type: 'UP_DOWN_KEY_PRESSED',
+        dispatch({ type: 'UP_DOWN_KEY_PRESSED',
             activeSuggestion: index, 
-            // term: suggestions[index].label
         });
-        // reduxFormHandler(suggestions[index].label);
     }
 
 

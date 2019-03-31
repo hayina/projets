@@ -1,11 +1,11 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import axios from 'axios';
 
 
 const initialState = {
-    data: undefined,
+    // data: undefined,
     loading: false,
-    error: false,
+    errors: false,
 }
 
 const reducer = (state, action) => {
@@ -16,20 +16,24 @@ const reducer = (state, action) => {
             return { ...initialState, loading: true }
 
         case 'API_SUCCESS':
-            return { ...state, data: action.data }
+            return { ...initialState, data: action.data }
 
         case 'API_ERROR':
-            return { ...state, error: true }
+            return { ...initialState, errors: true }
 
+        default:
+            throw new Error();
     }
 }
 
-const useApi = ({ url, method, params, success, feature }) => {
+const useApi = ({ url, method='GET', params, success, initialData }) => {
 
     console.log('USE API HOOK ---->', url)
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const [state, dispatch] = useReducer(reducer, { ...initialState, data: initialData });
 
     useEffect(() => {
+
+        let cancel = false;
 
         dispatch({ type: 'API_REQUEST' });
 
@@ -47,15 +51,18 @@ const useApi = ({ url, method, params, success, feature }) => {
                 params
             })
             .then(({ data }) => {
-
+                if( cancel ) return
                 dispatch({ type: 'API_SUCCESS', data });
                 success(data);
 
             })
             .catch((error) => {
+                if( cancel ) return
                 console.log(error);
                 dispatch({ type: 'API_ERROR' })
             })
+
+            return () => { cancel = true };
     }, [])
 
 

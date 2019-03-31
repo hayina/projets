@@ -22,7 +22,7 @@ const renderErrorField = (meta) => {
 
 export const SimpleField = ({ children, meta, label }) => (
     <div className="form-group simple-field-wr">
-        <label className="form-label">{label}</label>
+        <label className="field-label form-label">{label}</label>
         { children }
         { meta && renderErrorField(meta) }
     </div>
@@ -140,7 +140,7 @@ export const CheckboxField = ({ input, meta, label, options }) => {
 
                             }}
                         />
-                        <label className="form-check-label">
+                        <label className="checkbox-label form-check-label">
                             {option.label}
                         </label>
                     </div>
@@ -164,19 +164,19 @@ export const RadioField = ({ input, meta, label, options }) => {
                 <div className="form-check" key={option.value}>
                     <input
                         id={`${option.value}`}
-                        style={{ display: 'none' }}
+                        // style={{ display: 'none' }}
                         className="form-check-input"
                         type="radio"
                         value={option.value}
                         checked={option.value === input.value}
                         onChange={(e) => input.onChange(option.value)}
                     />
-                    {   option.value === input.value ? 
+                    {/* {   option.value === input.value ? 
                         <i className="fas fa-dot-circle"></i>
                         :
                         <i className="far fa-dot-circle"></i>
-                    }
-                    <label htmlFor={`${option.value}`} className="form-check-label">
+                    } */}
+                    <label htmlFor={`${option.value}`} className="radio-label form-check-label">
                         {option.label}
                     </label>
                 </div>

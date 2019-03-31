@@ -13,8 +13,12 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
     const modalRef = useRef(null);
 
     useLayoutEffect(() => {
+        // console.log('useLayoutEffect')
         document.body.classList.add('modal-on')
-        return () => document.body.classList.remove('modal-on')
+        return () => {
+            // console.log('return useLayoutEffect')
+            document.body.classList.remove('modal-on')
+        }
     }, [])
 
     useClickOutside(modalRef, () => {

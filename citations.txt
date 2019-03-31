@@ -1,0 +1,5 @@
+- The key takeaway is that the count constant inside any particular render doesn’t change over time. 
+It’s our component that’s called again — and each render “sees” its own count value that’s isolated between renders.
+
+-Every function inside the component render (including event handlers, effects, timeouts or API calls inside them) 
+captures the props and state of the render call that defined it.
