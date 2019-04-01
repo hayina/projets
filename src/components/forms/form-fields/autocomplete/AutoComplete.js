@@ -178,7 +178,12 @@ const AutoComplete = ({ onSelect, url }) => {
                     value={term}
                 // value={term}
                 />
-                {loading && (<i className='fas fa-spinner ac-sppiner'></i>)}
+                { loading && 
+                    <div className="spinner-wr">
+                        <i className='fas fa-spinner ac-sppiner'></i>
+                    </div>
+                }
+                {/* {loading && (<i className='fas fa-spinner ac-sppiner'></i>)} */}
                 {/* <i className={`fas fa-spinner ac-sppiner ${ loading ? '' : 'hide' }`}></i> */}
 
             </div>

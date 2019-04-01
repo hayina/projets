@@ -32,7 +32,7 @@ const useAjaxFetch = ({ url, method='GET', params, success, error }) => {
             .catch((errors) => {
                 if( cancel ) return
                 console.log(errors);
-                error(errors)
+                if(error) error(errors)
             })
 
             return () => { cancel = true };

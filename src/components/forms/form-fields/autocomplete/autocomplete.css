@@ -29,13 +29,22 @@
 }
 
 .autocomplete-input {
-
-}
+} 
 
 .oc-input-wr {
-    
+    position: relative;
 }
 
+.spinner-wr {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    /* transform: translateX(-100%); */
+    top: 50%;
+    transform: translate(-100%,-50%);
+    margin: 0px;
+    padding-right: 4px;
+}
 .ac-sppiner {
 
 }

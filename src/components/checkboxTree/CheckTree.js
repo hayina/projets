@@ -7,7 +7,7 @@ import './checkTree.css';
 
 export const CheckTree = ({ items, selection, setSelection }) => {
 
-    const [expand, setExpand] = useState(["1", "2", "2.4", "2.4.4", "3", "4", "4.4", "4.4.4"])
+    const [expand, setExpand] = useState([])
 
     
     console.log(`selection`, selection)
