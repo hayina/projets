@@ -53,7 +53,7 @@ export const CheckTree = ({ items, selection, setSelection }) => {
                     />
 
                     <div className="fa-container">
-                        { node.children &&
+                        { node.children && node.children.length > 0 &&
                             <span className="fa-wr">
                                 <i
                                     className={`fas fa-angle fa-checkbox ${ showChildren ? 'fa-angle-down' : 'fa-angle-right' }`}
@@ -80,7 +80,7 @@ export const CheckTree = ({ items, selection, setSelection }) => {
                         {node.label} - {node.path}
                     </label>
 
-                    {node.children && showChildren && renderCheckTree({ items: node.children })}
+                    {node.children && node.children.length > 0 && showChildren && renderCheckTree({ items: node.children })}
 
                 </div>
             )
@@ -120,7 +120,7 @@ export const NestedTree = ({items, onDelete}) =>
                 <span className="item-label">{item.label}</span>
             </span>
 
-            { item.children && <NestedTree items={item.children} onDelete={onDelete} /> }
+            { item.children && item.children.length > 0 && <NestedTree items={item.children} onDelete={onDelete} /> }
 
         </div>
 

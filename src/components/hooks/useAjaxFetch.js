@@ -5,10 +5,10 @@ import axios from 'axios';
 
 const useAjaxFetch = ({ url, method='GET', params, success, error }) => {
 
-    console.log('USE API HOOK ---->', url)
-
+    
     useEffect(() => {
-
+        
+        console.log('USE API HOOK ---->', url, params)
         let cancel = false;
 
         axios({

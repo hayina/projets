@@ -2,7 +2,7 @@
 
 export const findSelectedLeafs = (uiNode, statePaths, checked) => {
     const selectLeafs = ({ children, path }) => {
-        if (children) { children.forEach(item => selectLeafs(item)) }
+        if (children && children.length > 0) { children.forEach(item => selectLeafs(item)) }
         else {
             let indexOf = statePaths.indexOf(path)
             if (!checked) { statePaths.splice(indexOf, 1) }
@@ -26,7 +26,7 @@ export const convertToSelectionByParent = (leafsSelection, items) => {
             // on peut optimiser par just who startWith ...
             if( selection.some(sPath => `${sPath}.`.startsWith(`${item.path}.`)) ) {
             
-                if (item.children) {
+                if (item.children && item.children.length > 0) {
                     if (allDescendantLeafsSelected(item, selection)) {
                         // we delete the leafs
                         selection = selection.filter(path => !`${path}.`.startsWith(`${item.path}.`)) 
@@ -53,7 +53,7 @@ export const convertToSelectionByLeafs = (parentSelection, items) => {
 
     const searchTree = (items) => {
         items.forEach((item) => {
-            if (item.children) {
+            if (item.children && item.children.length > 0) {
 
                 let indexOf = selection.indexOf(item.path)
                 // if the parent is checked
@@ -91,7 +91,7 @@ export const nestedTree = (selection, items) => {
                 if( parent ) { parent.children.push(node) } 
                 else { uiNestedTree.push(node) }
 
-                if (item.children) {
+                if (item.children && item.children.length > 0) {
                     node.children = []
                     searchTree(item.children, node)
                 }
@@ -109,7 +109,7 @@ export const findTreeParents = (items) => {
     let parents = []
     const searchTree = (items) => {
         items.forEach((item) => {
-            if(item.children){
+            if(item.children && item.children.length > 0){
                 parents.push(item.path)
                 searchTree(item.children)
             }
@@ -124,7 +124,7 @@ export const findTreeLeafs = (items) => {
     let leafs = []
     const searchTree = (items) => {
         items.forEach((item) => {
-            if(item.children){
+            if(item.children && item.children.length > 0){
                 searchTree(item.children)
             } else {
                 leafs.push(item.path)
@@ -139,7 +139,7 @@ export const findTreeLeafs = (items) => {
 export const allDescendantLeafs = (node) => {
     let leafs = []
     const searchTree = ({ children, path }) => {
-        if (children) children.forEach(item => searchTree(item))
+        if (children && children.length > 0) children.forEach(item => searchTree(item))
         else leafs.push(path)
     }
     searchTree(node);

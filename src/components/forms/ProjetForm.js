@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm, formValueSelector, initialize, change } from 'redux-form'
 
@@ -18,6 +18,7 @@ import CheckListModal from '../modals/CheckListModal';
 
 import './forms.css';
 import SimpleList from './SimpleList';
+import useAjaxFetch from '../hooks/useAjaxFetch';
 
 
 
@@ -27,22 +28,19 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
 
 
 
-    const data = [];
-    // const { data, loading, error } = useApi({
-    //     url: '/localisation/getCommunesWithFractions',
-    //     method: 'GET',
-    //     success: (data) => {
-    //         // dispatch(showModal(modalTypes.ADD_LOCALISATION, { list: data }));
-    //     }
-    // })
+    const [localisationItems, setLocalisationItems] = useState([]);
 
-    // console.log('useApi', data)
+    console.log('localisationItems ->', localisationItems)
 
+    useAjaxFetch({
+        url: 'localisations',
+        success: (data) => {
+            // console.log('localisationItems ->', localisationItems)
+            setLocalisationItems(mapItems(data));
+        },
 
-    // useEffect(() => {
-    //     dispatch(showModal(modalTypes.ADD_LOCALISATION, { items }));
-    // }, [data])
-
+    })
+    
     const onSubmit = (formValues) => {
         console.log(formValues)
     }
@@ -131,7 +129,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
                     }
                 />
             </SimpleField>
-                    {/* { localisations.map(el => <div>{el}</div>) } */}
+
             <div className="localisations-wr tree-wr">
                 <NestedTree 
                     items={ nestedTree(localisations, localisationItems) }
@@ -160,12 +158,8 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
             <Field name="maitreOuvrageDel" label="maître d'ouvrage délégué" component={AutoCompleteField}
 
                 url='/get_acheteurs'
-                onSelect={(suggestion) => {
-                    dispatch(change(formName, 'maitreOuvrageDel', suggestion));
-                }}
-                onDelete={() => {
-                    dispatch(change(formName, 'maitreOuvrageDel', null))
-                }}
+                onSelect={ (suggestion) => dispatch(change(formName, 'maitreOuvrageDel', suggestion)) }
+                onDelete={ () => dispatch(change(formName, 'maitreOuvrageDel', null)) }
                 // suggestion={maitreOuvrage}
                 // validate={[required]}
             />
@@ -180,8 +174,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
                     value={ pointsFocaux.length > 0 ? `Editer` : `Choisir`}
                     style={{ float: 'right' }}
                     onClick={
-                        () => {
-                            dispatch(showModal(modalTypes.ADD_CHECK_LIST_MODAL, 
+                        () => dispatch(showModal(modalTypes.ADD_CHECK_LIST_MODAL, 
                                 { 
                                     title: 'Choisir un chargé du suivi',
                                     items: pointsFocauxItems, 
@@ -190,9 +183,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
                                         dispatch(arraySetting('pointsFocaux', selection))
                                     }
                                 }
-                            ))
-                            
-                        }
+                        ))
                     }
                 />
             </SimpleField>
@@ -285,73 +276,27 @@ let pointsFocauxItems = [
 ]
 
 
-let localisationItems = [
-    {
-        value: 1, label: 'Big cats',
-        children: [
-            { value: 1, label: 'Lion' },
-            { value: 2, label: 'Leopard' },
-            { value: 3, label: 'Guepard' },
-        ]
-    },
-    {
-        value: 2, label: 'Requins',
-        children: [
-            { value: 1, label: 'Great white shark' },
-            { value: 2, label: 'Tiger shark' },
-            { value: 3, label: 'Requin Marteau' },
-            {
-                value: 4, label: 'Chiens',
-                children: [
-                    { value: 1, label: 'Berger' },
-                    { value: 2, label: 'Dobermann' },
-                    { value: 3, label: 'Chiwawa' },
-                    {
-                        value: 4, label: 'Aigles',
-                        children: [
-                            { value: 1, label: 'Serf' },
-                            { value: 2, label: 'Flaman Rose' },
-                            { value: 3, label: 'Hiboux' },
-                        ]
-                    },
-                ]
-            },
-        ]
-    },
-    {
-        value: 3, label: 'Oiseaux',
-        children: [
-            { value: 1, label: 'Peroquet' },
-            { value: 2, label: 'Moinaux' },
-            { value: 3, label: 'Phenyx' },
-        ]
-    },
-    {
-        value: 4, label: 'Requins',
-        children: [
-            { value: 1, label: 'Great white shark' },
-            { value: 2, label: 'Tiger shark' },
-            { value: 3, label: 'Requin Marteau' },
-            {
-                value: 4, label: 'Chiens',
-                children: [
-                    { value: 1, label: 'Berger' },
-                    { value: 2, label: 'Dobermann' },
-                    { value: 3, label: 'Chiwawa' },
-                    {
-                        value: 4, label: 'Aigles',
-                        children: [
-                            { value: 1, label: 'Serf' },
-                            { value: 2, label: 'Flaman Rose' },
-                            { value: 3, label: 'Hiboux' },
-                        ]
-                    },
-                ]
-            },
-        ]
-    },
-]
 
+// @ResponseBody
+// @RequestMapping(value="/ajax/localisations") 
+// public Collection<TreeDto>  ajax_localisations(HttpServletRequest request) {
+    
+//     List<LocalisationBean> communes = localisationDao.getCommunesWithFractions2();
+    
+//     Map<Integer, TreeDto> communetree = new LinkedHashMap<Integer, TreeDto>();
+    
+//     communes.forEach((com) -> {
+        
+//         if (!communetree.containsKey(com.idCommune)){
+//             communetree.put(com.idCommune, new TreeDto(com.idCommune, com.commune));
+//         }
+        
+//         communetree.get(com.idCommune).children.add(new TreeDto(com.idFraction, com.fraction));
+        
+//     });
+    
+//     return communetree.values();
+    
+// }
 
-localisationItems = mapItems(localisationItems)
 
