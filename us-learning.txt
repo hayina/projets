@@ -53,3 +53,6 @@ overall = global
 Regardless = بغض النظر
 flaw = defaut, imperfection
 relevant = pertinent, approprié
+eager = impatient, pressé, enthousiaste
+silly = idiot, stupid ...
+brag = se vanter
