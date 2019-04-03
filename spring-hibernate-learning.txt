@@ -1,0 +1,19 @@
+cascade.REFRESH
+
+@initBinder
+
+@annotation
+
+lambda
+
+{ ... } collection ??
+
+new class[] { .... } ??
+
+class<?>[] ??
+
+return new String[] { ".." }  ??
+
+return new ResponseEntity<>(..., ...)  ??
+
+interface extends .... ?? jpaRepository

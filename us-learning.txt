@@ -56,3 +56,6 @@ relevant = pertinent, approprié
 sluggish = slow-moving or inactive.
 fold =  الطية، يطوي
 throttle = étrangler, accélérateur 
+eager = impatient, pressé, enthousiaste
+silly = idiot, stupid ...
+brag = se vanter
