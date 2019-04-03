@@ -15,3 +15,5 @@ class<?>[] ??
 return new String[] { ".." }  ??
 
 return new ResponseEntity<>(..., ...)  ??
+
+interface extends .... ?? jpaRepository
