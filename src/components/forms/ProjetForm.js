@@ -4,55 +4,128 @@ import { Field, reduxForm, formValueSelector, initialize, change } from 'redux-f
 
 import useApi from '../hooks/useApi';
 
-import { showModal, arraySetting } from '../../actions';
+import { showModal, arraySetting, initFormValues } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, RadioField, SelectField, SimpleField, 
     AutoCompleteField, ToggleField } from './form-fields/fields'
-import { getExtPartners, getLocalisations, getPointsFocaux } from '../../reducers/externalForms';
+import { getExtPartners, getLocalisations, getPointsFocaux, getInitialFormValues } from '../../reducers/externalForms';
 import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
 import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
 import { NestedTree } from '../checkboxTree/CheckTree';
 import CheckListModal from '../modals/CheckListModal';
 // import { formName as conventionFormName } from '../modals/Convention';
 
-import './forms.css';
+
 import SimpleList from './SimpleList';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 
-
+import './forms.css';
 
 const formName = 'projetForm'
 
-let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, dispatch }) => {
+let ProjetForm = ({ 
+            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, 
+            dispatch, match, initialValues, history     
+        }) => {
 
 
 
     const [localisationItems, setLocalisationItems] = useState([]);
+    const [secteurs, setSecteurs] = useState([]);
+    const [submitting, setSubmitting] = useState(false);
 
-    console.log('localisationItems ->', localisationItems)
+    // console.log("initialValues ->", initialValues)
+    // console.log("match.params ->", match.params.idProjet)
 
-    useAjaxFetch({
-        url: 'localisations',
-        success: (data) => {
-            // console.log('localisationItems ->', localisationItems)
-            setLocalisationItems(mapItems(data));
-        },
+    const { idProjet } = match.params
 
-    })
+    const initForm = () => {
+        dispatch(initFormValues({}))
+        dispatch(arraySetting('localisations', []))
+        dispatch(arraySetting('partners', []))
+    }
+
+    useEffect(() => {
+
+        initForm()
+
+        useAjaxFetch({
+            url: 'secteurs',
+            success: (data) => setSecteurs(data)
+        })
+        useAjaxFetch({
+            url: 'localisations',
+            success: (data) => setLocalisationItems(mapItems(data)),
+        })
+
+        // EDIT MODE
+        if(idProjet) {
+            setSubmitting(true)
+            useAjaxFetch({
+                url: `/projets/edit/${idProjet}`,
+                success: (data) => {
+                    console.log(`/projets/edit/${idProjet} ->`, data)
+                    // dispatch(initialize(formName, data))
+                    setSubmitting(false)
+                    dispatch(arraySetting('localisations', data.localisations))
+                    dispatch(arraySetting('partners', data.partners))
+                    dispatch(initFormValues(data))
+                },
+            })
+        } 
+        // NEW MODE
+        else {
+            // initForm()
+        }
+
+    }, [])
+    
     
     const onSubmit = (formValues) => {
+
+        setSubmitting(true)
+
         console.log(formValues)
+        // return false
+        let valuesToSend = { 
+            ...formValues,
+            idProjet,
+            maitreOuvrage: formValues.maitreOuvrage.value,
+            maitreOuvrageDel: formValues.isMaitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
+            localisations,
+            partners: partners.map(cp => `${cp.partner.value}:${cp.montant}`)
+        }
+
+
+        console.log(valuesToSend)
+
+
+        useAjaxFetch({
+            url: 'projets',
+            method: 'POST',
+            body: JSON.stringify(valuesToSend),
+            success: () => {
+                setTimeout(() => {
+
+                    initForm()
+                    setSubmitting(false)
+                    history.push("/projets")
+                },2000)
+            }
+            
+        })
+
     }
 
 
 
     return (
-        <form id={formName} className="form-wr" onSubmit={handleSubmit(onSubmit)}>
+        <form id={formName} className="form-wr" onSubmit={ handleSubmit(onSubmit) }>
 
             <div className="form-title">PROJET FORMULAIRE</div>
 
-            <div className="form-content">
+            <div className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}>
             <Field
                 name="intitule"
                 component={TextField}
@@ -87,7 +160,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
             {(isConvention && partners) && (
                 <div className="form-group">
                     {partners.map(({ partner, montant }, i) => (
-                        <div className="partner-item" key={partner.id}>
+                        <div className="partner-item" key={partner.value}>
 
                             <i className="fa fa-times delete-item-list"
                                 onClick={() => dispatch(arrayDeletingByIndex('partners', i))}></i>
@@ -103,7 +176,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
                             />
 
                             <div className="partner-name">{i+1}. {partner.label}</div>
-                            <div className="partner-montant">{montant} DH</div>
+                            <div className="partner-montant">{Number(montant).toLocaleString()} DH</div>
 
                         </div>
                     ))}
@@ -133,14 +206,14 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
             <div className="localisations-wr tree-wr">
                 <NestedTree 
                     items={ nestedTree(localisations, localisationItems) }
-                    onDelete= { (path) => dispatch(arrayDeletingByPath('localisation', path)) }
+                    onDelete= { (path) => dispatch(arrayDeletingByPath('localisations', path)) }
                 /> 
             </div>
 
 
             <Field name="maitreOuvrage" label="maître d'ouvrage" component={AutoCompleteField}
 
-                url='/get_acheteurs'
+                url='/acheteurs'
                 onSelect={(suggestion) => {
                     dispatch(change(formName, 'maitreOuvrage', suggestion));
                 }}
@@ -157,7 +230,7 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
             { isMaitreOuvrageDel &&
             <Field name="maitreOuvrageDel" label="maître d'ouvrage délégué" component={AutoCompleteField}
 
-                url='/get_acheteurs'
+                url='/acheteurs'
                 onSelect={ (suggestion) => dispatch(change(formName, 'maitreOuvrageDel', suggestion)) }
                 onDelete={ () => dispatch(change(formName, 'maitreOuvrageDel', null)) }
                 // suggestion={maitreOuvrage}
@@ -202,14 +275,17 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
                 name="secteur"
                 component={SelectField}
                 label="secteur"
-                options={[{ label: 'santé', value: 1 }, { label: 'education', value: 2 }, { label: 'eau potable', value: 3 }]}
+                options={secteurs}
                 validate={[required]}
             />
 
             </div>
 
             <div className="form-validation">
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" 
+                    className={`btn btn-primary ${ submitting ? 'btn-submitting is-submitting ':'' }`}>
+                    Submit { submitting ? '...':'' }
+                </button>
             </div>
 
         </form>
@@ -219,22 +295,23 @@ let ProjetForm = ({ handleSubmit, isConvention, partners, localisations, pointsF
 
 
 ProjetForm = reduxForm({
-    form: formName
+    form: formName,
+    enableReinitialize: true
 })(ProjetForm)
 
 const selector = formValueSelector('projetForm');
 
 export default connect(
     (state) => ({
-        initialValues: {
-            intitule: 'YOUSSEF PROJET',
-            montant: 300000,
-            secteur: 1,
-            isConvention: true,
-            communes: [2, 3],
-            partners: [],
-            isMaitreOuvrageDel: false,
-        },
+        // initialValues: {
+        //     intitule: 'YOUSSEF PROJET',
+        //     montant: 300000,
+        //     secteur: 1,
+        //     isConvention: true,
+        //     maitreOuvrage: {value: 35, label: "Délégation Provincial Santé - Taourirt"},
+        //     isMaitreOuvrageDel: false,
+        // },
+        initialValues: getInitialFormValues(state),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         // maitreOuvrage: selector(state, 'maitreOuvrage'),

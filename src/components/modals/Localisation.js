@@ -23,7 +23,7 @@ let Localisation = ({ dispatch, items, initialSelection=[] }) => {
         <Modal
             handleValidation={() => {
                 dispatch(
-                    arraySetting('localisation', convertToSelectionByParent(selection, items))
+                    arraySetting('localisations', convertToSelectionByParent(selection, items))
                 )
  
                 // nestedTree(selection, mappedItems)

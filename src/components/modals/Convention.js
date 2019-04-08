@@ -17,7 +17,7 @@ export const formName = 'conventionForm';
 const onSubmit = (formValues, dispatch, { editMode, index, partners }) => {
 
     if (!editMode) {
-        if ( partners.some((el) => el.partner.id === formValues.partner.id) ) {
+        if ( partners.some((el) => el.partner.value === formValues.partner.value) ) {
             throw new SubmissionError({
                 partner: 'Vous avez déjà ajouter ce partenaire',
                 // _error: 'Login failed!'
@@ -51,7 +51,7 @@ let Convention = ({ handleSubmit, dispatch, editMode }) => {
 
                     <Field name="partner" label="Partenaire" component={AutoCompleteField}
 
-                        url='/get_partners'
+                        url='/partners'
                         onSelect={(suggestion) => {
                             dispatch(change(formName, 'partner', suggestion));
                         }}

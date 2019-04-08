@@ -101,7 +101,7 @@ const AutoComplete = ({ onSelect, url }) => {
 
         axios({
             // SETUP PARAMS
-            baseURL: '/PROJETS/ajax',
+            baseURL: '/PROJET-API/api',
             headers: {
                 "Access-Control-Allow-Origin": "*"
             },
@@ -154,7 +154,7 @@ const AutoComplete = ({ onSelect, url }) => {
                         onClick={(e) => onClick(e, suggestion)}
                         onMouseEnter={(e) => onMouseEnter(e, i)}
                         className={`suggestions-item ${(i === activeSuggestion) ? 'active-suggestion' : ''}`}
-                        key={suggestion.id}
+                        key={suggestion.value}
                     >
                         {suggestion.label}
                         {/* - ({i}) ({activeSuggestion}) */}

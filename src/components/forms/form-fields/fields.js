@@ -211,18 +211,21 @@ export const SelectField = ({ input, meta, label, options }) => {
 
 export const ToggleField = ({label, meta, input}) => {
 
+    const checked = input.value ? true:false
+
     return (
         <div className="form-group simple-field-wr">
             <input 
                 id={`toggle-field`}
                 type="checkbox"
                 className="hide"
+                checked={checked}
                 onChange={(e) => {
                     input.onChange(e.target.checked)
                 }}
             />
             <i className={
-                `fa-${ input.value ? 'check-square checked fas' : 'square far' }`
+                `fa-${ checked ? 'check-square checked fas' : 'square far' }`
             } />
 
             <label 

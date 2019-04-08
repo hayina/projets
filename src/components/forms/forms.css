@@ -122,3 +122,16 @@
 .simple-field-wr {
     
 }
+
+
+.btn-submitting {
+    opacity: 0.6;
+}
+
+.form-submitting {
+    opacity: 0.5;
+}
+
+.is-submitting {
+    pointer-events:none;
+}

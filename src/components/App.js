@@ -1,10 +1,12 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { connect } from 'react-redux';
 
 
 import ProjetForm from './forms/ProjetForm';
 import ModalRoot from './modals/ModalRoot';
-import { isModal } from '../reducers/modals';
+import ProjetList from './projets/ProjetList';
+import Header from './Header';
 
 
 
@@ -16,19 +18,18 @@ const App = () => {
 
         <div className={`app-container`}>
 
-            <ProjetForm />
+            <Router>
+
+                <Header />
+
+                <Route path="/" exact component={ProjetForm} />
+                <Route path="/projets/edit/:idProjet" exact component={ProjetForm} />
+                <Route path="/projets" exact component={ProjetList} />
+
+
+            </Router>
 
             <ModalRoot />
-
-            {/* { projetForm.modals.show && (
-                <Modal
-                    handleClick={ () => dispatch(submit('conventionForm')) }
-                    title="ajouter un partenaire"
-                    modalName='convention'
-                >
-                    { projetForm.modals.convention && <Convention /> }
-                </Modal>
-            )} */}
 
         </div>
 

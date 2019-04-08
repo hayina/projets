@@ -2,18 +2,13 @@ import types from '../types';
 
 
 const initialState = {
-    partners: [
-        { partner: { id: 2, label: 'ONEE - Branche Eau' }, montant: '890000' },
-        { partner: { id: 4, label: 'Commune Mestegmeur' }, montant: '640000' },
-        { partner: { id: 30, label: 'Ministère de l\'Habitat et de la Politique de la Ville' }, montant: '10000000' }
-    ],
-    
-    localisation:  [],
+    partners: [],
+    localisations:  [],
     pointsFocaux: []
 }
 
 export const getExtPartners = (state) => state.externalForms.partners;
-export const getLocalisations = (state) => state.externalForms.localisation;
+export const getLocalisations = (state) => state.externalForms.localisations;
 export const getPointsFocaux = (state) => state.externalForms.pointsFocaux;
 
 export const externalForms = (state = initialState, action) => {
@@ -50,6 +45,7 @@ export const externalForms = (state = initialState, action) => {
             return state
 
         case types.DELETE_ITEM_BY_PATH:
+            console.log(state[arrName])
             let nState = state[arrName].filter(sPath => !`${sPath}.`.startsWith(`${path}.`)) 
             console.log(nState)
             return { ...state, [arrName]: nState };
@@ -66,4 +62,18 @@ export const externalForms = (state = initialState, action) => {
             return state;
     }
 
+}
+
+
+export const getInitialFormValues = (state) => state.initialFormValues;
+
+export const initialFormValues = (state = {}, action) => {
+
+    if ( action.type === types.EDIT_FORM_VALUES ) {
+        // let newState = { ...state, ...action.initialValues }
+        // console.log('REDUCER initialFormValues --->', newState)
+        return action.initialValues;
+    }
+
+    return state;
 }

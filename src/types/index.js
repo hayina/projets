@@ -24,8 +24,13 @@ const types = {
     UPDATE_ITEM: `${externalForms} UPDATE_ITEM`,
     SET_ARRAY: `${externalForms} SET_ARRAY`,
 
+    EDIT_FORM_VALUES: `${externalForms} EDIT_FORM_VALUES`,
+
+
 
     SET_CHECKBOX_PROP: `${checkbox} SET_PROP`,
+
+
 
     // SET_LOADER: '[ui] set loader',
     // NEW_API_REQUEST: '[api] new api request ...',

@@ -23,6 +23,8 @@ export const arrayDeletingByPath = (arrName, path) => ({ type: types.DELETE_ITEM
 export const arrayUpdating = (arrName, item, index) => ({ type: types.UPDATE_ITEM, arrName, index, item })
 export const arraySetting = (arrName, arrayVal) => ({ type: types.SET_ARRAY, arrName, arrayVal })
 
+export const initFormValues = (initialValues) => ({ type: types.EDIT_FORM_VALUES, initialValues })
+
 
 export const setCheckboxProp = (values, checkboxType, checkboxProp) => ({ 
         type: types.SET_CHECKBOX_PROP, 

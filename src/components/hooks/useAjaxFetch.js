@@ -1,42 +1,43 @@
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import axios from 'axios';
 
 
 
-const useAjaxFetch = ({ url, method='GET', params, success, error }) => {
+const useAjaxFetch = ({ url, method='GET', params, body, success, error, contentType="application/json" }) => {
 
     
-    useEffect(() => {
+    // useEffect(() => {
         
-        console.log('USE API HOOK ---->', url, params)
-        let cancel = false;
+        console.log('USE API HOOK ---->', url, params, body)
+        // let cancel = false;
 
         axios({
                 // SETUP PARAMS
-                baseURL: '/PROJETS/ajax',
+                baseURL: '/PROJET-API/api',
                 headers: {
                     "Access-Control-Allow-Origin": "*",
                     "X-Requested-With": "XMLHttpRequest",
-
+                    "Content-Type": contentType,
                 },
                 // PASSED PARAMS
                 url,
                 method,
-                params
+                params,
+                data: body,
             })
             .then(({ data }) => {
-                if( cancel ) return
-                success(data);
+                // if( cancel ) return
+                if(success) success(data);
 
             })
             .catch((errors) => {
-                if( cancel ) return
+                // if( cancel ) return
                 console.log(errors);
                 if(error) error(errors)
             })
 
-            return () => { cancel = true };
-    }, [])
+            // return () => { cancel = true };
+    // }, [])
     // }, [url, params])
 
 }
