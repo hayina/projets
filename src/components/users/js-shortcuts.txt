@@ -1,0 +1,7 @@
+
+// iterate over object
+Object.entries(myObj).forEach(([key, val]) => ... )
+
+// iterate over array
+    for (const s of myStringArray) 
+    myStringArray.forEach( () => ... )

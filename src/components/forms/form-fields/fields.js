@@ -28,6 +28,7 @@ export const SimpleField = ({ children, meta, label }) => (
     </div>
 )
 
+
 // props -> { input, meta }
 
 // meta 
@@ -209,7 +210,7 @@ export const SelectField = ({ input, meta, label, options }) => {
 
 /////////////////// TOGGLE
 
-export const ToggleField = ({label, meta, input}) => {
+export const ToggleField = ({label, input}) => {
 
     const checked = input.value ? true:false
 
@@ -239,3 +240,10 @@ export const ToggleField = ({label, meta, input}) => {
 }
 
 
+
+
+////////////// SIMPLE FIELD
+
+export const TextInput = (props) => (
+    <input type="text" autoComplete="off" {...props} />
+)

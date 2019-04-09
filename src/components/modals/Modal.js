@@ -38,9 +38,11 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
 
             <div className="modals-dialog" ref={modalRef}>
 
-                <div className="modals-header">
-                    <h5 className="modals-title">{title}</h5>
-                </div>
+                { title && 
+                    <div className="modals-header">
+                        <h5 className="modals-title">{title}</h5>
+                    </div>
+                }
 
                 <div className="modals-content">{children}</div>
 

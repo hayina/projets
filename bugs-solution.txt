@@ -43,6 +43,7 @@ can't .... undefinedalways check function if params are okey
 
 
 ------------
+            //// UPDATE ITEM IN ARRAY
                 // WORONG !! STATE MUTATION
             // let arr = state[arrName];
             // arr[index] = item;

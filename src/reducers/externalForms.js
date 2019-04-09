@@ -4,12 +4,14 @@ import types from '../types';
 const initialState = {
     partners: [],
     localisations:  [],
-    pointsFocaux: []
+    pointsFocaux: [],
+    users: []
 }
 
 export const getExtPartners = (state) => state.externalForms.partners;
 export const getLocalisations = (state) => state.externalForms.localisations;
 export const getPointsFocaux = (state) => state.externalForms.pointsFocaux;
+export const getUsers = (state) => state.externalForms.users;
 
 export const externalForms = (state = initialState, action) => {
 

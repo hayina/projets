@@ -35,10 +35,10 @@
 }
 
 .modals-title {
-    text-shadow: 1px 1px 1px #6c757d;
+    /* text-shadow: 1px 1px 1px #6c757d; */
     text-transform: uppercase;
     text-align: center;
-    font-weight: 600;
+    /* font-weight: 600; */
     font-size: 17px;
     line-height: 1;
     margin: 0;
@@ -55,11 +55,9 @@
     border-top: 1px solid #e9ecef;
     padding: 12px;
 }
+
 .modals-validation .btn {
     margin-left: 10px;
-    font-weight: 300;
-    font-size: 18px;
-    padding: 2px 28px 4px;
 }
 
  

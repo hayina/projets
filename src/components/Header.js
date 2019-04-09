@@ -5,14 +5,20 @@ import { Link } from "react-router-dom";
 
 let Header = () => {
 
+    const NavItem = ({url, label}) => (
+        <div className="nav-item">
+            <Link to={url}>{label}</Link>
+        </div>
+    )
+
     return (
         <nav className="nav-wr">
-            <div className="nav-item">
-                <Link to="/">Ajouter Projet</Link>
-            </div>
-            <div className="nav-item">
-                <Link to="/projets">Liste des Projets</Link>
-            </div>
+
+            <NavItem label="Ajouter Projet" url="/projets/new" />
+            <NavItem label="Liste des Projets" url="/projets" />
+            <NavItem label="Liste des utilisateurs" url="/users" />
+            
+
         
         </nav>
     )

@@ -7,6 +7,7 @@ import ProjetForm from './forms/ProjetForm';
 import ModalRoot from './modals/ModalRoot';
 import ProjetList from './projets/ProjetList';
 import Header from './Header';
+import UserList from './users/UserList';
 
 
 
@@ -22,9 +23,13 @@ const App = () => {
 
                 <Header />
 
-                <Route path="/" exact component={ProjetForm} />
+                <Route path="/" exact component={UserList} />
+
+                <Route path="/projets/new" exact component={ProjetForm} />
                 <Route path="/projets/edit/:idProjet" exact component={ProjetForm} />
                 <Route path="/projets" exact component={ProjetList} />
+
+                <Route path="/users" exact component={UserList} />
 
 
             </Router>

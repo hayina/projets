@@ -25,6 +25,9 @@ export const arraySetting = (arrName, arrayVal) => ({ type: types.SET_ARRAY, arr
 
 export const initFormValues = (initialValues) => ({ type: types.EDIT_FORM_VALUES, initialValues })
 
+// USERS
+export const addUser = (values) => ({ type: types.ADD_USER, values })
+
 
 export const setCheckboxProp = (values, checkboxType, checkboxProp) => ({ 
         type: types.SET_CHECKBOX_PROP, 

@@ -1,0 +1,13 @@
+
+
+
+.fa-add-user {
+    cursor: pointer;
+}
+
+.user-item{
+
+    box-shadow: 0 0 1px 1px rgba(20,23,28,0.1), 0 3px 1px 0 rgba(20,23,28,0.1);
+    margin-bottom: 12px;
+    padding: 10px;
+}

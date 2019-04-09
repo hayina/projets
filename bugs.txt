@@ -1,3 +1,5 @@
+quand ya pas de scroll popup bug decalage !!!!
+
 - delarative vs imperative
 
 - il faut absolute path f imports !!!!

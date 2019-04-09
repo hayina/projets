@@ -2,6 +2,7 @@
 // const SUGGESTIONS = '[Suggestions]';
 const externalForms = '[external forms]';
 const checkbox = '[checkbox]';
+const users = '[users]';
 
 const types = {
 
@@ -29,6 +30,11 @@ const types = {
 
 
     SET_CHECKBOX_PROP: `${checkbox} SET_PROP`,
+
+
+    ///// USERS
+    
+    ADD_USER: `${users} ADD`,
 
 
 

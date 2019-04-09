@@ -1,7 +1,14 @@
 
 
-export const required = value => 
-    value || typeof value === 'number' ? undefined : 'Required'
+export const required = value => {
+
+    console.log('1.required ->', value)
+    const isreq = value || typeof value === 'number' ? undefined : 'Required'
+
+    console.log('2.required ->', isreq)
+    return isreq
+}
+    
 
 export const number = value =>
     value && isNaN(Number(value)) ? 'Must be a number' : undefined
