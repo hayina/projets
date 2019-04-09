@@ -1,0 +1,36 @@
+
+.side-bar {
+    /* position: fixed; */
+    /* z-index: 999;
+    top: 0; */
+    width: 30%;
+    height: 100%;
+    box-shadow: 0 4px 7px 0 rgba(0, 0, 0, .2);
+    height: 100vh;
+}
+
+#logo {
+    text-align: center;
+}
+#img_logo {
+    width: 38%;
+    height: 38%;
+    cursor: pointer;
+}
+
+.side-item {
+  
+
+}
+.side-item a {
+    color: #545b62;
+    padding: 20px 20px;
+    border: 1px solid #0062cc;
+    color: white;
+    background-color: #5bc0ff;
+    display: block;
+}
+
+.nav-bar {
+    padding-top: 20px;
+}

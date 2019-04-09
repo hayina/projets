@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
 
-
+import './header.css'
 
 let Header = () => {
 
@@ -14,9 +14,11 @@ let Header = () => {
     return (
         <nav className="nav-wr">
 
-            <NavItem label="Ajouter Projet" url="/projets/new" />
-            <NavItem label="Liste des Projets" url="/projets" />
-            <NavItem label="Liste des utilisateurs" url="/users" />
+
+            <div className="header-right">
+                <NavItem label="Déconnexion" url="/logout" />
+            </div>
+
             
 
         
