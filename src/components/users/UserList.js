@@ -22,12 +22,16 @@ let UserList = ({dispatch, users}) => {
 
     return (
 
-        <div className="users-wr">
+        <div className="users-wr box-sh">
 
             <div className="nav-user">
-                <i className="fas fa-user-plus fa-add-user" onClick={() => {
-                    dispatch(showModal(modalTypes.ADD_USER, {editMode: false }))
-                }}></i>
+
+                <div className="add-user" onClick={() => {
+                        dispatch(showModal(modalTypes.ADD_USER, {editMode: false }))
+                    }}>
+                    <span className="ctr_ic">Ajouter un utilisateur</span> 
+                    <i className="fas fa-user-plus fa-add-user" ></i>
+                </div>
             </div>
 
             <div className="user-result">

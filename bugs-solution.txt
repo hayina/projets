@@ -53,3 +53,7 @@ can't .... undefinedalways check function if params are okey
             let arr = [ ...state[arrName] ];
             arr[index] = item;
             return { ...state, [arrName]: arr }
+
+////////
+
+bouble with setState() !!! attention stale state use instead useReducer hook

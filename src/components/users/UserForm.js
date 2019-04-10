@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import { connect } from 'react-redux';
 
 import './userForm.css'
@@ -29,13 +29,52 @@ const rules = {
     password: [required],
     nom: [required],
     prenom: [required],
+    active: [required],
+}
+
+const initialState = {
+    values: {
+        login: '',
+        password: '',
+        nom: '',
+        prenom: '',
+        active: false,
+    },
+    errors: {
+        login: '',
+        password: '',
+        nom: '',
+        prenom: '',
+        active: '',
+    }
+}
+export const reducer = (state, action) => {
+
+    console.log(`auto-complete/${action.type}`);
+
+    const newState = { ...state }
+
+    switch (action.type) {
+
+        case 'SET_ERRORS':
+            return { newState, errors : { ...newState.errors, [action.field]: action.error } };
+
+
+
+
+        default:
+            throw new Error();
+    }
+
 }
 
 let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) => {
 
 
+    const [state, dispatchForm] = useReducer(reducer, initialState)
+
     const [values, setValues] = useState(initUser)
-    const [errors, setErrors] = useState(intialFormErrors)
+    // const [errors, setErrors] = useState(intialFormErrors)
 
     const [submitting, setSubmitting] = useState(false);
 
@@ -48,12 +87,13 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
         //      password: [required],
 
         Object.entries(rules).forEach(([field, validators]) => {
-            // console.log(field, validators)
-            validators.forEach(rule => setErrors({ ...errors, [field]: rule(values[field]) }))
+            console.log(field, validators)
+            validators.forEach(rule => dispatchForm({ type: 'SET_ERRORS', field, error: rule(values[field]) }))
+            // validators.forEach(rule => setErrors({ ...errors, [field]: rule(values[field]) }))
         })
 
         console.log('onSubmit ->', values)
-        console.log('Errors ->', errors)
+        console.log('Errors ->', state.errors)
 
         return
 
@@ -120,8 +160,8 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
                     }}
                 />
                 <div className="form-errors">
-                    {Object.keys(errors).map((err, i) => 
-                            (<div className="err-item" key={i}>{err}. {errors[err]}</div>)
+                    {Object.keys(state.errors).map((err, i) => 
+                            (<div className="err-item" key={i}>{err}. {state.errors[err]}</div>)
                     )}
                 </div>
             

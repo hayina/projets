@@ -1,0 +1,8 @@
+// vertical align
+    display: flex;
+    align-items: center;
+
+
+// float right with flex (+2 elements)
+
+    margin-left: auto;

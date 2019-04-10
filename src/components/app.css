@@ -30,3 +30,28 @@
 .path-link {
     font-weight: 600;
 }
+
+
+.box-sh {
+    box-shadow: 0 2px 4px 0 rgba(43,43,43,0.1);
+    background-color: white;
+    /* padding: 12px 10px; */
+
+}
+
+.fv_align {
+    display: flex;
+    align-items: center;
+}
+
+.ctr_ic {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+.ctr_ic:hover {
+    cursor: pointer;
+    color: #0056b3;
+    text-decoration: underline;
+}
