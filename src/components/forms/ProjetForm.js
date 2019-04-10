@@ -123,7 +123,7 @@ let ProjetForm = ({
     return (
         <form id={formName} className="form-wr" onSubmit={ handleSubmit(onSubmit) }>
 
-            <div className="form-title">PROJET FORMULAIRE</div>
+            <div className="form-title hide">PROJET FORMULAIRE</div>
 
             <div className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}>
             <Field

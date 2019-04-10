@@ -32,6 +32,7 @@ animation: spinner 0.6s linear infinite;
 
 .fa, .far, .fas {
     margin: 0px 4px;
+    cursor: pointer;
 }
 
 .modal-on {

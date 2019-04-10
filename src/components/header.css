@@ -1,5 +1,58 @@
 
 
+.header {
+
+    /* font-family: "Quicksand",sans-serif;
+    font-family: "Open Sans",sans-serif; */
+
+    box-shadow: 0 2px 4px 0 rgba(43,43,43,0.1);
+    background-color: white;
+    display: flex;
+    padding: 10px 10px;
+    color: #333;
+    font-size: 15px;
+    font-weight: 400;
+
+    align-items: center;
+
+}
 .header-right {
     float: right;
+}
+
+.logo-label {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+#logo {
+    text-align: center;
+    margin-right: 16px;
+    /* width: 16%;
+    float: left; */
+}
+#img_logo {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+}
+
+.user-profile {
+    margin-left: auto;
+}
+
+.dropdown-wr {
+
+}
+
+.user-name {
+ 
+}
+
+.dropdown-item {
+
+}
+
+.dropdown-label {
+    margin-left: 8px;
 }

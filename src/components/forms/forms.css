@@ -1,8 +1,11 @@
 .form-wr {
-    width: 80%;
-    margin: 40px auto 80px;
-    border: 1px solid #ced4da;
+    /* width: 80%;
+    margin: 40px auto 80px; */
+    /* border: 1px solid #ced4da; */
+    background-color: white;
     /* padding: 0px 20px; */
+    box-shadow: 0 2px 4px 0 rgba(43,43,43,0.1);
+    border-top: 6px solid #007bff;
 }
 
 
@@ -26,6 +29,7 @@
 
 .form-content {
     padding: 14px 20px 0px;
+    background-color: white;
 }
 
 .form-label {
@@ -34,8 +38,8 @@
 
 .field-label {
     font-weight: 600;
-    text-transform: uppercase;
-    font-size: 14px;
+    /* text-transform: uppercase; */
+    font-size: 15px;
 }
 
 .form-check-label {
