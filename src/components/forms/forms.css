@@ -1,11 +1,17 @@
+#projetForm::before {
+    border-top: 6px solid #007bff;
+    content: '';
+    display: block;
+}
+
 .form-wr {
     /* width: 80%;
     margin: 40px auto 80px; */
-    /* border: 1px solid #ced4da; */
+    border: 1px solid #ced4da;
     background-color: white;
     /* padding: 0px 20px; */
     box-shadow: 0 2px 4px 0 rgba(43,43,43,0.1);
-    border-top: 6px solid #007bff;
+    
 }
 
 
@@ -34,6 +40,12 @@
 
 .form-label {
 
+}
+
+.form-label::after {
+    content: ':';
+    display: inline;
+    margin-left: 2px;
 }
 
 .field-label {
@@ -138,4 +150,10 @@
 
 .is-submitting {
     pointer-events:none;
+}
+
+
+.sep-line {
+    border-top: 2px solid #17a2b8;
+    margin-bottom: 20px;
 }

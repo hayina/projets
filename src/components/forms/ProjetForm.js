@@ -129,7 +129,7 @@ let ProjetForm = ({
             <Field
                 name="intitule"
                 component={TextField}
-                label="intitulé"
+                label="Intitulé"
                 fieldType="textarea"
                 validate={[required]}
             />
@@ -137,16 +137,17 @@ let ProjetForm = ({
             <Field
                 name="montant"
                 component={TextField}
-                label="montant"
+                label="Montant"
                 fieldType="input"
                 validate={[required, number]}
             />
 
+            <div className="sep-line"></div>
 
             <Field
                 name="isConvention"
                 component={RadioField}
-                label="conventionné"
+                label="Conventionné"
                 options={[{ label: 'Oui', value: true }, { label: 'Non', value: false }]}
             />
 
@@ -183,9 +184,9 @@ let ProjetForm = ({
                 </div>
             )}
 
-            
+            <div className="sep-line"></div>
 
-            <SimpleField label={'localisation'}>
+            <SimpleField label='Localisation'>
                 <input type="button" className="btn btn-info show-modal" 
                     value={ localisations.length > 0 ? `Editer` : `Choisir`}
                     style={{ float: 'right' }}
@@ -211,7 +212,9 @@ let ProjetForm = ({
             </div>
 
 
-            <Field name="maitreOuvrage" label="maître d'ouvrage" component={AutoCompleteField}
+            <div className="sep-line"></div>
+
+            <Field name="maitreOuvrage" label="Maître d'ouvrage" component={AutoCompleteField}
 
                 url='/acheteurs'
                 onSelect={(suggestion) => {
@@ -224,11 +227,11 @@ let ProjetForm = ({
                 // validate={[required]}
             />
 
-            <Field name="isMaitreOuvrageDel" label="ajouter un maître d'ouvrage délégué" component={ToggleField}
+            <Field name="isMaitreOuvrageDel" label="Ajouter un maître d'ouvrage délégué" component={ToggleField}
             />
 
             { isMaitreOuvrageDel &&
-            <Field name="maitreOuvrageDel" label="maître d'ouvrage délégué" component={AutoCompleteField}
+            <Field name="maitreOuvrageDel" label="Maître d'ouvrage délégué" component={AutoCompleteField}
 
                 url='/acheteurs'
                 onSelect={ (suggestion) => dispatch(change(formName, 'maitreOuvrageDel', suggestion)) }
@@ -240,7 +243,7 @@ let ProjetForm = ({
 
 
 
-            {/* /////////////// Chargé du Suivi */}
+            <div className="sep-line"></div>
 
             <SimpleField label={'Chargé du Suivi'}>
                 <input type="button" className="btn btn-info show-modal" 
@@ -269,17 +272,19 @@ let ProjetForm = ({
             /> 
      
 
-            {/* /////////////// secteur */}
+            <div className="sep-line"></div>
 
             <Field
                 name="secteur"
                 component={SelectField}
-                label="secteur"
+                label="Secteur"
                 options={secteurs}
                 validate={[required]}
             />
 
             </div>
+
+            
 
             <div className="form-validation">
                 <button type="submit" 
