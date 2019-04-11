@@ -4,7 +4,7 @@ import { Field, reduxForm, formValueSelector, initialize, change } from 'redux-f
 
 import useApi from '../hooks/useApi';
 
-import { showModal, arraySetting, initFormValues } from '../../actions';
+import { showModal, arraySetting, initFormValues, arrayPushing } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, RadioField, SelectField, SimpleField, 
@@ -21,11 +21,12 @@ import SimpleList from './SimpleList';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 
 import './forms.css';
+import types, { constants } from '../../types';
 
 const formName = 'projetForm'
 
 let ProjetForm = ({ 
-            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, 
+            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage,
             dispatch, match, initialValues, history     
         }) => {
 
@@ -88,7 +89,7 @@ let ProjetForm = ({
 
         console.log(formValues)
         // return false
-        let valuesToSend = { 
+        let apiValues = { 
             ...formValues,
             idProjet,
             maitreOuvrage: formValues.maitreOuvrage.value,
@@ -98,20 +99,27 @@ let ProjetForm = ({
         }
 
 
-        console.log(valuesToSend)
+        console.log(apiValues)
 
+
+        dispatch(arrayPushing('projets', apiValues));
+        setTimeout(() => {
+
+            initForm()
+            setSubmitting(false)
+            history.push("/projets")
+        },2000)
+
+        return
 
         useAjaxFetch({
             url: 'projets',
             method: 'POST',
-            body: JSON.stringify(valuesToSend),
+            body: JSON.stringify(apiValues),
             success: () => {
-                setTimeout(() => {
-
-                    initForm()
-                    setSubmitting(false)
-                    history.push("/projets")
-                },2000)
+                initForm()
+                setSubmitting(false)
+                history.push("/projets")
             }
             
         })
@@ -166,6 +174,7 @@ let ProjetForm = ({
                             <i className="fa fa-times delete-item-list"
                                 onClick={() => dispatch(arrayDeletingByIndex('partners', i))}></i>
 
+                            {/* <i className="fas fa-pencil-square-o edit-item-list fa-edit-partner" */}
                             <i className="fa fa-edit edit-item-list fa-edit-partner"
                                 onClick={() => {
                                     dispatch(showModal(modalTypes.ADD_CONVENTION, {
@@ -216,7 +225,8 @@ let ProjetForm = ({
 
             <Field name="maitreOuvrage" label="Maître d'ouvrage" component={AutoCompleteField}
 
-                url='/acheteurs'
+                // url='/acheteurs'
+                url='/get_acheteurs'
                 onSelect={(suggestion) => {
                     dispatch(change(formName, 'maitreOuvrage', suggestion));
                 }}
@@ -227,13 +237,28 @@ let ProjetForm = ({
                 // validate={[required]}
             />
 
+
+            { maitreOuvrage && maitreOuvrage.value === constants.PROVINCE_TAOURIRT &&
+                <Field
+                    name="sourceFinancement"
+                    component={SelectField}
+                    label="Source de Financement"
+                    options={[
+                                {value: 1, label: 'B.G'}, {value: 2, label: 'INDH'},
+                                {value: 3, label: 'FDR'}, {value: 4, label: 'INDH-FDR'}, , {value: 5, label: 'C.T'},
+                            ]}
+                    // validate={[required]}
+                />
+            }
+
             <Field name="isMaitreOuvrageDel" label="Ajouter un maître d'ouvrage délégué" component={ToggleField}
             />
 
             { isMaitreOuvrageDel &&
             <Field name="maitreOuvrageDel" label="Maître d'ouvrage délégué" component={AutoCompleteField}
 
-                url='/acheteurs'
+                url='/get_acheteurs'
+                // url='/acheteurs'
                 onSelect={ (suggestion) => dispatch(change(formName, 'maitreOuvrageDel', suggestion)) }
                 onDelete={ () => dispatch(change(formName, 'maitreOuvrageDel', null)) }
                 // suggestion={maitreOuvrage}
@@ -279,7 +304,7 @@ let ProjetForm = ({
                 component={SelectField}
                 label="Secteur"
                 options={secteurs}
-                validate={[required]}
+                // validate={[required]}
             />
 
             </div>
@@ -319,7 +344,7 @@ export default connect(
         initialValues: getInitialFormValues(state),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
-        // maitreOuvrage: selector(state, 'maitreOuvrage'),
+        maitreOuvrage: selector(state, 'maitreOuvrage'),
         partners: getExtPartners(state),
         localisations: getLocalisations(state),
         pointsFocaux: getPointsFocaux(state),
@@ -349,12 +374,12 @@ const mapItems = (items) => {
 }
 
 let pointsFocauxItems = [
-    { value: 1, label: 'DAS', },
-    { value: 2, label: 'DBM', },
-    { value: 3, label: 'DE', },
-    { value: 4, label: 'DAR', },
-    { value: 5, label: 'CAB', },
-    { value: 6, label: 'DAEC', },
+    { value: 1, label: 'EL YOUBY Mohammed', },
+    { value: 2, label: 'ABDENNABI Jamai', },
+    { value: 3, label: 'Karim Salah', },
+    { value: 4, label: 'Rachid Ech-choudany', },
+    { value: 5, label: 'Sahli Hamzaoui', },
+    { value: 6, label: 'BACHAOUI ABDERRAHMANE', },
 ]
 
 

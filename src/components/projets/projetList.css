@@ -45,3 +45,40 @@
 .dp-t {
     margin-left: 8px;
 }
+
+
+.search-bar {
+    padding-right: 60px !important;
+}
+
+.cr-list {
+
+}
+
+.cr-item {
+    width: 50%;
+}
+
+.cr-label {
+    width: 45%;
+    text-align: right;
+    padding-right: 4px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.cr-list > .cr-line:last-child {
+    margin-bottom: 0px;
+}
+
+.cr-line {
+    display: flex;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.cr-input {
+    width: 55%;
+    padding: 6px 0px;
+    padding-left: 4px;
+}

@@ -9,7 +9,7 @@
 }
 
 #routes {
-    width: 80%;
+    width: 90%;
     margin: 40px auto 80px;
 }
 
@@ -35,6 +35,8 @@
 .box-sh {
     box-shadow: 0 2px 4px 0 rgba(43,43,43,0.1);
     background-color: white;
+    padding: 12px 10px;
+    margin-bottom: 20px;
     /* padding: 12px 10px; */
 
 }
@@ -50,8 +52,26 @@
     color: #007bff;
     text-decoration: none;
 }
-.ctr_ic:hover {
+.ctr_ic:hover, .l_ho:hover {
     cursor: pointer;
     color: #0056b3;
     text-decoration: underline;
+}
+
+.ctr_ic2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.no_sel {
+    pointer-events:none;
+}
+
+
+.db_2::after {
+    content: ':';
+    display: inline;
+    margin-left: 2px;
 }

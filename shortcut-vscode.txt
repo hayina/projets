@@ -9,3 +9,7 @@ Ctrl+D          = Multi Selecte
 Ctrl+K, Ctrl+D  = to skip selection (after Ctrl+D)
 Ctrl+D, Ctrl+U  = back (after Ctrl+D)
 
+Ctrl+M = revenir au mode normal de tabulation si ...
+
+
+

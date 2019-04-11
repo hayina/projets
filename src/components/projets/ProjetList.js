@@ -11,8 +11,11 @@ import useAjaxFetch from '../hooks/useAjaxFetch';
 import './projetList.css'
 import { modalTypes } from '../modals/ModalRoot';
 import { showModal } from '../../actions';
+import { getProjets } from '../../reducers/externalForms';
+import { CretereItem } from './components';
+import SearchBar from './SearchBar';
 
-let ProjetList = ({dispatch}) => {
+let ProjetList = ({dispatch, _projets}) => {
 
 
     const [projets, setProjets] = useState([]);
@@ -55,22 +58,27 @@ let ProjetList = ({dispatch}) => {
                 setProjets(data)
                 setLoading(false)
             },
+            error: (err) => {
+                setLoading(false)
+                setProjets(_projets)
+            }
         })
         return () => cancel = true
     }, [])
 
     return (
-        <div className="projets-wr box-sh">
+        <div className="projets-wr">
 
+            <SearchBar />
 
         {   loading ? 
-            (<div className="loading-list">Loading ....</div>)
+            (<div className="loading-list box-sh">Loading ....</div>)
             :
             projets.length > 0 ?
 
             (  
             <React.Fragment>       
-            <div className="projets-nav">
+            <div className="projets-nav box-sh">
                 <a href="javascript:void(0)" className="delete-wr" onClick={ 
                     () =>  dispatch(showModal(modalTypes.ADD_DELETE, 
                         {
@@ -80,7 +88,7 @@ let ProjetList = ({dispatch}) => {
                 }>Supprimer tout</a>
             </div>
 
-            <div className="projets-results">
+            <div className="projets-results box-sh">
             {
 
             projets.map((projet, index) => {
@@ -122,5 +130,7 @@ let ProjetList = ({dispatch}) => {
 }
 
 export default connect(
-    // (state) => ({})
+    (state) => ({
+        _projets: getProjets(state)
+    })
 )(ProjetList)

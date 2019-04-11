@@ -5,13 +5,28 @@ const initialState = {
     partners: [],
     localisations:  [],
     pointsFocaux: [],
-    users: []
+    users: [],
+    projets: [{
+        intitule: 'azeazeaze',
+        montant: '89000',
+        isConvention: true,
+        maitreOuvrage: 8,
+        sourceFinancement: '2',
+        maitreOuvrageDel: null,
+        localisations: [],
+        partners: [
+          '5:8900000',
+          '10:98000000',
+          '11:700000'
+        ]
+      }],
 }
 
 export const getExtPartners = (state) => state.externalForms.partners;
 export const getLocalisations = (state) => state.externalForms.localisations;
 export const getPointsFocaux = (state) => state.externalForms.pointsFocaux;
 export const getUsers = (state) => state.externalForms.users;
+export const getProjets = (state) => state.externalForms.projets;
 
 export const externalForms = (state = initialState, action) => {
 

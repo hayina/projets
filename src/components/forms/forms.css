@@ -57,6 +57,7 @@
 .form-check-label {
     /* font-weight: 500; */
     /* text-transform: uppercase; */
+    color: #495057;
     cursor: pointer;
 }
 
@@ -154,6 +155,6 @@
 
 
 .sep-line {
-    border-top: 2px solid #17a2b8;
-    margin-bottom: 20px;
+    /* border-top: 2px solid #17a2b8;
+    margin-bottom: 20px; */
 }

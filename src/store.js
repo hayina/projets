@@ -7,13 +7,13 @@ import { apiMiddleware } from './middlewares/api';
 import { projetFormMiddleware } from './middlewares/projetForm';
 import { loggerMiddleware } from './middlewares/logger';
 
-import * as actionCreators from './actions/autocomplete'
+// import * as actionCreators from './actions/autocomplete'
 
 const middlewares = [thunk];
 const coreMiddlewares = [apiMiddleware];
 const featureMiddlewares = [projetFormMiddleware];
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionCreators, serialize: true, trace: true })
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
                          || compose;
 
 const enhancer = composeEnhancers(applyMiddleware(

@@ -64,7 +64,7 @@ export const SimpleField = ({ children, meta, label }) => (
 export const TextField = (props) => {
 
     const { input, meta, label, fieldType } = props;
-    // console.log('TextField', props);
+    console.log('TextField', props);
 
     const fieldProps = {
         ...input, // (provided by the redux-form HOC)

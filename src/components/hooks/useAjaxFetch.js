@@ -13,7 +13,8 @@ const useAjaxFetch = ({ url, method='GET', params, body, success, error, content
 
         axios({
                 // SETUP PARAMS
-                baseURL: '/PROJET-API/api',
+                baseURL: '/PROJETS/ajax',
+                // baseURL: '/PROJET-API/api',
                 headers: {
                     "Access-Control-Allow-Origin": "*",
                     "X-Requested-With": "XMLHttpRequest",

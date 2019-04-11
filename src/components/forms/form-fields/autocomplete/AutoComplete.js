@@ -101,7 +101,7 @@ const AutoComplete = ({ onSelect, url }) => {
 
         axios({
             // SETUP PARAMS
-            baseURL: '/PROJET-API/api',
+            baseURL: '/PROJETS/ajax',
             headers: {
                 "Access-Control-Allow-Origin": "*"
             },
@@ -115,7 +115,9 @@ const AutoComplete = ({ onSelect, url }) => {
             if ( q === lastTypedTerm.current ) { 
                 dispatch({
                     type: 'AC_API_SUCCESS',
-                    suggestions: response.data //.map((s) => ({ id: s.id, label: s.label }))
+                    suggestions: response.data 
+                    //.map((s) => ({ id: s.id, label: s.label }))
+                    .map((s) => ({ value: s.id, label: s.label }))
                 });
             }
         })

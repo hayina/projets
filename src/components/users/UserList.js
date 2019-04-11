@@ -14,7 +14,7 @@ let UserList = ({dispatch, users}) => {
 
     useEffect(() => {
 
-
+        dispatch(showModal(modalTypes.ADD_USER, {editMode: false }))
         return () => {}
     }, [])
 
@@ -29,7 +29,7 @@ let UserList = ({dispatch, users}) => {
                 <div className="add-user" onClick={() => {
                         dispatch(showModal(modalTypes.ADD_USER, {editMode: false }))
                     }}>
-                    <span className="ctr_ic">Ajouter un utilisateur</span> 
+                    <span className="ctr_ic2 l_ho">Ajouter un utilisateur</span> 
                     <i className="fas fa-user-plus fa-add-user" ></i>
                 </div>
             </div>

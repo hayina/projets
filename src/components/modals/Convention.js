@@ -51,7 +51,8 @@ let Convention = ({ handleSubmit, dispatch, editMode }) => {
 
                     <Field name="partner" label="Partenaire" component={AutoCompleteField}
 
-                        url='/partners'
+                        // url='/partners'
+                        url='/get_partners'
                         onSelect={(suggestion) => {
                             dispatch(change(formName, 'partner', suggestion));
                         }}

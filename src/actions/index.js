@@ -38,6 +38,13 @@ export const setCheckboxProp = (values, checkboxType, checkboxProp) => ({
 
 
 
+////////////// auto complete
+
+// export const setReduxForm = (reduxForm) => ({ type: types.SET_REDUX_FORM, reduxForm });
+// export const onSelectAC = (suggestion, name) => ({ type: types.AC_SELECT, payload: { suggestion, name } });
+// export const onInitAC = (name) => ({ type: types.AC_INIT, name });
+
+
 
 
 

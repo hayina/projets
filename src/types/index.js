@@ -35,44 +35,19 @@ const types = {
     ///// USERS
     
     ADD_USER: `${users} ADD`,
-
-
-
-    // SET_LOADER: '[ui] set loader',
-    // NEW_API_REQUEST: '[api] new api request ...',
-    // REQUEST_SUCCESS: '[api] success request',
-    // SET_AC_INPUT: '[ui] SET AC_INPUT',
-    // PRE_SET_AC_INPUT: '[ui] (PRE) SET AC_INPUT',
-    // SET_ACTIVE_SUGGESTION: '[ui] setting the active suggestion',
-    // INIT_ACTIVE_SUGGESTION: '[ui] init the active suggestion',
-
-    // AC_INPUT_CHANGED: '[ui] AC_INPUT_CHANGED',
-    // AC_INPUT_FOCUSED: '[ui] AC_INPUT_FOCUSED',
-    // AC_OUTSIDE_CLICK: '[ui] AC_OUTSIDE_CLICK',
-    // AC_INIT: '[ui] AC_INIT',
-    // AC_DESTROY: '[ui] AC_DESTROY',
-
-
-
-    
-
-
-    // SUGGESTIONS: `${SUGGESTIONS}`,
-    // SET_SUGGESTIONS: `${SUGGESTIONS} SET`,
-    // INIT_SUGGESTIONS: `${SUGGESTIONS} SET (INIT)`,
-    // FETCH_SUGGESTIONS: `${SUGGESTIONS} FETCH`,
-    // SELECT_SUGGESTION: `${SUGGESTIONS} SELECT`,
-    // TOGGLE_SUGGESTIONS: `${SUGGESTIONS} [ui] TOGGLE list`,
-    // SUGGESTIONS_KEY_PRESSED: `${SUGGESTIONS} KEY_PRESSED (SELECTING)`,
-    // SUGGESTIONS_API_REQUEST: `${SUGGESTIONS} API_REQUEST`,
-    // SUGGESTIONS_API_SUCCESS: `${SUGGESTIONS} API_SUCCESS`,
-    // SUGGESTIONS_API_ERROR: `${SUGGESTIONS} API_ERROR`,
-    // SUGGESTIONS_SET_ERRORS: `${SUGGESTIONS} SET_ERRORS`,
-    
-    // API_REQUEST: 'API_REQUEST',
-    // API_SUCCESS: 'API_SUCCESS',
-    // API_ERROR: 'API_ERROR',
 }
 
 
 export default types;
+
+export const constants = {
+    PROVINCE_TAOURIRT: 8
+}
+
+export const fieldType = {
+    TEXT: 'text',
+    SELECT: 'select',
+    RADIO: 'radio',
+    CHECKBOX: 'checkbox',
+}
+

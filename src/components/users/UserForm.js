@@ -16,51 +16,34 @@ const intialFormValues = {
     active: false,
 }
 
-const intialFormErrors = {
-    login: '',
-    password: '',
-    nom: '',
-    prenom: '',
-    active: '',
-}
+
 
 const rules = {
     login: [required],
     password: [required],
     nom: [required],
     prenom: [required],
-    active: [required],
+    // active: [required],
 }
 
 const initialState = {
-    values: {
-        login: '',
-        password: '',
-        nom: '',
-        prenom: '',
-        active: false,
-    },
-    errors: {
-        login: '',
-        password: '',
-        nom: '',
-        prenom: '',
-        active: '',
-    }
+    values: intialFormValues,
+    errors: {},
+    valid: {},
+    dirty: {},
 }
 export const reducer = (state, action) => {
 
     console.log(`auto-complete/${action.type}`);
 
-    const newState = { ...state }
+
 
     switch (action.type) {
 
         case 'SET_ERRORS':
-            return { newState, errors : { ...newState.errors, [action.field]: action.error } };
-
-
-
+            return { ...state, errors : { ...state.errors, [action.field]: action.error } };
+        case 'SET_VALUES':
+            return { ...state, values : { ...state.values, [action.field]: action.value } };
 
         default:
             throw new Error();
@@ -68,46 +51,44 @@ export const reducer = (state, action) => {
 
 }
 
+
 let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) => {
-
-
+    
+    
     const [state, dispatchForm] = useReducer(reducer, initialState)
+    const setValues = (field, value) => dispatchForm({ type: 'SET_VALUES', field, value }) 
+    const setErrors = (field, error) => dispatchForm({ type: 'SET_ERRORS', field, error }) 
 
-    const [values, setValues] = useState(initUser)
+    // const [state.values, setValues] = useState(initUser)
     // const [errors, setErrors] = useState(intialFormErrors)
 
     const [submitting, setSubmitting] = useState(false);
 
+    console.log('State ->', state)
+
+
     const onSubmit = () => {
 
-        // e.preventDefault();
-
-        // const rules = {
-        //      login: [required, number],
-        //      password: [required],
 
         Object.entries(rules).forEach(([field, validators]) => {
-            console.log(field, validators)
-            validators.forEach(rule => dispatchForm({ type: 'SET_ERRORS', field, error: rule(values[field]) }))
-            // validators.forEach(rule => setErrors({ ...errors, [field]: rule(values[field]) }))
+            validators.forEach(rule => setErrors(field, rule(state.values[field])))
         })
 
-        console.log('onSubmit ->', values)
-        console.log('Errors ->', state.errors)
+
 
         return
 
         if(editMode){
-            dispatch(arrayUpdating('users', values, userIndex))
+            dispatch(arrayUpdating('users', state.values, userIndex))
         } else {
 
-            values.dateCreation = new Date()//.getTime()
-            dispatch(arrayPushing('users', values))
+            state.values.dateCreation = new Date()//.getTime()
+            dispatch(arrayPushing('users', state.values))
         }
     }
 
 
-    // console.log('FORM VALUES ->', values)
+    // console.log('FORM VALUES ->', state.values)
 
     return (
 
@@ -127,43 +108,43 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
             
                 <SimpleField label="Login" >
                     <TextInput 
-                        onChange={ (e) => setValues({ ...values, login: e.target.value }) }
-                        value={values.login}
+                        onChange={ (e) => setValues('login', e.target.value) }
+                        value={state.values.login}
                     />
                 </SimpleField>
             
                 <SimpleField label="Password" >
                     <TextInput 
-                        onChange={ (e) => setValues({ ...values, password: e.target.value }) }
-                        value={values.password}
+                        onChange={ (e) => setValues('password', e.target.value) }
+                        value={state.values.password}
                     />
                 </SimpleField>
             
                 <SimpleField label="Nom" >
                     <TextInput 
-                        onChange={ (e) => setValues({ ...values, nom: e.target.value }) }
-                        value={values.nom}
+                        onChange={ (e) => setValues('nom', e.target.value) }
+                        value={state.values.nom}
                     />
                 </SimpleField>
             
                 <SimpleField label="Prénom" >
                     <TextInput 
-                        onChange={ (e) => setValues({ ...values, prenom: e.target.value }) }
-                        value={values.prenom}
+                        onChange={ (e) => setValues('prenom', e.target.value) }
+                        value={state.values.prenom}
                     />
                 </SimpleField>
 
                 <ToggleField label="Actif" 
                     input={{ 
-                        onChange: (checked) => setValues({ ...values, active: checked }),
-                        value: values.active
+                        onChange: (checked) => setValues('active', checked),
+                        value: state.values.active
                     }}
                 />
-                <div className="form-errors">
+                {/* <div className="form-errors">
                     {Object.keys(state.errors).map((err, i) => 
                             (<div className="err-item" key={i}>{err}. {state.errors[err]}</div>)
                     )}
-                </div>
+                </div> */}
             
             </div>
 
