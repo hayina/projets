@@ -2,10 +2,10 @@ import React, { useEffect, useState, useReducer } from 'react';
 import { connect } from 'react-redux';
 
 import './userForm.css'
-import { SimpleField, TextInput, ToggleField } from '../forms/form-fields/fields';
+import { SimpleField2, TextInput, ToggleField } from '../forms/form-fields/fields';
 import { hideModal, arrayPushing, arrayUpdating } from '../../actions';
 import Modal from '../modals/Modal';
-import { required } from '../forms/validator';
+import { required, number } from '../forms/validator';
 
 
 const intialFormValues = {
@@ -19,7 +19,7 @@ const intialFormValues = {
 
 
 const rules = {
-    login: [required],
+    login: [required, number],
     password: [required],
     nom: [required],
     prenom: [required],
@@ -29,17 +29,27 @@ const rules = {
 const initialState = {
     values: intialFormValues,
     errors: {},
-    valid: {},
-    dirty: {},
+    // valid: {},
+    // dirty: {},
+    touched: {},
+    submitting: false
 }
 export const reducer = (state, action) => {
 
-    console.log(`auto-complete/${action.type}`);
+    console.log(`@@auto-complete/${action.type}`);
 
 
 
     switch (action.type) {
 
+        case 'RESET':
+            return initialState;
+        case 'SET_SUBMITTING':
+            return { ...state, submitting : action.submitting };
+        case 'SET_TOUCHED':
+            return { ...state, touched : { ...state.touched, [action.field]: action.touched } };
+        // case 'SET_DIRTY':
+        //     return { ...state, dirty : { ...state.dirty, [action.field]: action.dirty } };
         case 'SET_ERRORS':
             return { ...state, errors : { ...state.errors, [action.field]: action.error } };
         case 'SET_VALUES':
@@ -56,23 +66,46 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
     
     
     const [state, dispatchForm] = useReducer(reducer, initialState)
+
     const setValues = (field, value) => dispatchForm({ type: 'SET_VALUES', field, value }) 
     const setErrors = (field, error) => dispatchForm({ type: 'SET_ERRORS', field, error }) 
+    const setTouched = (field, touched) => dispatchForm({ type: 'SET_TOUCHED', field, touched }) 
+    const setDirty = (field, dirty) => dispatchForm({ type: 'SET_DIRTY', field, dirty }) 
+    const setSubmitting = (submitting) => dispatchForm({ type: 'SET_SUBMITTING', submitting }) 
+    const reset = () => dispatchForm({ type: 'RESET'}) 
 
-    // const [state.values, setValues] = useState(initUser)
-    // const [errors, setErrors] = useState(intialFormErrors)
-
-    const [submitting, setSubmitting] = useState(false);
 
     console.log('State ->', state)
+
+
+    const validateFields = ({checkAll=true}) => {
+        console.log('validateFields ---------->')
+        Object.entries(rules).forEach(([field, validators]) => {
+            if( ( checkAll || state.touched[field] ) ) {
+                validate(field, validators, state.values[field])
+                // )
+            }
+        })
+    }
+    const validate = (field, validators, value) => {
+        console.log(`validate ---------->(${state.values[field]})`)
+
+        for (let rule of validators) {
+            let error = rule(value)
+            console.log(field, error)
+            setErrors(field, error)
+            if( error !== undefined ) break
+        }
+
+    }
+
 
 
     const onSubmit = () => {
 
 
-        Object.entries(rules).forEach(([field, validators]) => {
-            validators.forEach(rule => setErrors(field, rule(state.values[field])))
-        })
+        validateFields({})
+
 
 
 
@@ -82,13 +115,32 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
             dispatch(arrayUpdating('users', state.values, userIndex))
         } else {
 
-            state.values.dateCreation = new Date()//.getTime()
+            values.dateCreation = new Date()//.getTime()
             dispatch(arrayPushing('users', state.values))
         }
     }
 
+    const onFocus = (field) => {
+        // console.log('onFocus -> ', state)
+        setTouched(field, true)
+        validateFields({checkAll: false})
+    }
+
+    const onChange = (field, value) => {
+        // console.log('onChange -> ', state)
+
+        setValues(field, value)
+        rules[field] && validate(field, rules[field], value)
+        // rules[field] && rules[field].forEach(rule => setErrors(field, rule(value)))
+        // setErrors(field, undefined)
+        // setDirty(field, true)
+    }
 
     // console.log('FORM VALUES ->', state.values)
+
+    const { submitting, values, errors } = state
+
+    console.log('RENDERING  ----------------------------------------->', state)
 
     return (
 
@@ -106,55 +158,58 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
 
             <div className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}>
             
-                <SimpleField label="Login" >
+                <SimpleField2 label="Login" error={errors.login}>
                     <TextInput 
-                        onChange={ (e) => setValues('login', e.target.value) }
-                        value={state.values.login}
+                        onChange={ (e) => onChange('login', e.target.value) }
+                        // onChange={ (e) => dispatch({ type: 'SET_VALUES', field: 'login', value: e.target.value })  }
+                        onFocus={ (e) => onFocus('login') }
+                        value={values.login}
                     />
-                </SimpleField>
+                </SimpleField2>
             
-                <SimpleField label="Password" >
+                <SimpleField2 label="Password" error={errors.password}>
                     <TextInput 
-                        onChange={ (e) => setValues('password', e.target.value) }
-                        value={state.values.password}
+                        onChange={ (e) => onChange('password', e.target.value) }
+                        onFocus={ (e) => onFocus('password') }
+                        value={values.password}
                     />
-                </SimpleField>
+                </SimpleField2>
             
-                <SimpleField label="Nom" >
+                <SimpleField2 label="Nom" error={errors.nom}>
                     <TextInput 
-                        onChange={ (e) => setValues('nom', e.target.value) }
-                        value={state.values.nom}
+                        onChange={ (e) => onChange('nom', e.target.value) }
+                        onFocus={ (e) => onFocus('nom') }
+                        value={values.nom}
                     />
-                </SimpleField>
+                </SimpleField2>
             
-                <SimpleField label="Prénom" >
+                <SimpleField2 label="Prénom" error={errors.prenom}>
                     <TextInput 
-                        onChange={ (e) => setValues('prenom', e.target.value) }
-                        value={state.values.prenom}
+                        onChange={ (e) => onChange('prenom', e.target.value) }
+                        onFocus={ (e) => onFocus('prenom') }
+                        value={values.prenom}
                     />
-                </SimpleField>
+                </SimpleField2>
 
-                <ToggleField label="Actif" 
+                <ToggleField label="Actif" error={errors.active}
                     input={{ 
-                        onChange: (checked) => setValues('active', checked),
-                        value: state.values.active
+                        onChange: (checked) => {
+                            onChange('active', checked);
+                            onFocus('active');
+                        },
+                        value: values.active
                     }}
                 />
-                {/* <div className="form-errors">
-                    {Object.keys(state.errors).map((err, i) => 
-                            (<div className="err-item" key={i}>{err}. {state.errors[err]}</div>)
-                    )}
-                </div> */}
-            
-            </div>
 
-            {/* <div className="form-validation">
-                <button type="submit" 
-                    className={`btn btn-primary ${ submitting ? 'btn-submitting is-submitting ':'' }`}>
-                    Submit { submitting ? '...':'' }
-                </button>
-            </div> */}
+                <div className="form-errors">
+                    {Object.keys(errors).map((err, i) => 
+                            (<div className="err-item" key={i}>{err}. {errors[err]}</div>)
+                    )}
+                </div>
+
+                <input type="button" value="RESET" onClick={ () => reset() } />
             
+            </div>         
 
 
         </Modal>

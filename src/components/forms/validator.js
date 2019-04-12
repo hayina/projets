@@ -1,17 +1,12 @@
 
 
-export const required = value => {
+export const required = value => value  ? undefined : 'Champs obligatoire'
+    // value || typeof value === 'number' ? undefined : 'Required'
 
-    console.log('1.required ->', value)
-    const isreq = value || typeof value === 'number' ? undefined : 'Required'
-
-    console.log('2.required ->', isreq)
-    return isreq
-}
     
 
 export const number = value =>
-    value && isNaN(Number(value)) ? 'Must be a number' : undefined
+    value && isNaN(Number(value)) ? 'Ce champs doit être un nombre' : undefined
 
 export const email = value =>
     value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)

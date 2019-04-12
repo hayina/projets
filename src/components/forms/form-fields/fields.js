@@ -8,7 +8,7 @@ import SelectedAC from './SelectedAC'
 const fieldCss = (meta) => `form-control ${gotError(meta) ? 'is-invalid' : ''}`;
 
 const gotError = ({ touched, error, dirty }) => {
-    if ((dirty || touched) && error) return true;
+    if ( (dirty || touched) && error ) return true;
     return false;
 }
 
@@ -20,11 +20,28 @@ const renderErrorField = (meta) => {
 
 ////////////// SIMPLE FIELD
 
-export const SimpleField = ({ children, meta, label }) => (
+export const SimpleField = ({ children, meta, label, errors }) => {
+
+    console.log('SimpleField RENDERING ---------------------------->')
+
+    // const hasErors = errors !== undefined ? true : false
+    return (
+        <div className="form-group simple-field-wr">
+            <label className="field-label form-label">{label}</label>
+            { children }
+            { meta && renderErrorField(meta) }
+        </div>
+    )
+}
+
+export const SimpleField2 = ({ children, label, error }) => (
+
+    // const hasErors = errors !== undefined ? true : false
+
     <div className="form-group simple-field-wr">
         <label className="field-label form-label">{label}</label>
         { children }
-        { meta && renderErrorField(meta) }
+        { error && <div className="error-feedback">{error}</div> }
     </div>
 )
 
@@ -81,7 +98,6 @@ export const TextField = (props) => {
         renderTextField = <textarea {...fieldProps} />
     }
     
-
     return (
         <SimpleField label={label} meta={meta} >
             { renderTextField }
@@ -120,7 +136,7 @@ export const CheckboxField = ({ input, meta, label, options }) => {
     return (
 
         <SimpleField label={label} meta={meta} >
-            <div className={`${fieldCss(meta)}`}>
+            <div className={ `${fieldCss(meta)}` }>
                 {options.map((option) => (
                     <div className="form-check" key={option.value}>
                         <input
@@ -221,9 +237,8 @@ export const ToggleField = ({label, input}) => {
                 type="checkbox"
                 className="hide"
                 checked={checked}
-                onChange={(e) => {
-                    input.onChange(e.target.checked)
-                }}
+                onFocus={ input.onFocus }
+                onChange={ (e) => input.onChange(e.target.checked) }
             />
             <i className={
                 `fa-${ checked ? 'check-square checked fas' : 'square far' }`

@@ -127,6 +127,7 @@ let ProjetForm = ({
     }
 
 
+    console.log('RENDERING  ----------------------------------------->')
 
     return (
         <form id={formName} className="form-wr" onSubmit={ handleSubmit(onSubmit) }>
