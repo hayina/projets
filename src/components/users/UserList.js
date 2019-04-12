@@ -44,7 +44,8 @@ let UserList = ({dispatch, users}) => {
                                     onClick={ () => dispatch(showModal(modalTypes.ADD_USER, 
                                         { editMode: true, initUser: user, userIndex: index })) 
                                     }
-                                    >Edit</span>
+                                >Edit
+                                </span>
                                 <span className="btn btn-link"
                                     onClick={ () =>  dispatch(showModal(modalTypes.ADD_DELETE, 
                                         {
@@ -54,7 +55,9 @@ let UserList = ({dispatch, users}) => {
                                             ${user.prenom.toUpperCase()} (${user.login}) ?`
                                         }))
                                     
-                                     }>Delete</span>
+                                     }
+                                >Delete
+                                </span>
                                 <i className="fas fa-ellipsis-v"></i>
                             </span>
                             <div className="user-label"><strong>{index}.</strong> {user.nom} {user.prenom}</div>

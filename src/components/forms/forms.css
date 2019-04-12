@@ -45,7 +45,7 @@
 .form-label::after {
     content: ':';
     display: inline;
-    margin-left: 2px;
+    margin: 0px 4px;
 }
 
 .field-label {

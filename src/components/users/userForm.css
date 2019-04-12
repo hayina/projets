@@ -8,3 +8,32 @@
 .err-item {
     
 }
+
+
+#userForm {
+    
+}
+
+#userForm .simple-field-wr  {
+    display: flex;
+    align-items: center;
+}
+
+#userForm .simple-field-wr .form-label {
+    width: 27%;
+    text-align: right;
+}
+#userForm .simple-field-wr .form-control {
+
+}
+#userForm .simple-field-wr .form-check-label {
+    font-weight: 600;
+    color: #212529;
+    text-transform: lowercase;
+
+    color: #007bff;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+

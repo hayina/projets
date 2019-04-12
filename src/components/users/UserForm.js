@@ -2,7 +2,7 @@ import React, { useEffect, useState, useReducer } from 'react';
 import { connect } from 'react-redux';
 
 import './userForm.css'
-import { SimpleField2, TextInput, ToggleField } from '../forms/form-fields/fields';
+import { SimpleField2, TextInput, ToggleField, CheckboxField } from '../forms/form-fields/fields';
 import { hideModal, arrayPushing, arrayUpdating } from '../../actions';
 import Modal from '../modals/Modal';
 import { required, number } from '../forms/validator';
@@ -14,6 +14,7 @@ const intialFormValues = {
     nom: '',
     prenom: '',
     active: false,
+    roles: [],
 }
 
 
@@ -79,7 +80,7 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
 
 
     const validateFields = ({checkAll=true}) => {
-        console.log('validateFields ---------->')
+        // console.log('validateFields ---------->')
         Object.entries(rules).forEach(([field, validators]) => {
             if( ( checkAll || state.touched[field] ) ) {
                 validate(field, validators, state.values[field])
@@ -88,11 +89,11 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
         })
     }
     const validate = (field, validators, value) => {
-        console.log(`validate ---------->(${state.values[field]})`)
+        // console.log(`validate ---------->(${state.values[field]})`)
 
         for (let rule of validators) {
             let error = rule(value)
-            console.log(field, error)
+            // console.log(field, error)
             setErrors(field, error)
             if( error !== undefined ) break
         }
@@ -156,7 +157,7 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
 
 
 
-            <div className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}>
+            <div id="userForm" className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}>
             
                 <SimpleField2 label="Login" error={errors.login}>
                     <TextInput 
@@ -191,7 +192,25 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
                     />
                 </SimpleField2>
 
-                <ToggleField label="Actif" error={errors.active}
+                <SimpleField2 label="Roles">
+                    <CheckboxField
+                        options={[
+                            {value: 1, label: 'ADD_PROJET'},
+                            {value: 2, label: 'ADD_MACRHE'},
+                            {value: 3, label: 'ADD_USER'},
+                            {value: 4, label: 'ROOT'},
+                        ]} 
+                        input={{ 
+                            onChange: (checked) => {
+                                onChange('roles', checked);
+                                onFocus('roles');
+                            },
+                            value: values.roles
+                        }}
+                    />
+                </SimpleField2>
+
+                <ToggleField label="Actif (l'utilisateur peut se connecter)"
                     input={{ 
                         onChange: (checked) => {
                             onChange('active', checked);
@@ -201,11 +220,13 @@ let UserForm = ({ dispatch, editMode, initUser=intialFormValues, userIndex }) =>
                     }}
                 />
 
-                <div className="form-errors">
+
+            
+                {/* <div className="form-errors">
                     {Object.keys(errors).map((err, i) => 
                             (<div className="err-item" key={i}>{err}. {errors[err]}</div>)
                     )}
-                </div>
+                </div> */}
 
                 <input type="button" value="RESET" onClick={ () => reset() } />
             

@@ -73,11 +73,12 @@
 .db_2::after {
     content: ':';
     display: inline;
-    margin-left: 2px;
+    margin: 0px 4px;
 }
 
 
 .error-feedback {
     width: 100%;
+    margin-top: 2px;
     color: #dc3545;
 }

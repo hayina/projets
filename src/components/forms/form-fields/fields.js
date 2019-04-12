@@ -136,7 +136,7 @@ export const CheckboxField = ({ input, meta, label, options }) => {
     return (
 
         <SimpleField label={label} meta={meta} >
-            <div className={ `${fieldCss(meta)}` }>
+            <div className={ meta && `${fieldCss(meta)}` }>
                 {options.map((option) => (
                     <div className="form-check" key={option.value}>
                         <input
@@ -260,5 +260,5 @@ export const ToggleField = ({label, input}) => {
 ////////////// SIMPLE FIELD
 
 export const TextInput = (props) => (
-    <input type="text" autoComplete="off" {...props} />
+    <input type="text" className="form-control" autoComplete="off" {...props} />
 )
