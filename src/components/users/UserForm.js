@@ -36,11 +36,22 @@ const rules = {
 let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser }) => {
     
     const { state, dispatchForm, onSubmit } = useContext(FormContext);
+    const [roles, setRoles] = useState([])
 
     useEffect(() => {
-        if(editMode) {
-            dispatchForm(reset(initUser))
-        }
+
+        useAjaxFetch({
+            url: 'roles',
+            method: 'GET',
+            success: (data) => {
+                setRoles(data)
+
+                if(editMode) {
+                    dispatchForm(reset(initUser))
+                }
+            }
+        })
+        
     }, [])
 
     // console.log('State ->', state, onSubmit)
@@ -117,13 +128,7 @@ let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser }) => {
                     { props =>   
                         <CheckboxField
                             label="Choisir les profiles de l'utilisateur"
-                            options={[
-                                {value: 1, label: 'PROJET_CONSULTATION'},
-                                {value: 2, label: 'ADD_PROJET'},
-                                {value: 3, label: 'ADD_MACRHE'},
-                                {value: 4, label: 'ADD_USER'},
-                                {value: 5, label: 'ROOT'},
-                            ]} 
+                            options={roles} 
                             {...props} 
                         /> 
                     }
