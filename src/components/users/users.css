@@ -1,18 +1,26 @@
 
 
 .users-wr {
-    display: flex;
+    /* display: flex; */
 }
 
 .fa-add-user {
     cursor: pointer;
 }
 
-.user-item{
+.user-item {
+    /* box-shadow: 0 0 1px 1px rgba(20,23,28,0.1), 0 3px 1px 0 rgba(20,23,28,0.1); */
+    /* margin-bottom: 8px; */
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+}
 
-    box-shadow: 0 0 1px 1px rgba(20,23,28,0.1), 0 3px 1px 0 rgba(20,23,28,0.1);
-    margin-bottom: 12px;
-    padding: 10px;
+.user-info {
+
+}
+.user-label {
+    font-weight: 600;
 }
 
 .add-user {
@@ -21,4 +29,8 @@
 
 .nav-user {
     padding: 10px;
+}
+
+.user-result {
+
 }

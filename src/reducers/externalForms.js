@@ -5,7 +5,28 @@ const initialState = {
     partners: [],
     localisations:  [],
     pointsFocaux: [],
-    users: [],
+    users: [{
+        login: 'yous18',
+        password: '',
+        nom: '',
+        prenom: '',
+        active: true,
+        roles: [
+          5
+        ],
+        dateCreation: '2019-04-14T13:03:14.322Z'
+      },
+      {
+        login: 'hicham.88',
+        password: '',
+        nom: 'Lechqar',
+        prenom: '',
+        active: true,
+        roles: [
+          1
+        ],
+        dateCreation: '2019-04-14T13:03:36.985Z'
+      }],
     projets: [{
         intitule: 'azeazeaze',
         montant: '89000',

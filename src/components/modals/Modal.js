@@ -51,14 +51,16 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
                     <button className="btn btn-secondary"
                         onClick={ () => dispatch(hideModal()) }>Annuler</button>
 
-                    <button type="submit" className="btn btn-primary"
-                        onClick={ handleValidation }>Valider</button>
-
                     {/* <button type="submit" className="btn btn-primary"
+                        onClick={ handleValidation }>Valider</button> */}
+
+                    <button type="submit" className="btn btn-primary"
                         onClick={
-                            () => doSaving(handleClick)
-                                .then(() => hideModal())
-                        } >Valider</button> */}
+                            () => {
+                                handleValidation()
+                                // dispatch(hideModal())
+                            }} 
+                        >Valider</button>
 
                 </div>
             </div>

@@ -129,45 +129,6 @@ export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete 
 
 }
 
-////////////// CHECKBOX
-
-export const CheckboxField = ({ input, meta, label, options }) => {
-
-    return (
-
-        <SimpleField label={label} meta={meta} >
-            <div className={ meta && `${fieldCss(meta)}` }>
-                {options.map((option) => (
-                    <div className="form-check" key={option.value}>
-                        <input
-                            className="form-check-input"
-                            type="checkbox"
-                            checked={input.value.indexOf(option.value) !== -1}
-                            //
-                            onChange={(e) => {
-                                const newValues = [...input.value];
-                                if (e.target.checked) {
-                                    newValues.push(option.value);
-                                } else {
-                                    newValues.splice(newValues.indexOf(option.value), 1);
-                                }
-                                // console.log('Checkbox', newValues)
-                                input.onChange(newValues); // it's like dispatch(change(newValues))
-                                // change(form:String, field:String, value:any)
-
-                            }}
-                        />
-                        <label className="checkbox-label form-check-label">
-                            {option.label}
-                        </label>
-                    </div>
-                ))}
-            </div>
-        </SimpleField>
-
-    )
-
-}
 
 
 ////////////// RADIO
@@ -223,6 +184,57 @@ export const SelectField = ({ input, meta, label, options }) => {
     )
 }
 
+////////////// CHECKBOX
+
+export const CheckboxField = ({ input, meta, label, options }) => {
+
+    return (
+
+        <SimpleField label={label} meta={meta} >
+            <div className={ `check-control check-array` }>
+            {/* <div className={ meta && `${fieldCss(meta)}` }> */}
+                { options.map((option) => {
+                    let checked = input.value.indexOf(option.value) !== -1
+                    return (
+                    <div className="form-check" key={option.value}>
+                        <input
+                            id={option.value}
+                            className="form-check-input hide"
+                            type="checkbox"
+                            checked={checked}
+                            //
+                            onChange={(e) => {
+                                const newValues = [...input.value];
+                                if (e.target.checked) {
+                                    newValues.push(option.value);
+                                } else {
+                                    newValues.splice(newValues.indexOf(option.value), 1);
+                                }
+                                // console.log('Checkbox', newValues)
+                                input.onChange(newValues); // it's like dispatch(change(newValues))
+                                // change(form:String, field:String, value:any)
+
+                            }}
+                        />
+
+                        <i className={ `fa-${ checked ? 'check-square checked fas' : 'square far' }` }/>
+
+                        <label className="checkbox-label form-check-label" htmlFor={option.value}>
+                            {option.label}
+                        </label>
+                    </div>
+                )}
+                
+                )}
+            </div>
+
+            { meta.error && <div className="error-feedback">{meta.error}</div> }
+        </SimpleField>
+
+    )
+
+}
+
 
 /////////////////// TOGGLE
 
@@ -259,6 +271,13 @@ export const ToggleField = ({label, input}) => {
 
 ////////////// SIMPLE FIELD
 
-export const TextInput = (props) => (
-    <input type="text" className="form-control" autoComplete="off" {...props} />
+export const TextInput = ({ input, meta, placeholder='', type='text', autoComplete='off' }) => (
+    <div className="in_wr">
+        <input 
+            type={type} placeholder={placeholder} autoComplete={autoComplete}  
+            className={`form-control ${ meta.error ? 'has-errors' : '' }`} 
+            { ...input } 
+        />
+        { meta.error && <div className="error-feedback">{meta.error}</div> }
+    </div>
 )

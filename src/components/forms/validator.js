@@ -1,6 +1,6 @@
 
 
-export const required = value => value  ? undefined : 'Champs obligatoire'
+export const required = value => value  ? undefined : 'Ce champs est obligatoire'
     // value || typeof value === 'number' ? undefined : 'Required'
 
     
@@ -21,4 +21,4 @@ export const alphaNumeric = value =>
     ? 'Only alphanumeric characters' : undefined
 
 export const emptyArray = array =>
-    array && array.length === 0 ? 'Required ...' : undefined
+    array && array.length === 0 ? 'Ce champs est obligatoire' : undefined
