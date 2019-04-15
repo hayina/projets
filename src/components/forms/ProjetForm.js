@@ -34,6 +34,7 @@ let ProjetForm = ({
 
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
+    const [financements, setFinancements] = useState([]);
     const [submitting, setSubmitting] = useState(false);
 
     // console.log("initialValues ->", initialValues)
@@ -82,6 +83,14 @@ let ProjetForm = ({
 
     }, [])
     
+
+    const fetchFinancements = (acheteur) => {
+
+        useAjaxFetch({
+            url: `/financements/${acheteur}`,
+            success: (data) => { setFinancements(data) },
+        })
+    }
     
     const onSubmit = (formValues) => {
 
@@ -92,10 +101,11 @@ let ProjetForm = ({
         let apiValues = { 
             ...formValues,
             idProjet,
-            maitreOuvrage: formValues.maitreOuvrage.value,
+            maitreOuvrage: formValues.maitreOuvrage ? 
+            `${formValues.maitreOuvrage.value}${ formValues.srcFinancement ? `:${formValues.srcFinancement}`:'' }` : null,
             maitreOuvrageDel: formValues.isMaitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
             localisations,
-            partners: partners.map(cp => `${cp.partner.value}:${cp.montant}`)
+            partners: partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? `:${cp.srcFinancement}`:''}`)
         }
 
 
@@ -110,7 +120,7 @@ let ProjetForm = ({
         //     history.push("/projets")
         // },2000)
 
-        // return
+        return
 
         useAjaxFetch({
             url: 'projets',
@@ -127,7 +137,7 @@ let ProjetForm = ({
     }
 
 
-    console.log('RENDERING  ----------------------------------------->')
+    console.log('PROJET FORM -> RENDERING -->')
 
     return (
         <form id={formName} className="form-wr" onSubmit={ handleSubmit(onSubmit) }>
@@ -227,24 +237,23 @@ let ProjetForm = ({
                 // url='/get_acheteurs'
                 onSelect={(suggestion) => {
                     dispatch(change(formName, 'maitreOuvrage', suggestion));
+                    fetchFinancements(suggestion.value)
                 }}
                 onDelete={() => {
                     dispatch(change(formName, 'maitreOuvrage', null))
+                    setFinancements([])
                 }}
                 // suggestion={maitreOuvrage}
                 // validate={[required]}
             />
 
-
-            { maitreOuvrage && maitreOuvrage.value === constants.PROVINCE_TAOURIRT &&
+            {/* si pas Conventionné pour ne pas rentrer en confli avec src financement des partenaire */}
+            { !isConvention && financements && financements.length > 0 &&
                 <Field
-                    name="sourceFinancement"
+                    name="srcFinancement"
                     component={SelectField}
                     label="Source de Financement"
-                    options={[
-                                {value: 1, label: 'B.G'}, {value: 2, label: 'INDH'},
-                                {value: 3, label: 'FDR'}, {value: 4, label: 'INDH-FDR'}, , {value: 5, label: 'C.T'},
-                            ]}
+                    options={financements}
                     // validate={[required]}
                 />
             }
@@ -341,7 +350,7 @@ export default connect(
         //     isMaitreOuvrageDel: false,
         // },
         initialValues: getInitialFormValues(state),
-        // isConvention: selector(state, 'isConvention'),
+        isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         maitreOuvrage: selector(state, 'maitreOuvrage'),
         partners: getExtPartners(state),

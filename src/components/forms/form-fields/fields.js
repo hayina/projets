@@ -81,7 +81,7 @@ export const SimpleField2 = ({ children, label, error }) => (
 export const TextField = (props) => {
 
     const { input, meta, label, fieldType } = props;
-    console.log('TextField', props);
+    // console.log('TextField', props);
 
     const fieldProps = {
         ...input, // (provided by the redux-form HOC)
@@ -212,11 +212,12 @@ const SwitchSlider = (props) => (
 
 export const SelectField = ({ input, meta, label, options }) => {
 
+    // console.log('SelectField -> ', options)
     return (
         <SimpleField label={label} meta={meta} >
             <select
                 className={`${fieldCss(meta)}`}
-                onChange={(e) => input.onChange(e)}
+                onChange={input.onChange}
                 value={input.value}
             >
                 <option value=''>...</option>
