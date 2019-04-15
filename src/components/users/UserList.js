@@ -58,15 +58,8 @@ let UserList = ({ dispatch }) => {
 
     const editUser = (id, index) => {
 
-        useAjaxFetch({
-            url: `users/edit/${id}`,
-            method: 'GET',
-            success: (data) => {
-                dispatch(showModal(modalTypes.ADD_USER, 
-                    { editMode: true, initUser: data, userIndex: index, updateUser })) 
-            }
-            
-        })
+        dispatch(showModal(modalTypes.ADD_USER, 
+            { editMode: true, userToEdit: id, userIndex: index, updateUser })) 
     }
 
 

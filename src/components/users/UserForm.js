@@ -34,26 +34,42 @@ const rules = {
 
 
 
-let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser, updateUser }) => {
+let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser }) => {
     
     const { state, dispatchForm, onSubmit } = useContext(FormContext);
     const [roles, setRoles] = useState([])
+    const [editLoading, setEditLoading] = useState(false)
+
+
 
     useEffect(() => {
+
+        
 
         useAjaxFetch({
             url: 'roles',
             method: 'GET',
             success: (data) => {
                 setRoles(data)
-
-                if(editMode) {
-                    dispatchForm(reset(initUser))
-                }
-            }
+            },
+            // error: () => setEditLoading(false)
         })
+
+        if(editMode) {
+            setEditLoading(true)
+            useAjaxFetch({
+                url: `users/edit/${userToEdit}`,
+                method: 'GET',
+                success: (data) => {
+                    dispatchForm(reset(data))
+                    setEditLoading(false)
+                },
+                error: () => setEditLoading(false)
+            })
+        }
         
     }, [])
+
 
     // console.log('State ->', state, onSubmit)
 
@@ -109,7 +125,7 @@ let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser, updateUser }
 
 
 
-            <div id="userForm" className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}>
+            <div id="userForm" className={`form-content ${ submitting || editLoading ? 'form-submitting is-submitting':'' }`}>
             {/* <div id="userForm" className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}> */}
             
                 <Field name="login" validate={[required, number]}>
@@ -139,7 +155,7 @@ let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser, updateUser }
                     { props => <ToggleField label="Actif (l'utilisateur peut se connecter)" {...props} /> }
                 </Field>
   
-                <input type="button" value="RESET" onClick={ () => dispatchForm(reset(editMode ? initUser : intialValues)) } />
+                {/* <input type="button" value="RESET" onClick={ () => dispatchForm(reset(editMode ? initUser : intialValues)) } /> */}
             
             </div>         
 

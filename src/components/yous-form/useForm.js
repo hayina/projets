@@ -103,8 +103,8 @@ export const FormProvider = ({ intialValues, rules, children }) => {
             console.log('Form has errors')
             return
         }
-        console.log('OKEY onSubmit')
-        return
+        // console.log('OKEY onSubmit')
+        // return
         // console.log('editMode', editMode)
 
         // dispatchForm(setValid(true))

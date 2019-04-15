@@ -52,3 +52,5 @@ splice & slice & split ....
 -- a verifier checkbox et select pour validation dirty et touched
 
 prototype ??
+
+issue with many submitting !!!
