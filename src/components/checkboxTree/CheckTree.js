@@ -77,7 +77,8 @@ export const CheckTree = ({ items, selection, setSelection }) => {
 
                     <label className={`checkbox-label form-check-label ${checkClass} ${checkedInState ? 'bold-label' : ''}`}
                         htmlFor={`${node.path}`}>
-                        {node.label} - {node.path}
+                        {node.label} 
+                        {/* - {node.path} */}
                     </label>
 
                     {node.children && node.children.length > 0 && showChildren && renderCheckTree({ items: node.children })}

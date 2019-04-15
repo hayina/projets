@@ -32,14 +32,7 @@ let CheckListModal = ({ vHandler, items, title, initialSelection=[] }) => {
 
         <Modal
             handleValidation={() => {
-                console.log('CheckListModal ---> handleValidation')
                 vHandler(selection)
-                // dispatch(
-                //     arraySetting('localisation', convertToSelectionByParent(selection, items))
-                // )
- 
-                // nestedTree(selection, mappedItems)
-                // dispatch(hideModal())
             }}
             title={title}
         >

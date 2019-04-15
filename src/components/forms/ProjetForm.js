@@ -4,7 +4,7 @@ import { Field, reduxForm, formValueSelector, initialize, change } from 'redux-f
 
 import useApi from '../hooks/useApi';
 
-import { showModal, arraySetting, initFormValues, arrayPushing } from '../../actions';
+import { showModal, arraySetting, initFormValues, arrayPushing, hideModal } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, RadioField, SelectField, SimpleField, 
@@ -102,15 +102,15 @@ let ProjetForm = ({
         console.log(apiValues)
 
 
-        dispatch(arrayPushing('projets', apiValues));
-        setTimeout(() => {
+        // dispatch(arrayPushing('projets', apiValues));
+        // setTimeout(() => {
 
-            initForm()
-            setSubmitting(false)
-            history.push("/projets")
-        },2000)
+        //     initForm()
+        //     setSubmitting(false)
+        //     history.push("/projets")
+        // },2000)
 
-        return
+        // return
 
         useAjaxFetch({
             url: 'projets',
@@ -226,8 +226,8 @@ let ProjetForm = ({
 
             <Field name="maitreOuvrage" label="Maître d'ouvrage" component={AutoCompleteField}
 
-                // url='/acheteurs'
-                url='/get_acheteurs'
+                url='/acheteurs'
+                // url='/get_acheteurs'
                 onSelect={(suggestion) => {
                     dispatch(change(formName, 'maitreOuvrage', suggestion));
                 }}
@@ -258,8 +258,8 @@ let ProjetForm = ({
             { isMaitreOuvrageDel &&
             <Field name="maitreOuvrageDel" label="Maître d'ouvrage délégué" component={AutoCompleteField}
 
-                url='/get_acheteurs'
-                // url='/acheteurs'
+                // url='/get_acheteurs'
+                url='/acheteurs'
                 onSelect={ (suggestion) => dispatch(change(formName, 'maitreOuvrageDel', suggestion)) }
                 onDelete={ () => dispatch(change(formName, 'maitreOuvrageDel', null)) }
                 // suggestion={maitreOuvrage}
@@ -283,6 +283,7 @@ let ProjetForm = ({
                                     initialSelection: pointsFocaux,
                                     vHandler: (selection) => {
                                         dispatch(arraySetting('pointsFocaux', selection))
+                                        dispatch(hideModal())
                                     }
                                 }
                         ))

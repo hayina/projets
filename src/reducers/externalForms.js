@@ -3,22 +3,9 @@ import types from '../types';
 
 const initialState = {
     partners: [],
-    localisations:  [],
+    localisations: [],
     pointsFocaux: [],
-    projets: [{
-        intitule: 'azeazeaze',
-        montant: '89000',
-        isConvention: true,
-        maitreOuvrage: 8,
-        sourceFinancement: '2',
-        maitreOuvrageDel: null,
-        localisations: [],
-        partners: [
-          '5:8900000',
-          '10:98000000',
-          '11:700000'
-        ]
-      }],
+    projets: [],
 }
 
 export const getExtPartners = (state) => state.externalForms.partners;

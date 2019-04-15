@@ -25,9 +25,7 @@ let Localisation = ({ dispatch, items, initialSelection=[] }) => {
                 dispatch(
                     arraySetting('localisations', convertToSelectionByParent(selection, items))
                 )
- 
-                // nestedTree(selection, mappedItems)
-                // dispatch(hideModal())
+                dispatch(hideModal())
             }}
             title="Choisir la localisation du projet"
         >

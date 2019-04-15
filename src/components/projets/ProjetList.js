@@ -15,7 +15,7 @@ import { getProjets } from '../../reducers/externalForms';
 import { CretereItem } from './components';
 import SearchBar from './SearchBar';
 
-let ProjetList = ({dispatch, _projets}) => {
+let ProjetList = ({dispatch}) => {
 
 
     const [projets, setProjets] = useState([]);
@@ -60,7 +60,7 @@ let ProjetList = ({dispatch, _projets}) => {
             },
             error: (err) => {
                 setLoading(false)
-                setProjets(_projets)
+                // setProjets(_projets)
             }
         })
         return () => cancel = true

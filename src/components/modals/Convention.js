@@ -37,7 +37,14 @@ let Convention = ({ handleSubmit, dispatch, editMode }) => {
 
         <Modal
             handleValidation={() => {
-                dispatch(submit('conventionForm'));
+                // dispatch(submit('conventionForm'));
+
+                const doSaving = (f) => new Promise((resolve, reject) => {
+                    f();
+                    resolve();
+                })
+
+                doSaving(() => dispatch(submit('conventionForm'))).then(() => dispatch(hideModal()))
                 // dispatch(hideModal());
                 // dispatch(submit('conventionForm')).then(
                 //     () => dispatch(hideModal())
@@ -51,8 +58,8 @@ let Convention = ({ handleSubmit, dispatch, editMode }) => {
 
                     <Field name="partner" label="Partenaire" component={AutoCompleteField}
 
-                        // url='/partners'
-                        url='/get_partners'
+                        url='/partners'
+                        // url='/get_partners'
                         onSelect={(suggestion) => {
                             dispatch(change(formName, 'partner', suggestion));
                         }}

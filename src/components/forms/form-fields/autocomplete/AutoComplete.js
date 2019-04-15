@@ -101,7 +101,8 @@ const AutoComplete = ({ onSelect, url }) => {
 
         axios({
             // SETUP PARAMS
-            baseURL: '/PROJETS/ajax',
+            // baseURL: '/PROJETS/ajax',
+            baseURL: '/PROJET-API/api',
             headers: {
                 "Access-Control-Allow-Origin": "*"
             },
@@ -117,7 +118,6 @@ const AutoComplete = ({ onSelect, url }) => {
                     type: 'AC_API_SUCCESS',
                     suggestions: response.data 
                     //.map((s) => ({ id: s.id, label: s.label }))
-                    .map((s) => ({ value: s.id, label: s.label }))
                 });
             }
         })
