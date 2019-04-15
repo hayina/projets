@@ -48,3 +48,10 @@
 .ac-sppiner {
 
 }
+
+
+.api-error {
+    color: #dc3545;
+    display: flex;
+    align-items: center;
+}

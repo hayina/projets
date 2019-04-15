@@ -149,7 +149,8 @@ const AutoComplete = ({ onSelect, url }) => {
 
         let suggestionsList;
 
-        if (showSuggestions && !errors) {
+        if (showSuggestions) {
+        // if (showSuggestions && !errors) {
             if (suggestions.length > 0) {
                 suggestionsList = suggestions.map((suggestion, i) => (
                     <li
@@ -190,7 +191,15 @@ const AutoComplete = ({ onSelect, url }) => {
 
             </div>
 
-            {renderSuggestionsList()}
+            {/* {renderSuggestionsList()} */}
+            {   !errors ?  
+                renderSuggestionsList() 
+                : 
+                <div className="api-error">
+                    Une erreur s'est produit
+                    <i className="fas fa-info-circle"></i>
+                </div> 
+            }
         </div>
     )
 }
