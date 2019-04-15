@@ -8,13 +8,13 @@ const useAjaxFetch = ({ url, method='GET', params, body, success, error, content
     
     // useEffect(() => {
         
-        console.log('USE API HOOK ---->', url, params, body)
+        // console.log('USE API HOOK ---->', url, params, body)
         // let cancel = false;
 
         axios({
                 // SETUP PARAMS
-                baseURL: '/PROJETS/ajax',
-                // baseURL: '/PROJET-API/api',
+                // baseURL: '/PROJETS/ajax',
+                baseURL: '/PROJET-API/api',
                 headers: {
                     "Access-Control-Allow-Origin": "*",
                     "X-Requested-With": "XMLHttpRequest",

@@ -26,37 +26,44 @@ let UserList = ({ dispatch }) => {
         return () => {}
     }, [])
 
-    const addUser = (user) => setUsers([ ...users, user])
+    const addUser = (user) => {
+        setUsers([ ...users, user])
+    }
+    const updateUser = (user, index) => {
+        let nwUsers = [ ...users ];
+        nwUsers[index] = user;
+        setUsers(nwUsers);
+    }
 
-    const deleteUser = (user, index) => {
+    const deleteUser = ({id, nom, prenom}, index) => {
 
         dispatch(showModal(modalTypes.ADD_DELETE, 
             {
                 onDanger: () => useAjaxFetch({
-                    url: `users/${user.id}`,
+                    url: `users/${id}`,
                     method: 'DELETE',
                     success: () => {
-                        users.splice(index, -1)
+                        users.splice(index, 1)
                         setUsers([ ...users])
                         dispatch(hideModal())
                     }
                 }),
                 dangerText: `Voulez vous vraiment supprimer l'utilisateur : 
-                ${user.nom.toUpperCase()} 
-                ${user.prenom.toUpperCase()} ?`
+                ${nom.toUpperCase()} 
+                ${prenom.toUpperCase()} ?`
             }))
 
 
     }
 
-    const editUser = (idUser, index) => {
+    const editUser = (id, index) => {
 
         useAjaxFetch({
-            url: `users/${idUser}`,
-            method: 'POST',
+            url: `users/edit/${id}`,
+            method: 'GET',
             success: (data) => {
                 dispatch(showModal(modalTypes.ADD_USER, 
-                    { editMode: true, initUser: data, userIndex: index })) 
+                    { editMode: true, initUser: data, userIndex: index, updateUser })) 
             }
             
         })
@@ -78,13 +85,13 @@ let UserList = ({ dispatch }) => {
             </div>
 
             <div className="user-result">
-                {   users.map((user,index) => {
+                {   users.map((user, index) => {
 
                     return (
                         <div className="user-item" key={user.id}>
 
                             <div className="user-info">
-                                <div className="user-label">{user.login}</div>
+                                <div className="user-label">{user.id}. {user.nom} {user.prenom}</div>
                                 {/* <div className="user-lastCon">{user.lastConnexion}</div> */}
                                 {/* <div className="user-dateCr">{user.dateCreation}</div> */}
                             </div>

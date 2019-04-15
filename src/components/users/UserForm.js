@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState, useReducer } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import './userForm.css'
-import { SimpleField2, TextInput, ToggleField, CheckboxField } from '../forms/form-fields/fields';
-import { hideModal, arrayPushing, arrayUpdating } from '../../actions';
+import { TextInput, ToggleField, CheckboxField } from '../forms/form-fields/fields';
+import { hideModal} from '../../actions';
 import Modal from '../modals/Modal';
 import { required, number, emptyArray } from '../forms/validator';
-import { FormProvider, setValues, setTouched, reset, FormContext, Field } from '../yous-form/useForm';
+import { FormProvider, reset, FormContext, Field, setSubmitting } from '../yous-form/useForm';
 import useAjaxFetch from '../hooks/useAjaxFetch'
+
+import './userForm.css'
 
 
 const intialValues = {
@@ -22,18 +23,18 @@ const intialValues = {
 
 
 const rules = {
-    login: [required],
+    // login: [required],
     // password: [required],
-    // nom: [required],
+    nom: [required],
     // prenom: [required],
-    // roles: [emptyArray],
+    roles: [emptyArray],
     // active: [required],
 }
 
 
 
 
-let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser }) => {
+let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser, updateUser }) => {
     
     const { state, dispatchForm, onSubmit } = useContext(FormContext);
     const [roles, setRoles] = useState([])
@@ -58,40 +59,41 @@ let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser }) => {
 
     const handleSubmit = () => {
 
-        console.log('onSubmit State ->', state.values)
+        // console.log('onSubmit State ->', state.values)
 
+        dispatchForm(setSubmitting(true))
         useAjaxFetch({
             url: 'users',
             method: 'POST',
             body: JSON.stringify(state.values),
-            success: (idUser) => {
-                addUser({...state.values, idUser})
-                dispatch(hideModal())
+            success: (id) => {
+
+                // setTimeout(() => {
+
+                    if( !editMode) {
+                        addUser({...state.values, id})
+                    } else {
+                        updateUser({...state.values}, userIndex)
+                    }
+                    dispatch(hideModal())
+
+                // },3000)
+
+
+            },
+            error: () => {
+                dispatchForm(setSubmitting(false))
             }
+
             
         })
-
-        // return
-
-        // if(editMode){
-        //     dispatch(arrayUpdating('users', state.values, userIndex))
-        // } else {
-
-        //     state.values.dateCreation = new Date().getTime()
-        //     dispatch(arrayPushing('users', state.values))
-        // }
-
         
     }
 
 
+    // console.log('UserForm RENDERING  ----------------------------------------->', state)
 
-    // console.log('FORM VALUES ->', state.values)
-
-    // const { submitting, values, errors } = state
-
-    console.log('UserForm RENDERING  ----------------------------------------->', state)
-
+    const { submitting } = state
     return (
         
         <Modal
@@ -100,15 +102,14 @@ let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser }) => {
                 // dispatch(hideModal())
             }}
             title={`${ editMode ? 'Editer':'Ajouter'} utilisateur`}
-            vClass={`btn btn-primary`}
-            vValue={`Submit`}
-            // vClass={`btn btn-primary ${ submitting ? 'btn-submitting is-submitting ':'' }`}
-            // vValue={`Submit ${ submitting ? '...':'' }`}
+            // vClass={`btn btn-primary`}
+            // vValue={`Submit`}
+            submitting={submitting}
         >
 
 
 
-            <div id="userForm" className={`form-content`}>
+            <div id="userForm" className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}>
             {/* <div id="userForm" className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}> */}
             
                 <Field name="login" validate={[required, number]}>
@@ -137,28 +138,7 @@ let UserForm = ({ dispatch, editMode, initUser, userIndex, addUser }) => {
                 <Field name="active" validate={[required]}>
                     { props => <ToggleField label="Actif (l'utilisateur peut se connecter)" {...props} /> }
                 </Field>
-           
-
-          
-
-                {/* <ToggleField label="Actif (l'utilisateur peut se connecter)"
-                    input={{ 
-                        onChange: (checked) => {
-                            onChange('active', checked);
-                            onFocus('active');
-                        },
-                        value: values.active
-                    }}
-                />  */}
-
-
-            
-                {/* <div className="form-errors">
-                    {Object.keys(errors).map((err, i) => 
-                            (<div className="err-item" key={i}>{err}. {errors[err]}</div>)
-                    )}
-                </div> */}
-
+  
                 <input type="button" value="RESET" onClick={ () => dispatchForm(reset(editMode ? initUser : intialValues)) } />
             
             </div>         

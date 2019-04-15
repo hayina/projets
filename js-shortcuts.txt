@@ -6,3 +6,6 @@ Object.entries(myObj).forEach(([key, val]) => ... )
     for (const s of myStringArray) 
     for (const [index, el] of arr.entries()) {
     myStringArray.forEach( () => ... )
+
+
+var size = Object.keys(myObj).length;

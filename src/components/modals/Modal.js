@@ -8,7 +8,7 @@ import './modal.css'
 
 
 
-const Modal = ({ title, children, handleValidation, dispatch }) => {
+const Modal = ({ title, children, handleValidation, dispatch, submitting }) => {
 
     const modalRef = useRef(null);
 
@@ -54,13 +54,13 @@ const Modal = ({ title, children, handleValidation, dispatch }) => {
                     {/* <button type="submit" className="btn btn-primary"
                         onClick={ handleValidation }>Valider</button> */}
 
-                    <button type="submit" className="btn btn-primary"
+                    <button type="submit" className={`btn btn-primary ${submitting ? 'btn-submitting is-submitting ':''}`}
                         onClick={
                             () => {
                                 handleValidation()
                                 // dispatch(hideModal())
                             }} 
-                        >Valider</button>
+                        >Valider{ submitting ? '...':'' }</button>
 
                 </div>
             </div>

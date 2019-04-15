@@ -47,3 +47,8 @@ splice & slice & split ....
 
 
 -------- prevent rendereing parent form case when onChange
+
+
+-- a verifier checkbox et select pour validation dirty et touched
+
+prototype ??

@@ -22,7 +22,7 @@ const renderErrorField = (meta) => {
 
 export const SimpleField = ({ children, meta, label, errors }) => {
 
-    console.log('SimpleField RENDERING ---------------------------->')
+    // console.log('SimpleField RENDERING ---------------------------->')
 
     // const hasErors = errors !== undefined ? true : false
     return (

@@ -15,6 +15,8 @@ export const reducer = (state, action) => {
             return { ...state, submitting : action.submitting };
         case 'SET_TOUCHED':
             return { ...state, touched : { ...state.touched, [action.field]: action.touched } };
+        case 'SET_DIRTY':
+            return { ...state, dirty : { ...state.dirty, [action.field]: action.dirty } };
         case 'SET_ERRORS':
             return { ...state, errors : { ...state.errors, [action.field]: action.error } };
         case 'SET_VALUES':
@@ -32,8 +34,9 @@ const initialState = {
     values: {},
     errors: {},
     touched: {},
+    dirty: {},
     submitting: false,
-    valid: false
+    // valid: false
 }
 
 export const setProp = (prop, field, value) => ({ type: 'SET_PROP', prop, field, value }) 
@@ -43,9 +46,11 @@ export const setTouched = (field, touched) => ({ type: 'SET_TOUCHED', field, tou
 export const setDirty = (field, dirty) => ({ type: 'SET_DIRTY', field, dirty }) 
 export const setSubmitting = (submitting) => ({ type: 'SET_SUBMITTING', submitting }) 
 export const reset = (intialValues) => ({ type: 'RESET', intialValues }) 
-export const setValid = (valid) => ({ type: 'SET_VALID', valid }) 
+// export const setValid = (valid) => ({ type: 'SET_VALID', valid }) 
 
 export const FormContext = createContext({});
+
+let firstTimeValidation = false
 
 export const FormProvider = ({ intialValues, rules, children }) => {
 
@@ -54,6 +59,8 @@ export const FormProvider = ({ intialValues, rules, children }) => {
     // console.log('Form Provider State ->', state)
 
     const validateFields = ({checkAll=true}) => {
+
+        // let nErrors = {}
         Object.entries(rules).forEach(([field, validators]) => {
             if( ( checkAll || state.touched[field] ) ) {
                 validate(field, validators, state.values[field])
@@ -73,33 +80,38 @@ export const FormProvider = ({ intialValues, rules, children }) => {
         }
     }
 
+    
     const onSubmit = (submit, editMode) => {
         // validateFields({})
 
-
-        console.log('Submitting ...')
-        // Check if the form is touched
-        if( !editMode && Object.keys(state.touched).length < 1  ){
-            // dispatchForm(setValid(false))
+        console.log('Submitting ...', state)
+        console.log('firstTimeValidation -> ', firstTimeValidation)
+        //if form is new mode && fields to be validated are not all dirty
+        if( !firstTimeValidation && !editMode && Object.keys(state.dirty)
+                        .filter(tField => rules[tField] !== undefined).length !== Object.keys(rules).length ){
+            console.log('New & Not all dirty')
+            firstTimeValidation = true
             validateFields({})
-            console.log('ERROR onSubmit')
             return
         }
 
-        console.log('Errors  ---->  ', Object.entries(state.errors).some(([field, err]) => err !== undefined))
+        //if form is new mode && 
+
         if( Object.entries(state.errors).some(([field, err]) => err !== undefined) ){
-            // dispatchForm(setValid(false))
-            console.log('ERROR onSubmit')
+            console.log('Form has errors')
             return
         }
         console.log('OKEY onSubmit')
+        return
+        // console.log('editMode', editMode)
 
-        dispatchForm(setValid(true))
+        // dispatchForm(setValid(true))
         submit()
     }
 
     const onChange = (field, value) => {
         dispatchForm(setValues(field, value))
+        dispatchForm(setDirty(field, true))
         validate(field, rules[field], value)
     }
 
