@@ -50,14 +50,15 @@
 
 .field-label {
     font-weight: 600;
-    /* text-transform: uppercase; */
+    text-transform: uppercase;
     font-size: 15px;
+    color: #212529;
 }
 
 .form-check-label {
     /* font-weight: 500; */
     /* text-transform: uppercase; */
-    color: #495057;
+    /* color: #495057; */
     cursor: pointer;
 }
 
@@ -158,3 +159,9 @@
     /* border-top: 2px solid #17a2b8;
     margin-bottom: 20px; */
 }
+
+#projetForm .radio-line .switch {
+    margin-left: 10px;
+}
+
+

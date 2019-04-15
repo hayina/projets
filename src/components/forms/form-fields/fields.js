@@ -27,7 +27,7 @@ export const SimpleField = ({ children, meta, label, errors }) => {
     // const hasErors = errors !== undefined ? true : false
     return (
         <div className="form-group simple-field-wr">
-            <label className="field-label form-label">{label}</label>
+            { label && <label className="field-label form-label">{label}</label> }
             { children }
             { meta && renderErrorField(meta) }
         </div>
@@ -165,6 +165,48 @@ export const RadioField = ({ input, meta, label, options }) => {
 
 }
 
+export const RadioList = ({options, input}) => 
+    options.map((option) => (
+        <div className="form-check" key={option.label}>
+            <input id={option.label} className="form-check-input" type="radio"
+                value={option.value}
+                checked={option.value === input.value}
+                onChange={(e) => input.onChange(option.value)}
+            />
+            <label htmlFor={option.label} className="radio-label form-check-label">
+                {option.label}
+            </label>
+        </div>
+    ))
+
+
+export const LineRadio = ({input, options, label, btnText, btnOnClick}) => {
+
+    return (
+        <div className="radio-line">
+            
+            <label className="field-label form-label">{label}</label>
+
+            {/* <div className="radio-list">
+                <RadioList options={options} input={input} />
+            </div> */}
+
+            <SwitchSlider onChange={ (e) => input.onChange(e.target.checked) } checked={input.value ? true:false} />
+
+            <input type="button" className={`btn btn-info show-modal ${input.value ? '':'op-hide'}`} 
+                    value={btnText} onClick={btnOnClick}
+            />
+            
+        </div>
+    )
+}
+
+const SwitchSlider = (props) => (
+    <label className="switch">
+        <input type="checkbox" name="cloture" {...props} />
+        <div className="slider round"></div>
+    </label>
+)
 
 ////////////// SELECT
 
@@ -253,11 +295,12 @@ export const ToggleField = ({label, input}) => {
                 onChange={ (e) => input.onChange(e.target.checked) }
             />
             <i className={
-                `fa-${ checked ? 'check-square checked fas' : 'square far' }`
+                `_fa_check fa-${ checked ? 'check-square checked fas' : 'square far' }`
             } />
 
             <label 
-                className={`form-check-label`}
+                className={`field-label form-check-label`}
+                // className={`form-check-label`}
                 htmlFor={`toggle-field`}
             >
                 {label}

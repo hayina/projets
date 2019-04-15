@@ -19,6 +19,14 @@ ul {
     display: none;
 }
 
+.v-hide {
+    visibility: hidden;
+}
+
+.op-hide {
+    opacity: 0;
+}
+
 /* Define an animation behavior */
 @keyframes spinner {
     to { transform: rotate(360deg); }

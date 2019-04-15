@@ -8,7 +8,7 @@ import { showModal, arraySetting, initFormValues, arrayPushing, hideModal } from
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, RadioField, SelectField, SimpleField, 
-    AutoCompleteField, ToggleField } from './form-fields/fields'
+    AutoCompleteField, ToggleField, LineRadio } from './form-fields/fields'
 import { getExtPartners, getLocalisations, getPointsFocaux, getInitialFormValues } from '../../reducers/externalForms';
 import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
 import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
@@ -155,6 +155,15 @@ let ProjetForm = ({
 
             <Field
                 name="isConvention"
+                component={LineRadio}
+                label="Conventionné"
+                // options={[{ label: 'Oui', value: true }, { label: 'Non', value: false }]}
+                btnText="ajouter un partenaire"
+                btnOnClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: false }))}
+            />
+
+            {/* <Field
+                name="isConvention"
                 component={RadioField}
                 label="Conventionné"
                 options={[{ label: 'Oui', value: true }, { label: 'Non', value: false }]}
@@ -165,7 +174,7 @@ let ProjetForm = ({
                 <input type="button" className="btn btn-info show-modal show-modal-conv" value="ajouter un partenaire"
                     onClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: false }))}
                 />
-            )}
+            )} */}
 
             {(isConvention && partners) && (
                 <div className="form-group">
@@ -256,7 +265,7 @@ let ProjetForm = ({
             />
 
             { isMaitreOuvrageDel &&
-            <Field name="maitreOuvrageDel" label="Maître d'ouvrage délégué" component={AutoCompleteField}
+            <Field name="maitreOuvrageDel"  component={AutoCompleteField}
 
                 // url='/get_acheteurs'
                 url='/acheteurs'
