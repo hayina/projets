@@ -1,5 +1,6 @@
 import React from 'react'
 
+import './checkList.css';
 
 const CheckList = ({items, selection, setSelection}) => {
 
@@ -33,7 +34,7 @@ const CheckList = ({items, selection, setSelection}) => {
                             />
 
                             <i className={ `${ checked ? 'fas fa-check-square' : 'far fa-square' } check-color`}></i>
-                            <label htmlFor={item.value} className={`form-check-label check-color`}>{item.label}</label>
+                            <label htmlFor={item.value} className={`form-check-label check-color bg-label`}>{item.label}</label>
 
                         
                         </div>

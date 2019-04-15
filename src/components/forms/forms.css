@@ -158,6 +158,10 @@
 .sep-line {
     /* border-top: 2px solid #17a2b8;
     margin-bottom: 20px; */
+    border-bottom: 1px solid lightgrey;
+    /* margin-bottom: 18px; */
+    /* margin-bottom: 1rem; */
+    margin: 1rem 0px;
 }
 
 #projetForm .radio-line .switch {

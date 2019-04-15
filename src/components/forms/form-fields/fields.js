@@ -180,10 +180,10 @@ export const RadioList = ({options, input}) =>
     ))
 
 
-export const LineRadio = ({input, options, label, btnText, btnOnClick}) => {
+export const LineRadio = ({input, label, btnText, btnOnClick}) => {
 
     return (
-        <div className="radio-line">
+        <div className="radio-line form-group">
             
             <label className="field-label form-label">{label}</label>
 

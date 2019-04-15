@@ -97,7 +97,7 @@
 .radio-line {
     display: flex;
     align-items: center;
-    padding: 10px 0px 18px;
+    /* padding: 10px 0px 18px; */
 }
 
 .radio-line label {
@@ -196,6 +196,13 @@
   /* Slider end */
 
 
-  .simple-field-wr > ._fa_check {
+.simple-field-wr > ._fa_check {
     margin-left: 0px;
+}
+
+.bg-label {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 15px;
+    color: #212529;
 }

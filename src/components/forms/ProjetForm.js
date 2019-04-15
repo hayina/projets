@@ -158,23 +158,9 @@ let ProjetForm = ({
                 component={LineRadio}
                 label="Conventionné"
                 // options={[{ label: 'Oui', value: true }, { label: 'Non', value: false }]}
-                btnText="ajouter un partenaire"
+                btnText="Ajouter un partenaire"
                 btnOnClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: false }))}
             />
-
-            {/* <Field
-                name="isConvention"
-                component={RadioField}
-                label="Conventionné"
-                options={[{ label: 'Oui', value: true }, { label: 'Non', value: false }]}
-            />
-
-
-            {isConvention && (
-                <input type="button" className="btn btn-info show-modal show-modal-conv" value="ajouter un partenaire"
-                    onClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: false }))}
-                />
-            )} */}
 
             {(isConvention && partners) && (
                 <div className="form-group">
@@ -223,12 +209,14 @@ let ProjetForm = ({
                 />
             </SimpleField>
 
+            { localisations && localisations.length > 0 &&
             <div className="localisations-wr tree-wr">
                 <NestedTree 
                     items={ nestedTree(localisations, localisationItems) }
                     onDelete= { (path) => dispatch(arrayDeletingByPath('localisations', path)) }
                 /> 
             </div>
+            }
 
 
             <div className="sep-line"></div>
@@ -353,7 +341,7 @@ export default connect(
         //     isMaitreOuvrageDel: false,
         // },
         initialValues: getInitialFormValues(state),
-        isConvention: selector(state, 'isConvention'),
+        // isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         maitreOuvrage: selector(state, 'maitreOuvrage'),
         partners: getExtPartners(state),
