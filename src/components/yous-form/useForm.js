@@ -8,9 +8,10 @@ export const reducer = (state, action) => {
     switch (action.type) {
 
         case 'RESET':
-            return { ...initialState, values: action.intialValues };
-        case 'SET_VALID':
-            return { ...initialState, valid: action.valid };
+            return { ...initialState, values: action.intialValues }; // attention de copier initialState
+
+        case 'FIRST_TIME_VALIDATION':
+            return { ...state, firstTimeValidation: action.value };
         case 'SET_SUBMITTING':
             return { ...state, submitting : action.submitting };
         case 'SET_TOUCHED':
@@ -36,6 +37,7 @@ const initialState = {
     touched: {},
     dirty: {},
     submitting: false,
+    firstTimeValidation: false
     // valid: false
 }
 
@@ -46,11 +48,11 @@ export const setTouched = (field, touched) => ({ type: 'SET_TOUCHED', field, tou
 export const setDirty = (field, dirty) => ({ type: 'SET_DIRTY', field, dirty }) 
 export const setSubmitting = (submitting) => ({ type: 'SET_SUBMITTING', submitting }) 
 export const reset = (intialValues) => ({ type: 'RESET', intialValues }) 
+export const setFirstTimeValidation = (value) => ({ type: 'FIRST_TIME_VALIDATION', value }) 
 // export const setValid = (valid) => ({ type: 'SET_VALID', valid }) 
 
 export const FormContext = createContext({});
 
-let firstTimeValidation = false
 
 export const FormProvider = ({ intialValues, rules, children }) => {
 
@@ -85,12 +87,12 @@ export const FormProvider = ({ intialValues, rules, children }) => {
         // validateFields({})
 
         console.log('Submitting ...', state)
-        console.log('firstTimeValidation -> ', firstTimeValidation)
+        console.log('firstTimeValidation -> ', state.firstTimeValidation)
         //if form is new mode && fields to be validated are not all dirty
-        if( !firstTimeValidation && !editMode && Object.keys(state.dirty)
+        if( !state.firstTimeValidation && !editMode && Object.keys(state.dirty)
                         .filter(tField => rules[tField] !== undefined).length !== Object.keys(rules).length ){
             console.log('New & Not all dirty')
-            firstTimeValidation = true
+            dispatchForm(setFirstTimeValidation(true))
             validateFields({})
             return
         }
