@@ -10,6 +10,7 @@ import { required, number } from '../forms/validator'
 import { TextField, AutoCompleteField } from '../forms/form-fields/fields'
 import { arrayPushing, arrayUpdating } from '../../actions';
 import { getExtPartners } from '../../reducers/externalForms';
+import { asyncFunc } from '../../helpers'
 
 
 export const formName = 'conventionForm';
@@ -37,18 +38,9 @@ let Convention = ({ handleSubmit, dispatch, editMode }) => {
 
         <Modal
             handleValidation={() => {
-                // dispatch(submit('conventionForm'));
 
-                const doSaving = (f) => new Promise((resolve, reject) => {
-                    f();
-                    resolve();
-                })
+                asyncFunc(() => dispatch(submit('conventionForm'))).then(() => dispatch(hideModal()))
 
-                doSaving(() => dispatch(submit('conventionForm'))).then(() => dispatch(hideModal()))
-                // dispatch(hideModal());
-                // dispatch(submit('conventionForm')).then(
-                //     () => dispatch(hideModal())
-                // );
             }}
             title={ `${ editMode ? 'editer' : 'ajouter' } un partenaire` }
             // modalName='convention'
