@@ -4,7 +4,6 @@ import './checkList.css';
 
 const CheckList = ({items, selection, setSelection}) => {
 
-    console.log('CheckList -> ', selection)
 
     return (
 
@@ -13,7 +12,8 @@ const CheckList = ({items, selection, setSelection}) => {
             {
                 items.map((item, index) => {
 
-                    const checked = selection.includes(item)
+                    const checked = selection.some(s => s.value === item.value)
+                    
                     return (
                         <div className={ `check-item ${ checked ? 'checked' : '' }` } key={item.value}>
                         
