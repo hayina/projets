@@ -20,6 +20,7 @@ let ProjetList = ({dispatch}) => {
 
     const [projets, setProjets] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState(false);
 
 
     function deleteProjet(idProjet, index) {
@@ -66,6 +67,48 @@ let ProjetList = ({dispatch}) => {
         return () => cancel = true
     }, [])
 
+    const renderResultsList = () => (
+
+        <React.Fragment>       
+        <div className="projets-nav box-sh">
+            <a href="javascript:void(0)" className="delete-wr" onClick={ 
+                () =>  dispatch(showModal(modalTypes.ADD_DELETE, 
+                    {
+                        onDanger: () => deleteAllProjets() ,
+                        dangerText: `Voulez vous vraiment sûr supprimer tous les projets ?`
+                    }))
+            }>Supprimer tout</a>
+        </div>
+
+        <div className="projets-results box-sh">
+        {
+
+        projets.map((projet, index) => {
+
+            return (
+                <div className="projet-item" key={projet.id}>
+                    <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div>
+                    <span className="control-bar fv_align">
+                        <Link to={`/projets/edit/${projet.id}`} className="ctr_ic edit-wr">editer</Link>
+                        <a href="javascript:void(0)" className="ctr_ic delete-wr" onClick={ 
+                            () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
+                                    onDanger: () => deleteProjet(projet.id, index)  ,
+                                    dangerText: ["Voulez vous vraiment supprimer le projet ", 
+                                    <strong>{projet.intitule}</strong>,  " ?"]
+                                    // dangerText: `Voulez vous vraiment sûr supprimer le projet 
+                                    // ${projet.intitule} ?`
+                            }))
+                        }>supprimer</a>
+                        <i className="fas fa-ellipsis-v dp-t"></i>
+                    </span>
+                </div>
+            )
+        })
+        }
+        </div>
+        </React.Fragment>   
+    )
+
     return (
         <div className="projets-wr">
 
@@ -76,49 +119,9 @@ let ProjetList = ({dispatch}) => {
             :
             projets.length > 0 ?
 
-            (  
-            <React.Fragment>       
-            <div className="projets-nav box-sh">
-                <a href="javascript:void(0)" className="delete-wr" onClick={ 
-                    () =>  dispatch(showModal(modalTypes.ADD_DELETE, 
-                        {
-                            onDanger: () => deleteAllProjets() ,
-                            dangerText: `Voulez vous vraiment sûr supprimer tous les projets ?`
-                        }))
-                }>Supprimer tout</a>
-            </div>
-
-            <div className="projets-results box-sh">
-            {
-
-            projets.map((projet, index) => {
-
-                return (
-                    <div className="projet-item" key={projet.id}>
-                        <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div>
-                        <span className="control-bar fv_align">
-                            <Link to={`/projets/edit/${projet.id}`} className="ctr_ic edit-wr">editer</Link>
-                            <a href="javascript:void(0)" className="ctr_ic delete-wr" onClick={ 
-                                () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
-                                        onDanger: () => deleteProjet(projet.id, index)  ,
-                                        dangerText: ["Voulez vous vraiment supprimer le projet ", 
-                                        <strong>{projet.intitule}</strong>,  " ?"]
-                                        // dangerText: `Voulez vous vraiment sûr supprimer le projet 
-                                        // ${projet.intitule} ?`
-                                }))
-                            }>supprimer</a>
-                            <i className="fas fa-ellipsis-v dp-t"></i>
-                        </span>
-                    </div>
-                )
-            })
-            }
-            </div>
-            </React.Fragment>   
-            
-            )
+            !errors ? renderResultsList() : <div className="empty-list">0 projets retrouvés</div>
             :
-            <div className="empty-list">0 projets retrouvés</div>
+            <div className="api-error">Une erreur s'est produit<i className="fas fa-info-circle"></i></div>
         }
         
         
