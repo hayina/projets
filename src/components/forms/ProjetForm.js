@@ -112,12 +112,12 @@ let ProjetForm = ({
             idProjet,
             maitreOuvrage: formValues.maitreOuvrage ? 
             `${formValues.maitreOuvrage.value}${ formValues.srcFinancement ? `:${formValues.srcFinancement}`:'' }` : null,
-            maitreOuvrageDel: formValues.isMaitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
+            ...formValues.isMaitreOuvrageDel && { maitreOuvrageDel: formValues.maitreOuvrageDel.value } ,
             localisations,
             partners: partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? `:${cp.srcFinancement}`:''}`)
         }
 
-
+        
         console.log(apiValues)
 
 

@@ -35,19 +35,6 @@ let ProjetList = ({dispatch}) => {
         })
     }
 
-    function deleteAllProjets() {
-
-        useAjaxFetch({
-            url: `/projets`,
-            method: 'DELETE',
-            success: () => {
-
-            },
-        })
-
-        return false
-    }
-
     useEffect(() => {
 
         let cancel = false
@@ -60,7 +47,9 @@ let ProjetList = ({dispatch}) => {
                 setLoading(false)
             },
             error: (err) => {
+                if(cancel) return
                 setLoading(false)
+                setErrors(true)
                 // setProjets(_projets)
             }
         })
@@ -69,17 +58,9 @@ let ProjetList = ({dispatch}) => {
 
     const renderResultsList = () => (
 
+        projets.length > 0 ?
         <React.Fragment>       
-        <div className="projets-nav box-sh">
-            <a href="javascript:void(0)" className="delete-wr" onClick={ 
-                () =>  dispatch(showModal(modalTypes.ADD_DELETE, 
-                    {
-                        onDanger: () => deleteAllProjets() ,
-                        dangerText: `Voulez vous vraiment sûr supprimer tous les projets ?`
-                    }))
-            }>Supprimer tout</a>
-        </div>
-
+        <div className="projets-nav box-sh"></div>
         <div className="projets-results box-sh">
         {
 
@@ -107,24 +88,20 @@ let ProjetList = ({dispatch}) => {
         }
         </div>
         </React.Fragment>   
+        : <div className="empty-list">0 projets retrouvés</div>
+    )
+
+    const renderLoading = () => (
+        <div className="loading-list box-sh">Loading ....</div>
+    )
+    const renderErrors = () => (
+        <div className="api-error">Une erreur s'est produit<i className="fas fa-info-circle"></i></div>
     )
 
     return (
         <div className="projets-wr">
-
             <SearchBar />
-
-        {   loading ? 
-            (<div className="loading-list box-sh">Loading ....</div>)
-            :
-            projets.length > 0 ?
-
-            !errors ? renderResultsList() : <div className="empty-list">0 projets retrouvés</div>
-            :
-            <div className="api-error">Une erreur s'est produit<i className="fas fa-info-circle"></i></div>
-        }
-        
-        
+            { loading ? renderLoading() : ( !errors ? renderResultsList() : renderErrors() ) }
         </div>
     )
 
