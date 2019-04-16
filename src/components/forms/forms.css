@@ -125,6 +125,11 @@
     float: right;
 }
 
+.delete-item-list:hover {
+    text-shadow: 0px 0px 5px #dc35455c;
+    color: #dc3545;
+}
+
 .edit-item-list {
     color: #007bff;
     cursor: pointer;
@@ -169,3 +174,6 @@
 }
 
 
+.partner-item ._item_ls {
+    margin-bottom: 0px;
+}

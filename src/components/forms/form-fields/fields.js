@@ -2,6 +2,7 @@ import React from 'react';
 
 import AutoComplete from './autocomplete/AutoComplete';
 import SelectedAC from './SelectedAC'
+import { SimpleListItem } from '../SimpleList';
 
 ////////////// helpers
 
@@ -115,8 +116,10 @@ export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete 
     return (
         <SimpleField label={label} meta={meta} >
             { input.value ?
-                <SelectedAC suggestion={input.value} onDelete={onDelete} />
-                // <SelectedAC suggestion={suggestion} onDelete={onDelete} />
+                // <React.Fragment>
+                // <SelectedAC suggestion={input.value} onDelete={onDelete} />
+                <SimpleListItem item={input.value} onDelete= {onDelete} />
+                // </React.Fragment>
                 :
                 // <div className={`${fieldCss(meta)}`}>
                     <AutoComplete onSelect={onSelect} url={url} /> 
@@ -193,9 +196,10 @@ export const LineRadio = ({input, label, btnText, btnOnClick}) => {
 
             <SwitchSlider onChange={ (e) => input.onChange(e.target.checked) } checked={input.value ? true:false} />
 
-            <input type="button" className={`btn btn-info show-modal ${input.value ? '':'op-hide'}`} 
-                    value={btnText} onClick={btnOnClick}
-            />
+            { btnText && btnOnClick && 
+                <input type="button" className={`btn btn-info show-modal ${input.value ? '':'op-hide'}`} 
+                    value={btnText} onClick={btnOnClick} />
+            }
             
         </div>
     )
@@ -222,6 +226,29 @@ export const SelectField = ({ input, meta, label, options }) => {
             >
                 <option value=''>...</option>
                 {options.map((op) => <option key={op.value} value={op.value}>{op.label}</option>)}
+            </select>
+        </SimpleField>
+    )
+}
+export const SelectGrpField = ({ input, meta, label, optgroups }) => {
+
+    // console.log('SelectField -> ', options)
+    return (
+        <SimpleField label={label} meta={meta} >
+
+            <select
+                className={`${fieldCss(meta)}`}
+                onChange={input.onChange}
+                value={input.value}
+            >
+                <option value='' disabled >Choisir un programme...</option>
+                {   
+                    optgroups.map(({label, options}, index) => (
+                        <optgroup label={label} key={index}>
+                            { options.map(({value, label}) => <option key={value} value={value}>{label}</option>) }
+                        </optgroup>
+                    )) 
+                }
             </select>
         </SimpleField>
     )

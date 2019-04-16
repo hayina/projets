@@ -8,7 +8,7 @@ import { showModal, arraySetting, initFormValues, arrayPushing, hideModal } from
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, RadioField, SelectField, SimpleField, 
-    AutoCompleteField, ToggleField, LineRadio } from './form-fields/fields'
+    AutoCompleteField, ToggleField, LineRadio, SelectGrpField } from './form-fields/fields'
 import { getExtPartners, getLocalisations, getPointsFocaux, getInitialFormValues } from '../../reducers/externalForms';
 import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
 import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
@@ -17,16 +17,17 @@ import CheckListModal from '../modals/CheckListModal';
 // import { formName as conventionFormName } from '../modals/Convention';
 
 
-import SimpleList from './SimpleList';
+import SimpleList, { SimpleListItem } from './SimpleList';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 
 import './forms.css';
 import types, { constants } from '../../types';
+import { programmes } from '../../dataSource';
 
 const formName = 'projetForm'
 
 let ProjetForm = ({ 
-            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage,
+            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage, indh,
             dispatch, match, initialValues, history     
         }) => {
 
@@ -43,9 +44,17 @@ let ProjetForm = ({
     const { idProjet } = match.params
 
     const initForm = () => {
-        dispatch(initFormValues({}))
-        dispatch(arraySetting('localisations', []))
-        dispatch(arraySetting('partners', []))
+        dispatch(initFormValues({
+            intitule: 'YOUSSEF PROJET',
+            montant: 300000,
+            maitreOuvrage: {value: 8, label: "Province de Taourirt"},
+            isConvention: true,
+            // secteur: 1,
+            // isMaitreOuvrageDel: false,
+        }))
+        // dispatch(initFormValues({}))
+        // dispatch(arraySetting('localisations', []))
+        // dispatch(arraySetting('partners', []))
     }
 
     useEffect(() => {
@@ -113,12 +122,9 @@ let ProjetForm = ({
 
 
         // dispatch(arrayPushing('projets', apiValues));
-        // setTimeout(() => {
-
-        //     initForm()
-        //     setSubmitting(false)
-        //     history.push("/projets")
-        // },2000)
+        setTimeout(() => {
+            setSubmitting(false)
+        },300)
 
         return
 
@@ -164,6 +170,23 @@ let ProjetForm = ({
             <div className="sep-line"></div>
 
             <Field
+                name="indh"
+                component={LineRadio}
+                label="Projet INDH"
+            />
+
+            { indh && 
+            <Field
+                name="programme"
+                component={SelectGrpField}
+                // label="Programme"
+                optgroups={programmes}
+                // validate={[required]}
+            />
+            }
+            <div className="sep-line"></div>
+
+            <Field
                 name="isConvention"
                 component={LineRadio}
                 label="Conventionné"
@@ -172,16 +195,18 @@ let ProjetForm = ({
                 btnOnClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: false }))}
             />
 
+            {/* ({partners.length})-({isConvention ? 'true':'false'}) */}
+
             {(isConvention && partners) && (
                 <div className="form-group">
                     {partners.map(({ partner, montant }, i) => (
                         <div className="partner-item" key={partner.value}>
 
-                            <i className="fa fa-times delete-item-list"
-                                onClick={() => dispatch(arrayDeletingByIndex('partners', i))}></i>
+                            {/* <i className="fa fa-times delete-item-list"
+                                onClick={() => dispatch(arrayDeletingByIndex('partners', i))}></i> */}
 
                             {/* <i className="fas fa-pencil-square-o edit-item-list fa-edit-partner" */}
-                            <i className="fa fa-edit edit-item-list fa-edit-partner"
+                            {/* <i className="fa fa-edit edit-item-list fa-edit-partner"
                                 onClick={() => {
                                     dispatch(showModal(modalTypes.ADD_CONVENTION, {
                                         editMode: true, index: i, initialValues: partners[i]
@@ -189,9 +214,19 @@ let ProjetForm = ({
                                     // dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: true, index: i }))
                                     // dispatch(initialize(conventionFormName, partners[i]))
                                 }}
+                            /> */}
+
+                            {/* <div className="partner-name">{i+1}. {partner.label}</div> */}
+
+                            <SimpleListItem item={partner} 
+                                onDelete={ () => dispatch(arrayDeletingByIndex('partners', i)) } 
+                                onEdit={() => {
+                                    dispatch(showModal(modalTypes.ADD_CONVENTION, {
+                                        editMode: true, index: i, initialValues: partners[i]
+                                    }))
+                                }}
                             />
 
-                            <div className="partner-name">{i+1}. {partner.label}</div>
                             <div className="partner-montant">{Number(montant).toLocaleString()} DH</div>
 
                         </div>
@@ -350,6 +385,7 @@ export default connect(
         //     isMaitreOuvrageDel: false,
         // },
         initialValues: getInitialFormValues(state),
+        indh: selector(state, 'indh'),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         maitreOuvrage: selector(state, 'maitreOuvrage'),

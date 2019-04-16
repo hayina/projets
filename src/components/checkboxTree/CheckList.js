@@ -4,6 +4,7 @@ import './checkList.css';
 
 const CheckList = ({items, selection, setSelection}) => {
 
+    console.log('CheckList -> ', selection)
 
     return (
 

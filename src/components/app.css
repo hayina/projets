@@ -206,3 +206,16 @@
     font-size: 15px;
     color: #212529;
 }
+
+
+._item_ls {
+    color: #07C;
+    font-weight: 600;
+    font-size: 11pt;
+    line-height: 1;
+    margin: 10px 0px;
+    padding: 2px 0px;
+    color: #07C;
+    font-weight: 600;
+    font-size: 15px;
+}

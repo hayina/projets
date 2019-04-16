@@ -2,9 +2,22 @@ import types from '../types';
 
 
 const initialState = {
-    partners: [],
+    partners: [
+        { partner: { value: 2, label: 'ONEE - Branche Eau' }, montant: '890000' },
+        { partner: { value: 4, label: 'Commune Mestegmeur' }, montant: '640000' },
+        { partner: { value: 30, label: 'Ministère de l\'Habitat et de la Politique de la Ville' }, montant: '10000000' }
+    ],
     localisations: [],
-    pointsFocaux: [],
+    pointsFocaux: [
+        {
+            value: 5,
+            label: 'Sahli Hamzaoui'
+        },
+        {
+            value: 4,
+            label: 'Rachid Ech-choudany'
+        }
+    ],
     projets: [],
 }
 
@@ -16,31 +29,31 @@ export const getProjets = (state) => state.externalForms.projets;
 
 export const externalForms = (state = initialState, action) => {
 
-    const { arrName, item, index, value, path } = action ;
+    const { arrName, item, index, value, path } = action;
     let arrDel
 
     switch (action.type) {
 
         // PARTENAIRES
         case types.ADD_ITEM:
-            return { ...state, [arrName]: [ ...state[arrName], item ] }
+            return { ...state, [arrName]: [...state[arrName], item] }
 
         case types.UPDATE_ITEM:
 
-            let arr = [ ...state[arrName] ];
+            let arr = [...state[arrName]];
             arr[index] = item;
             return { ...state, [arrName]: arr }
 
         case types.DELETE_ITEM_BY_INDEX:
-            arrDel = [ ...state[arrName] ];
+            arrDel = [...state[arrName]];
             arrDel.splice(index, 1);
             return { ...state, [arrName]: arrDel };
 
         case types.DELETE_ITEM_BY_VALUE:
 
-            arrDel = [ ...state[arrName] ]
+            arrDel = [...state[arrName]]
             let indexOf = arrDel.indexOf(value)
-            if( indexOf !== -1 ) {
+            if (indexOf !== -1) {
                 arrDel.splice(indexOf, 1);
                 return { ...state, [arrName]: arrDel };
             }
@@ -49,7 +62,7 @@ export const externalForms = (state = initialState, action) => {
 
         case types.DELETE_ITEM_BY_PATH:
             console.log(state[arrName])
-            let nState = state[arrName].filter(sPath => !`${sPath}.`.startsWith(`${path}.`)) 
+            let nState = state[arrName].filter(sPath => !`${sPath}.`.startsWith(`${path}.`))
             console.log(nState)
             return { ...state, [arrName]: nState };
 
@@ -72,7 +85,7 @@ export const getInitialFormValues = (state) => state.initialFormValues;
 
 export const initialFormValues = (state = {}, action) => {
 
-    if ( action.type === types.EDIT_FORM_VALUES ) {
+    if (action.type === types.EDIT_FORM_VALUES) {
         // let newState = { ...state, ...action.initialValues }
         // console.log('REDUCER initialFormValues --->', newState)
         return action.initialValues;

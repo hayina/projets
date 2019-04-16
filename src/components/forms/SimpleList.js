@@ -1,21 +1,18 @@
 import React from 'react'
 
-const SimpleList = ({items, onDelete}) => 
+export const SimpleListItem = ({item, onDelete, onEdit}) => (
+    <div className="_item_ls" >
+        { onDelete && <i className="fa fa-times delete-item-list" onClick={onDelete} /> }
+        { onEdit && <i className="fa fa-edit edit-item-list" onClick={onEdit} /> }
+        <span className="item-label">{item.label}</span>
+    </div>
+)
+
+const SimpleList = ({ items, onDelete }) =>
 
     <div className="list-wr">
         {items.map((item, index) => 
-
-            <div key={item.value} className="item-list-wr" >
-
-                <i  
-                    className="fa fa-times delete-item-list" 
-                    onClick={ () => onDelete(index) }
-                />
-                <span className="item-label">{item.label}</span>
-
-
-            </div>
-
+            <SimpleListItem key={item.value} item={item} onDelete= { () => onDelete(index) } />
         )}
     </div>
 
