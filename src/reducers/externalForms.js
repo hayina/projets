@@ -2,21 +2,17 @@ import types from '../types';
 
 
 const initialState = {
-    partners: [
-        { partner: { value: 2, label: 'ONEE - Branche Eau' }, montant: '890000' },
-        { partner: { value: 4, label: 'Commune Mestegmeur' }, montant: '640000' },
-        { partner: { value: 30, label: 'Ministère de l\'Habitat et de la Politique de la Ville' }, montant: '10000000' }
-    ],
+    partners: [],
     localisations: [],
     pointsFocaux: [
-        {
-            value: 5,
-            label: 'Sahli Hamzaoui'
-        },
-        {
-            value: 4,
-            label: 'Rachid Ech-choudany'
-        }
+        // {
+        //     value: 5,
+        //     label: 'Sahli Hamzaoui'
+        // },
+        // {
+        //     value: 4,
+        //     label: 'Rachid Ech-choudany'
+        // }
     ],
     projets: [],
 }

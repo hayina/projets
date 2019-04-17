@@ -39,12 +39,17 @@ let ProjetList = ({dispatch}) => {
 
         let cancel = false
         setLoading(true)
+
+
+
         useAjaxFetch({
             url: 'projets',
             success: (data) => {
-                if(cancel) return
-                setProjets(data)
-                setLoading(false)
+                setTimeout(() => {
+                    if(cancel) return
+                    setProjets(data)
+                    setLoading(false)
+                },600)
             },
             error: (err) => {
                 if(cancel) return
@@ -60,7 +65,10 @@ let ProjetList = ({dispatch}) => {
 
         projets.length > 0 ?
         <React.Fragment>       
-        <div className="projets-nav box-sh"></div>
+        <div className="projets-nav box-sh">
+            { loading ? renderLoading() : 
+                <div className="result-info">{ projets.length } Projets retrouvés</div> }
+        </div>
         <div className="projets-results box-sh">
         {
 
@@ -68,8 +76,8 @@ let ProjetList = ({dispatch}) => {
 
             return (
                 <div className="projet-item" key={projet.id}>
-                    <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div>
-                    <span className="control-bar fv_align">
+
+                    <span className="ct_pr">
                         <Link to={`/projets/edit/${projet.id}`} className="ctr_ic edit-wr">editer</Link>
                         <a href="javascript:void(0)" className="ctr_ic delete-wr" onClick={ 
                             () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
@@ -82,6 +90,16 @@ let ProjetList = ({dispatch}) => {
                         }>supprimer</a>
                         <i className="fas fa-ellipsis-v dp-t"></i>
                     </span>
+                    <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div>
+                    <div className="projet-loc">
+                        <i className="_fa_lpr fas fa-map-marker-alt"></i>
+                        <span className="loc-label">Commune Taourirt</span>
+                    </div>
+                    <div className="projet-mo">
+                        <i className="_fa_lpr far fa-building"></i>
+                        <span className="mo-label">Délégation Provincial Santé - Taourirt</span>
+                    </div>
+
                 </div>
             )
         })
@@ -111,6 +129,6 @@ let ProjetList = ({dispatch}) => {
 
 export default connect(
     (state) => ({
-        _projets: getProjets(state)
+        // _projets: getProjets(state)
     })
 )(ProjetList)

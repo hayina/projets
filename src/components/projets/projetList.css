@@ -6,14 +6,11 @@
 .projet-item {
     /* box-shadow: 0 0 1px 1px rgba(20,23,28,0.1), 0 3px 1px 0 rgba(20,23,28,0.1); */
     /* opacity: 1; */
-    display: flex;
-    align-items: center;
+    /* display: flex; */
+    /* align-items: center; */
     padding: 10px;
 }
 
-.projet-label {
-
-}
 
 .empty-list {
     padding: 10px;
@@ -26,10 +23,7 @@
 .edit-projet {
 
 }
-.control-bar {
-    /* float: right; */
-    margin-left: auto;
-}
+
 
 
 
@@ -64,7 +58,7 @@
     text-align: right;
     padding-right: 4px;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .cr-list > .cr-line:last-child {
@@ -81,4 +75,52 @@
     width: 55%;
     padding: 6px 0px;
     padding-left: 4px;
+}
+
+.projet-label {
+    color: #065ebd;
+    color: #0062cc;
+    display: inline-block;
+}
+
+.projet-label:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.projet-loc {
+
+}
+
+.projet-loc .fa-map-marker-alt {
+    color: #63cb34;
+    margin: 0px;
+    margin-right: 6px;
+}
+
+.loc-label {
+    font-size: 14px;
+}
+
+.ct_pr {
+    float: right;
+    margin-left: auto;
+}
+
+.projet-mo {
+    
+}
+
+.projet-mo .fa-building {
+    color: #007bff;
+    margin: 0px;
+    margin-right: 6px;
+}
+
+.mo-label {
+    font-size: 14px;
+}
+
+._fa_lpr {
+    font-size: 14px;
 }

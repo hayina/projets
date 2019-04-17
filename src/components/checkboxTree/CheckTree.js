@@ -10,8 +10,8 @@ export const CheckTree = ({ items, selection, setSelection }) => {
     const [expand, setExpand] = useState([])
 
     
-    console.log(`selection`, selection)
-    console.log(`expand`, expand)
+    // console.log(`selection`, selection)
+    // console.log(`expand`, expand)
 
     const renderCheckTree = ({ items }) => {
 

@@ -99,7 +99,7 @@ export const nestedTree = (selection, items) => {
         })
     }
     searchTree(items)
-    console.log(`Nested Tree ----->`, uiNestedTree)
+    // console.log(`Nested Tree ----->`, uiNestedTree)
     return uiNestedTree
 }
 

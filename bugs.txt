@@ -1,3 +1,7 @@
+validation !!!!!!!!!!!!
+auto complete si ya du text sans selection il raise not error !!! aparament it's okey :)
+
+
 quand ya pas de scroll popup bug decalage !!!!
 
 - delarative vs imperative

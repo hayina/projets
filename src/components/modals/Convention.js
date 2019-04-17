@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm, submit, change, SubmissionError } from 'redux-form';
 
@@ -31,11 +31,19 @@ const onSubmit = (formValues, dispatch, { editMode, index, partners }) => {
     else {
         dispatch(arrayUpdating('partners', formValues, index));
     }
+    dispatch(hideModal())
 }
 
-let Convention = ({ handleSubmit, dispatch, editMode }) => {
+let Convention = ({ handleSubmit, dispatch, editMode, initialValues, submitFailed }) => {
 
     const [financements, setFinancements] = useState([]);
+
+    console.log('submitFailed -> ', submitFailed)
+
+    useEffect(() => {
+        if( editMode && initialValues.srcFinancement ) 
+            fetchFinancements(initialValues.partner.value)
+    }, [])
 
     const fetchFinancements = (acheteur) => {
 
@@ -50,7 +58,10 @@ let Convention = ({ handleSubmit, dispatch, editMode }) => {
         <Modal
             handleValidation={() => {
 
-                asyncFunc(() => dispatch(submit('conventionForm'))).then(() => dispatch(hideModal()))
+                dispatch(submit('conventionForm'))
+                // asyncFunc(() => dispatch(submit('conventionForm'))).then(() => {
+                //     if(!submitFailed) dispatch(hideModal())
+                // })
 
             }}
             title={ `${ editMode ? 'editer' : 'ajouter' } un partenaire` }

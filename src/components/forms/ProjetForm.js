@@ -23,6 +23,7 @@ import useAjaxFetch from '../hooks/useAjaxFetch';
 import './forms.css';
 import types, { constants } from '../../types';
 import { programmes } from '../../dataSource';
+import { ApiError } from '../helpers';
 
 const formName = 'projetForm'
 
@@ -37,6 +38,8 @@ let ProjetForm = ({
     const [secteurs, setSecteurs] = useState([]);
     const [financements, setFinancements] = useState([]);
     const [submitting, setSubmitting] = useState(false);
+    const [editLoading, setEditLoading] = useState(false)
+    const [errors, setErrors] = useState(false);
 
     // console.log("initialValues ->", initialValues)
     // console.log("match.params ->", match.params.idProjet)
@@ -44,17 +47,9 @@ let ProjetForm = ({
     const { idProjet } = match.params
 
     const initForm = () => {
-        dispatch(initFormValues({
-            intitule: 'YOUSSEF PROJET',
-            montant: 300000,
-            maitreOuvrage: {value: 8, label: "Province de Taourirt"},
-            isConvention: true,
-            // secteur: 1,
-            // isMaitreOuvrageDel: false,
-        }))
-        // dispatch(initFormValues({}))
-        // dispatch(arraySetting('localisations', []))
-        // dispatch(arraySetting('partners', []))
+        dispatch(initFormValues({}))
+        dispatch(arraySetting('localisations', []))
+        dispatch(arraySetting('partners', []))
     }
 
     useEffect(() => {
@@ -63,26 +58,32 @@ let ProjetForm = ({
 
         useAjaxFetch({
             url: 'secteurs',
-            success: (data) => setSecteurs(data)
+            success: (data) => setSecteurs(data),
+            error: (err) => setErrors(true)
         })
         useAjaxFetch({
             url: 'localisations',
             success: (data) => setLocalisationItems(mapItems(data)),
+            error: (err) => setErrors(true)
         })
 
         // EDIT MODE
         if(idProjet) {
-            setSubmitting(true)
+            setEditLoading(true)
             useAjaxFetch({
                 url: `/projets/edit/${idProjet}`,
                 success: (data) => {
                     console.log(`/projets/edit/${idProjet} ->`, data)
                     // dispatch(initialize(formName, data))
-                    setSubmitting(false)
+                    setEditLoading(false)
                     dispatch(arraySetting('localisations', data.localisations))
                     dispatch(arraySetting('partners', data.partners))
                     dispatch(initFormValues(data))
+                    //load src financement for this specific maitre ouvrage
+                    // si pas Conventionné pour ne pas rentrer en confli avec src financement des partenaire 
+                    if(!data.isConvention) fetchFinancements(data.maitreOuvrage.value)
                 },
+                error: (err) => setErrors(true)
             })
         } 
         // NEW MODE
@@ -94,16 +95,17 @@ let ProjetForm = ({
     
 
     const fetchFinancements = (acheteur) => {
-
         useAjaxFetch({
             url: `/financements/${acheteur}`,
             success: (data) => { setFinancements(data) },
+            error: (err) => setErrors(true)
         })
     }
     
     const onSubmit = (formValues) => {
 
         setSubmitting(true)
+        setErrors(false)
 
         console.log(formValues)
         // return false
@@ -112,21 +114,22 @@ let ProjetForm = ({
             idProjet,
             maitreOuvrage: formValues.maitreOuvrage ? 
             `${formValues.maitreOuvrage.value}${ formValues.srcFinancement ? `:${formValues.srcFinancement}`:'' }` : null,
-            ...formValues.isMaitreOuvrageDel && { maitreOuvrageDel: formValues.maitreOuvrageDel.value } ,
+            maitreOuvrageDel: formValues.maitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
             localisations,
             partners: partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? `:${cp.srcFinancement}`:''}`)
         }
 
         
         console.log(apiValues)
+        console.log(JSON.stringify(apiValues))
 
 
         // dispatch(arrayPushing('projets', apiValues));
-        setTimeout(() => {
-            setSubmitting(false)
-        },300)
+        // setTimeout(() => {
+        //     setSubmitting(false)
+        // },300)
 
-        return
+        // return
 
         useAjaxFetch({
             url: 'projets',
@@ -136,6 +139,10 @@ let ProjetForm = ({
                 initForm()
                 setSubmitting(false)
                 history.push("/projets")
+            },
+            error: (err) => {
+                setErrors(true)
+                setSubmitting(false)
             }
             
         })
@@ -150,7 +157,7 @@ let ProjetForm = ({
 
             <div className="form-title hide">PROJET FORMULAIRE</div>
 
-            <div className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}>
+            <div className={`form-content ${ submitting || editLoading ? 'form-submitting is-submitting':'' }`}>
             <Field
                 name="intitule"
                 component={TextField}
@@ -201,23 +208,6 @@ let ProjetForm = ({
                 <div className="form-group">
                     {partners.map(({ partner, montant }, i) => (
                         <div className="partner-item" key={partner.value}>
-
-                            {/* <i className="fa fa-times delete-item-list"
-                                onClick={() => dispatch(arrayDeletingByIndex('partners', i))}></i> */}
-
-                            {/* <i className="fas fa-pencil-square-o edit-item-list fa-edit-partner" */}
-                            {/* <i className="fa fa-edit edit-item-list fa-edit-partner"
-                                onClick={() => {
-                                    dispatch(showModal(modalTypes.ADD_CONVENTION, {
-                                        editMode: true, index: i, initialValues: partners[i]
-                                    }))
-                                    // dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: true, index: i }))
-                                    // dispatch(initialize(conventionFormName, partners[i]))
-                                }}
-                            /> */}
-
-                            {/* <div className="partner-name">{i+1}. {partner.label}</div> */}
-
                             <SimpleListItem item={partner} 
                                 onDelete={ () => dispatch(arrayDeletingByIndex('partners', i)) } 
                                 onEdit={() => {
@@ -226,9 +216,7 @@ let ProjetForm = ({
                                     }))
                                 }}
                             />
-
                             <div className="partner-montant">{Number(montant).toLocaleString()} DH</div>
-
                         </div>
                     ))}
                 </div>
@@ -283,7 +271,7 @@ let ProjetForm = ({
             />
 
             {/* si pas Conventionné pour ne pas rentrer en confli avec src financement des partenaire */}
-            { !isConvention && financements && financements.length > 0 &&
+            {  !isConvention && financements && financements.length > 0 &&
                 <Field
                     name="srcFinancement"
                     component={SelectField}
@@ -354,12 +342,14 @@ let ProjetForm = ({
 
             
 
-            <div className="form-validation">
+            <div className={`form-validation ${ editLoading ? 'is-submitting form-submitting':'' }`}>
                 <button type="submit" 
                     className={`btn btn-primary ${ submitting ? 'btn-submitting is-submitting ':'' }`}>
                     Submit { submitting ? '...':'' }
                 </button>
             </div>
+
+            { errors && <ApiError />}
 
         </form>
     )

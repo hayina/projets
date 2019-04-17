@@ -6,6 +6,7 @@ export const CretereItem = ({ label, fType=fieldType.TEXT, options=[] }) => {
     
     function renderField(){
 
+        // eslint-disable-next-line default-case
         switch (fType) {
 
             case fieldType.TEXT:
