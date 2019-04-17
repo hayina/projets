@@ -6,7 +6,7 @@ import './sideBar.css'
 let SideBar = () => {
 
 
-    const SideItem = ({ url, label, children=(<i className="fas fa-bars"></i>) }) => (
+    const SideItem = ({ url, label, children=(<i className="_fa_sb fas fa-bars"></i>) }) => (
         <div className="side-item">
             
             <NavLink exact className="side-link" activeClassName="active" to={url}>
@@ -28,21 +28,21 @@ let SideBar = () => {
             <div className="nav-bar">
 
                 <SideItem label="Tableau de bord" url="/projets/dashboard" >
-                    <i className="fas fa-chart-bar"></i>
+                    <i className="_fa_sb fas fa-chart-bar"></i>
                 </SideItem>
                 <SideItem label="Ajouter Projet" url="/projets/new" >
-                    <i className="fas fa-industry"></i>
+                    <i className="_fa_sb fas fa-industry"></i>
                 </SideItem>
                 <SideItem label="Liste des Projets" url="/projets" >
-                    <i className="fas fa-poll-h"></i>
+                    <i className="_fa_sb fas fa-poll-h"></i>
                 </SideItem>
                 <SideItem label="Liste des Marchés" url="/marches" />
                 <SideItem label="Liste des Conventions" url="/conventions" />
                 <SideItem label="Gestion des localisations" url="/localisations" >
-                    <i className="fas fa-map-marker-alt"></i>
+                    <i className="_fa_sb fas fa-map-marker-alt"></i>
                 </SideItem>
                 <SideItem label="Gestion des utilisateurs" url="/users" >
-                    <i className="fas fa-users-cog"></i>
+                    <i className="_fa_sb fas fa-users-cog"></i>
                 </SideItem>
 
             </div>

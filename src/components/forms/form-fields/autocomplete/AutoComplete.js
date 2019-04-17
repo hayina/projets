@@ -12,9 +12,10 @@ import useClickOutside from '../../../hooks/useClickOutside';
 import './autocomplete.css'
 import useApi from '../../../hooks/useApi';
 import useAjaxFetch from '../../../hooks/useAjaxFetch';
+import { ApiError } from '../../../helpers';
 
 
-const AutoComplete = ({ onSelect, url }) => {
+const AutoComplete = ({ onSelect, url, validateClass }) => {
 
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -174,7 +175,7 @@ const AutoComplete = ({ onSelect, url }) => {
     return (
         <div className="autocomplete-wrapper" ref={autocompleteRef}>
             <div className="oc-input-wr">
-                <input type="text" className={`form-control autocomplete-input`}
+                <input type="text" className={`form-control autocomplete-input ${validateClass}`}
                     onChange={onChange}
                     onFocus={onFocus}
                     onKeyDown={onKeyDown}
@@ -195,10 +196,7 @@ const AutoComplete = ({ onSelect, url }) => {
             {   !errors ?  
                 renderSuggestionsList() 
                 : 
-                <div className="api-error">
-                    Une erreur s'est produit
-                    <i className="fas fa-info-circle"></i>
-                </div> 
+                <ApiError cssClass="ac-ap-error" />
             }
         </div>
     )

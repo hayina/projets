@@ -177,3 +177,36 @@
 .partner-item ._item_ls {
     margin-bottom: 0px;
 }
+
+.slider-check-array {
+    
+}
+
+.slider-check-array .switch {
+
+}
+
+.slider-check-array .switch-item {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.slider-check-array label {
+    vertical-align: middle;
+    margin: 0px;
+}
+
+.slider-check-array .checkbox-label {
+    font-weight: 600;
+    font-size: 14px;
+    margin-left: 6px;
+}
+
+#projetForm .va-errors.api-error {
+    padding: 0px 0px 10px;
+    text-align: center;
+}
+
+.invalid-feedback {
+    display: block;
+}

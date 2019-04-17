@@ -122,7 +122,7 @@ export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete 
                 // </React.Fragment>
                 :
                 // <div className={`${fieldCss(meta)}`}>
-                    <AutoComplete onSelect={onSelect} url={url} /> 
+                    <AutoComplete onSelect={onSelect} url={url} validateClass={fieldCss(meta)}/> 
                 // </div>
                 // fieldCss(meta)
             }
@@ -190,10 +190,6 @@ export const LineRadio = ({input, label, btnText, btnOnClick}) => {
             
             <label className="field-label form-label">{label}</label>
 
-            {/* <div className="radio-list">
-                <RadioList options={options} input={input} />
-            </div> */}
-
             <SwitchSlider onChange={ (e) => input.onChange(e.target.checked) } checked={input.value ? true:false} />
 
             { btnText && btnOnClick && 
@@ -214,7 +210,7 @@ const SwitchSlider = (props) => (
 
 ////////////// SELECT
 
-export const SelectField = ({ input, meta, label, options }) => {
+export const SelectField = ({ input, meta, label, options, defaultLabel="..." }) => {
 
     // console.log('SelectField -> ', options)
     return (
@@ -224,13 +220,13 @@ export const SelectField = ({ input, meta, label, options }) => {
                 onChange={input.onChange}
                 value={input.value}
             >
-                <option value=''>...</option>
+                <option value='' disabled >{defaultLabel}</option>
                 {options.map((op) => <option key={op.value} value={op.value}>{op.label}</option>)}
             </select>
         </SimpleField>
     )
 }
-export const SelectGrpField = ({ input, meta, label, optgroups }) => {
+export const SelectGrpField = ({ input, meta, label, optgroups, gOptsLabel="..." }) => {
 
     // console.log('SelectField -> ', options)
     return (
@@ -241,7 +237,7 @@ export const SelectGrpField = ({ input, meta, label, optgroups }) => {
                 onChange={input.onChange}
                 value={input.value}
             >
-                <option value='' disabled >Choisir un programme...</option>
+                <option value='' disabled >{gOptsLabel}</option>
                 {   
                     optgroups.map(({label, options}, index) => (
                         <optgroup label={label} key={index}>
@@ -272,23 +268,14 @@ export const CheckboxField = ({ input, meta, label, options }) => {
                             className="form-check-input hide"
                             type="checkbox"
                             checked={checked}
-                            //
                             onChange={(e) => {
                                 const newValues = [...input.value];
-                                if (e.target.checked) {
-                                    newValues.push(option.value);
-                                } else {
-                                    newValues.splice(newValues.indexOf(option.value), 1);
-                                }
-                                // console.log('Checkbox', newValues)
-                                input.onChange(newValues); // it's like dispatch(change(newValues))
-                                // change(form:String, field:String, value:any)
-
+                                if (e.target.checked) { newValues.push(option.value) } 
+                                else { newValues.splice(newValues.indexOf(option.value), 1) }
+                                input.onChange(newValues)
                             }}
                         />
-
                         <i className={ `fa-${ checked ? 'check-square checked fas' : 'square far' }` }/>
-
                         <label className="checkbox-label form-check-label" htmlFor={option.value}>
                             {option.label}
                         </label>
@@ -297,9 +284,45 @@ export const CheckboxField = ({ input, meta, label, options }) => {
                 
                 )}
             </div>
-
             { meta.error && <div className="error-feedback">{meta.error}</div> }
         </SimpleField>
+
+    )
+
+}
+
+export const SliderCheckbox = ({ input, meta, label, options }) => {
+
+    return (
+
+        <div className="radio-line form-group">
+            
+            <label className="field-label form-label">{label}</label>
+            <div className={ `check-control slider-check-array` }>
+                { options.map((option) => {
+                    let checked = input.value.indexOf(option.value) !== -1
+                    return (
+                    <div className="switch-item" key={option.value}>
+                        <SwitchSlider 
+                            id={option.value}
+                            onChange={(e) => {
+                                const newValues = [...input.value];
+                                if (e.target.checked) { newValues.push(option.value) } 
+                                else { newValues.splice(newValues.indexOf(option.value), 1) }
+                                input.onChange(newValues)
+                            }} 
+                            checked={checked} 
+                        />
+                        <label className="checkbox-label form-check-label" htmlFor={option.value}>
+                            {option.label}
+                        </label>
+                    </div>
+                    )}
+                )}
+            </div>
+            { meta.error && <div className="error-feedback">{meta.error}</div> }
+
+        </div>
 
     )
 

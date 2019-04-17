@@ -8,7 +8,7 @@ import { showModal, arraySetting, initFormValues, arrayPushing, hideModal } from
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, RadioField, SelectField, SimpleField, 
-    AutoCompleteField, ToggleField, LineRadio, SelectGrpField } from './form-fields/fields'
+    AutoCompleteField, ToggleField, LineRadio, SelectGrpField, SliderCheckbox } from './form-fields/fields'
 import { getExtPartners, getLocalisations, getPointsFocaux, getInitialFormValues } from '../../reducers/externalForms';
 import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
 import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
@@ -28,7 +28,7 @@ import { ApiError } from '../helpers';
 const formName = 'projetForm'
 
 let ProjetForm = ({ 
-            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage, indh,
+            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage, nature,
             dispatch, match, initialValues, history     
         }) => {
 
@@ -177,20 +177,23 @@ let ProjetForm = ({
             <div className="sep-line"></div>
 
             <Field
-                name="indh"
-                component={LineRadio}
-                label="Projet INDH"
+                name="nature"
+                component={SliderCheckbox}
+                options={[ constants.INDH, constants.PRDTS ]}
+                label="Nature Projet"
             />
 
-            { indh && 
+            { nature && nature.includes(constants.INDH.value) && 
             <Field
                 name="programme"
                 component={SelectGrpField}
                 // label="Programme"
                 optgroups={programmes}
+                gOptsLabel="Choisir un programme..."
                 // validate={[required]}
             />
             }
+            
             <div className="sep-line"></div>
 
             <Field
@@ -267,7 +270,7 @@ let ProjetForm = ({
                     setFinancements([])
                 }}
                 // suggestion={maitreOuvrage}
-                // validate={[required]}
+                validate={[required]}
             />
 
             {/* si pas Conventionné pour ne pas rentrer en confli avec src financement des partenaire */}
@@ -335,7 +338,8 @@ let ProjetForm = ({
                 component={SelectField}
                 label="Secteur"
                 options={secteurs}
-                // validate={[required]}
+                defaultLabel="Choisir ..."
+                validate={[required]}
             />
 
             </div>
@@ -348,8 +352,8 @@ let ProjetForm = ({
                     Submit { submitting ? '...':'' }
                 </button>
             </div>
-
-            { errors && <ApiError />}
+            
+            { errors && <ApiError cssClass="va-errors"/>}
 
         </form>
     )
@@ -375,7 +379,7 @@ export default connect(
         //     isMaitreOuvrageDel: false,
         // },
         initialValues: getInitialFormValues(state),
-        indh: selector(state, 'indh'),
+        nature: selector(state, 'nature'),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         maitreOuvrage: selector(state, 'maitreOuvrage'),

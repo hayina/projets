@@ -220,3 +220,18 @@
     font-weight: 600;
     font-size: 15px;
 }
+
+
+.api-error {
+    color: #dc3545;
+    /* display: flex;
+    align-items: center; */
+}
+
+.api-error > span {
+    vertical-align: middle;
+}
+
+.api-error > .fa-info-circle {
+    vertical-align: middle;
+}

@@ -1,3 +1,5 @@
+get piece of state from store just to calculate someting and no to display it ?? am i wrong ??
+
 localisation -> le cas where user choose all communes
 
 chercher option dans axios pour le cas success ou errors like finally
