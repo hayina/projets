@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { change } from 'redux-form'
 
 import AutoComplete from './autocomplete/AutoComplete';
 import SelectedAC from './SelectedAC'
@@ -6,12 +7,10 @@ import { SimpleListItem } from '../SimpleList';
 
 ////////////// helpers
 
-const fieldCss = (meta) => `form-control ${gotError(meta) ? 'is-invalid' : ''}`;
+const fieldCss = (meta) => `form-control ${ gotError(meta) ? 'is-invalid' : '' }`;
 
-const gotError = ({ touched, error, dirty }) => {
-    if ( (dirty || touched) && error ) return true;
-    return false;
-}
+const gotError = ({ touched, error, dirty }) => touched && error
+// const gotError = ({ touched, error, dirty }) => (dirty || touched) && error
 
 const renderErrorField = (meta) => {
     if (gotError(meta)) {
@@ -375,3 +374,25 @@ export const TextInput = ({ input, meta, placeholder='', type='text', autoComple
         { meta.error && <div className="error-feedback">{meta.error}</div> }
     </div>
 )
+////////////// Empty Field
+
+export const EmptyField = ({ input, meta, arrayValues }) => {
+    
+    console.log('EmptyField Rendering ..................')
+    
+    useEffect(() => {
+        console.log('useEffect EmptyField ... >>>>>>')
+        input.onChange(arrayValues)
+    }, [arrayValues])
+    
+
+    return (
+        <React.Fragment>
+        {
+            meta.touched && meta.error && 
+            <div className="error-feedback">{meta.error}</div>
+        }
+        </React.Fragment>
+    )
+
+}

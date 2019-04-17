@@ -8,7 +8,7 @@ import { showModal, arraySetting, initFormValues, arrayPushing, hideModal } from
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, RadioField, SelectField, SimpleField, 
-    AutoCompleteField, ToggleField, LineRadio, SelectGrpField, SliderCheckbox } from './form-fields/fields'
+    AutoCompleteField, ToggleField, LineRadio, SelectGrpField, SliderCheckbox, EmptyField } from './form-fields/fields'
 import { getExtPartners, getLocalisations, getPointsFocaux, getInitialFormValues } from '../../reducers/externalForms';
 import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
 import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
@@ -24,6 +24,18 @@ import './forms.css';
 import types, { constants } from '../../types';
 import { programmes } from '../../dataSource';
 import { ApiError } from '../helpers';
+
+
+const vPartners = (array, formValues, props, name) => (
+    ((formValues.isConvention === true) && array && array.length === 0) ? 
+         'Veuillez ajouter des partenaires' : undefined
+)
+
+const vMod = (value, formValues, props, name) => (
+    (formValues.isMaitreOuvrageDel === true) && (!value) ? 
+         'Ce champs est obligatoire' : undefined
+)
+
 
 const formName = 'projetForm'
 
@@ -190,7 +202,7 @@ let ProjetForm = ({
                 // label="Programme"
                 optgroups={programmes}
                 gOptsLabel="Choisir un programme..."
-                // validate={[required]}
+                validate={[required]}
             />
             }
             
@@ -203,6 +215,13 @@ let ProjetForm = ({
                 // options={[{ label: 'Oui', value: true }, { label: 'Non', value: false }]}
                 btnText="Ajouter un partenaire"
                 btnOnClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: false }))}
+            />
+
+            <Field
+                name="partners2"
+                component={EmptyField}
+                arrayValues={partners}
+                validate={vPartners}
             />
 
             {/* ({partners.length})-({isConvention ? 'true':'false'}) */}
@@ -244,6 +263,14 @@ let ProjetForm = ({
                     }
                 />
             </SimpleField>
+
+            <Field
+                name="localaisation2"
+                component={EmptyField}
+                arrayValues={localisations}
+                validate={[emptyArray]}
+            />
+
 
             { localisations && localisations.length > 0 &&
             <div className="localisations-wr tree-wr">
@@ -295,7 +322,7 @@ let ProjetForm = ({
                 onSelect={ (suggestion) => dispatch(change(formName, 'maitreOuvrageDel', suggestion)) }
                 onDelete={ () => dispatch(change(formName, 'maitreOuvrageDel', null)) }
                 // suggestion={maitreOuvrage}
-                // validate={[required]}
+                validate={vMod}
             />
             }
 
@@ -323,7 +350,13 @@ let ProjetForm = ({
                 />
             </SimpleField>
 
-            
+            <Field
+                name="pointsFocaux2"
+                component={EmptyField}
+                arrayValues={pointsFocaux}
+                validate={[emptyArray]}
+            />
+
             
             <SimpleList
                 items={ pointsFocaux }
