@@ -41,6 +41,11 @@
 
 }
 
+.box-br {
+    border: 1px solid rgb(212, 218, 231);
+    border-radius: 4px;
+}
+
 .fv_align {
     display: flex;
     align-items: center;

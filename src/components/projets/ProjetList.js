@@ -1,6 +1,6 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 
@@ -15,6 +15,7 @@ import { getProjets } from '../../reducers/externalForms';
 import { CretereItem } from './components';
 import SearchBar from './SearchBar';
 import Percentage from './Percentage';
+import useClickOutside from '../hooks/useClickOutside';
 
 let ProjetList = ({dispatch}) => {
 
@@ -62,11 +63,17 @@ let ProjetList = ({dispatch}) => {
         return () => cancel = true
     }, [])
 
+    const dropDownEl = useRef(null);
+    useClickOutside(dropDownEl, () => {
+        console.log('show-drop', dropDownEl.current.classList)
+        dropDownEl.current.classList.toggle('show-drop2')
+    });
+
     const renderResultsList = () => (
 
         projets.length > 0 ?
         <React.Fragment>       
-        <div className="projets-nav box-sh">
+        <div className="projets-nav box-sh box-br">
             { loading ? renderLoading() : 
                 <div className="result-info">{ projets.length } Projets retrouvés</div> }
         </div>
@@ -76,19 +83,24 @@ let ProjetList = ({dispatch}) => {
         projets.map((projet, index) => {
 
             return (
-                <div className="projet-item box-sh" key={projet.id}>
+                <div className="projet-item box-sh box-br" key={projet.id}>
 
-                    <span className="ct_pr">
-                        <Link to={`/projets/edit/${projet.id}`} className="ctr_ic edit-wr">editer</Link>
-                        <a href="javascript:void(0)" className="ctr_ic delete-wr" onClick={ 
-                            () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
-                                    onDanger: () => deleteProjet(projet.id, index)  ,
-                                    dangerText: ["Voulez vous vraiment supprimer le projet ", 
-                                    <strong>{projet.intitule}</strong>,  " ?"]
-                                    // dangerText: `Voulez vous vraiment sûr supprimer le projet 
-                                    // ${projet.intitule} ?`
-                            }))
-                        }>supprimer</a>
+                    <span id="_3_bar" className="ct_pr" ref={dropDownEl} onClick={(e) => {
+                        console.log(e.currentTarget.offsetTop, e.currentTarget.offsetRight)
+                        e.currentTarget.classList.toggle('show-drop')
+                    }}>
+                        <div className="_drop-down">
+                            <Link to={`/projets/edit/${projet.id}`} className="_dr-item">Editer</Link>
+                            <a href="javascript:void(0)" className="_dr-item" onClick={ 
+                                () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
+                                        onDanger: () => deleteProjet(projet.id, index)  ,
+                                        dangerText: ["Voulez vous vraiment supprimer le projet ", 
+                                        <strong>{projet.intitule}</strong>,  " ?"]
+                                        // dangerText: `Voulez vous vraiment sûr supprimer le projet 
+                                        // ${projet.intitule} ?`
+                                }))
+                            }>Supprimer</a>
+                        </div>
                         <i className="fas fa-ellipsis-v dp-t"></i>
                         {/* <svg class="j2dfb39" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
                             <path fill="none" d="M0 0h24v24H0z"></path>

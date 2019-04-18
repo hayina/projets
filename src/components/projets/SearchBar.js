@@ -8,7 +8,7 @@ const SearchBar = ({}) => {
 
     return (
 
-        <div className="search-bar box-sh">
+        <div className="search-bar box-sh box-br">
 
             <div className="cr-list">
                 <div className="cr-line">   
