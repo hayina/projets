@@ -14,6 +14,7 @@ import { showModal } from '../../actions';
 import { getProjets } from '../../reducers/externalForms';
 import { CretereItem } from './components';
 import SearchBar from './SearchBar';
+import Percentage from './Percentage';
 
 let ProjetList = ({dispatch}) => {
 
@@ -69,13 +70,13 @@ let ProjetList = ({dispatch}) => {
             { loading ? renderLoading() : 
                 <div className="result-info">{ projets.length } Projets retrouvés</div> }
         </div>
-        <div className="projets-results box-sh">
+        <div className="projets-results ">
         {
 
         projets.map((projet, index) => {
 
             return (
-                <div className="projet-item" key={projet.id}>
+                <div className="projet-item box-sh" key={projet.id}>
 
                     <span className="ct_pr">
                         <Link to={`/projets/edit/${projet.id}`} className="ctr_ic edit-wr">editer</Link>
@@ -89,6 +90,10 @@ let ProjetList = ({dispatch}) => {
                             }))
                         }>supprimer</a>
                         <i className="fas fa-ellipsis-v dp-t"></i>
+                        {/* <svg class="j2dfb39" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                        </svg> */}
                     </span>
                     <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div>
                     <div className="projet-loc">
@@ -98,6 +103,9 @@ let ProjetList = ({dispatch}) => {
                     <div className="projet-mo">
                         <i className="_fa_lpr far fa-building"></i>
                         <span className="mo-label">Délégation Provincial Santé - Taourirt</span>
+                    </div>
+                    <div className="projet-per">
+                        <Percentage percentage="40" />
                     </div>
 
                 </div>

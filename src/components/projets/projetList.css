@@ -11,6 +11,10 @@
     padding: 10px;
 }
 
+.projet-item.box-sh {
+    margin-bottom: 10px;
+}
+
 
 .empty-list {
     padding: 10px;
@@ -79,8 +83,9 @@
 
 .projet-label {
     color: #065ebd;
-    color: #0062cc;
+    color: #1384ff;
     display: inline-block;
+    font-weight: 600;
 }
 
 .projet-label:hover {

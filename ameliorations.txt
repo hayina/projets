@@ -7,3 +7,5 @@ chercher option dans axios pour le cas success ou errors like finally
 quand ya pas de scroll a la base -> bug avec modal leger decaage a gauche
 
 svg loading or font ?? 
+
+popup just alert customize buttons
