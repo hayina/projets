@@ -22,7 +22,7 @@ import useAjaxFetch from '../hooks/useAjaxFetch';
 
 import './forms.css';
 import types, { constants } from '../../types';
-import { programmes } from '../../dataSource';
+// import { programmes } from '../../dataSource';
 import { ApiError } from '../helpers';
 
 
@@ -40,8 +40,9 @@ const vMod = (value, formValues, props, name) => (
 const formName = 'projetForm'
 
 let ProjetForm = ({ 
-            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage, nature,
-            dispatch, match, initialValues, history     
+            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage, 
+            programmes,
+            dispatch, match, initialValues, history,    
         }) => {
 
 
@@ -49,6 +50,8 @@ let ProjetForm = ({
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
     const [financements, setFinancements] = useState([]);
+    const [programmesItems, setProgrammesItems] = useState([]);
+    const [subProgrammes, setSubProgrammes] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
     const [errors, setErrors] = useState(false);
@@ -66,6 +69,8 @@ let ProjetForm = ({
 
     useEffect(() => {
 
+        // BOTH MODES
+
         initForm()
 
         useAjaxFetch({
@@ -75,7 +80,12 @@ let ProjetForm = ({
         })
         useAjaxFetch({
             url: 'localisations',
-            success: (data) => setLocalisationItems(mapItems(data)),
+            success: (data) => setLocalisationItems(data),
+            error: (err) => setErrors(true)
+        })
+        useAjaxFetch({
+            url: 'parent/programmes',
+            success: (data) => setProgrammesItems(data),
             error: (err) => setErrors(true)
         })
 
@@ -110,6 +120,14 @@ let ProjetForm = ({
         useAjaxFetch({
             url: `/financements/${acheteur}`,
             success: (data) => { setFinancements(data) },
+            error: (err) => setErrors(true)
+        })
+    }
+    
+    const fetchSubProgrammes = (parent) => {
+        useAjaxFetch({
+            url: `/programmes/${parent}`,
+            success: (data) => { setSubProgrammes(data) },
             error: (err) => setErrors(true)
         })
     }
@@ -189,18 +207,21 @@ let ProjetForm = ({
             <div className="sep-line"></div>
 
             <Field
-                name="nature"
+                name="programmes"
                 component={SliderCheckbox}
-                options={[ constants.INDH, constants.PRDTS ]}
-                label="Nature Projet"
+                options={programmesItems}
+                label="Programme"
+                apiFetch={(parent) => {
+                    if(parent === constants.INDH) fetchSubProgrammes(parent)
+                }}
             />
 
-            { nature && nature.includes(constants.INDH.value) && 
+            { programmes && programmes.includes(constants.INDH) && subProgrammes.length > 0 &&
             <Field
-                name="programme"
+                name="subProgramme"
                 component={SelectGrpField}
                 // label="Programme"
-                optgroups={programmes}
+                optgroups={subProgrammes}
                 gOptsLabel="Choisir un programme..."
                 validate={[required]}
             />
@@ -412,7 +433,7 @@ export default connect(
         //     isMaitreOuvrageDel: false,
         // },
         initialValues: getInitialFormValues(state),
-        nature: selector(state, 'nature'),
+        programmes: selector(state, 'programmes'),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         maitreOuvrage: selector(state, 'maitreOuvrage'),
@@ -423,26 +444,26 @@ export default connect(
 )(ProjetForm);
 
 
-const mapItems = (items) => {
+// const mapItems = (items) => {
 
-    console.log(`Mapping items -------------------------------------> !!!`)
+//     console.log(`Mapping items -------------------------------------> !!!`)
 
-    const mapProperties = ({ items, parentPath }) => {
+//     const mapProperties = ({ items, parentPath }) => {
 
-        items.forEach(el => {
+//         items.forEach(el => {
 
-            if (parentPath) el.path = `${parentPath}.${el.value}`
-            else el.path = `${el.value}`
+//             if (parentPath) el.path = `${parentPath}.${el.value}`
+//             else el.path = `${el.value}`
 
-            if (el.children)
-                mapProperties({ items: el.children, parentPath: `${el.path}` })
-        });
+//             if (el.children)
+//                 mapProperties({ items: el.children, parentPath: `${el.path}` })
+//         });
 
-    }
+//     }
 
-    mapProperties({ items })
-    return items
-}
+//     mapProperties({ items })
+//     return items
+// }
 
 let pointsFocauxItems = [
     { value: 1, label: 'EL YOUBY Mohammed', },

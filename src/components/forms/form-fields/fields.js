@@ -290,7 +290,7 @@ export const CheckboxField = ({ input, meta, label, options }) => {
 
 }
 
-export const SliderCheckbox = ({ input, meta, label, options }) => {
+export const SliderCheckbox = ({ input, meta, label, options, apiFetch }) => {
 
     return (
 
@@ -305,9 +305,11 @@ export const SliderCheckbox = ({ input, meta, label, options }) => {
                         <SwitchSlider 
                             id={option.value}
                             onChange={(e) => {
+                                if(apiFetch) apiFetch(option.value)
                                 const newValues = [...input.value];
                                 if (e.target.checked) { newValues.push(option.value) } 
                                 else { newValues.splice(newValues.indexOf(option.value), 1) }
+                                console.log(newValues)
                                 input.onChange(newValues)
                             }} 
                             checked={checked} 

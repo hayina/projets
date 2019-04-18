@@ -42,8 +42,8 @@ export default types;
 
 export const constants = {
     PROVINCE_TAOURIRT: 8,
-    INDH: { value:1, label: 'I.N.D.H' },
-    PRDTS: { value:2, label: 'P.R.D.T.S' },
+    INDH: 1,
+    PRDTS: 2,
 }
 
 export const fieldType = {
