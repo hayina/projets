@@ -192,7 +192,7 @@ export const LineRadio = ({input, label, btnText, btnOnClick}) => {
             <SwitchSlider onChange={ (e) => input.onChange(e.target.checked) } checked={input.value ? true:false} />
 
             { btnText && btnOnClick && 
-                <input type="button" className={`btn btn-info show-modal ${input.value ? '':'op-hide'}`} 
+                <input type="button" className={`btn btn-info show-modal ${input.value ? '':'hide'}`} 
                     value={btnText} onClick={btnOnClick} />
             }
             
@@ -228,6 +228,33 @@ export const SelectField = ({ input, meta, label, options, defaultLabel="..." })
 export const SelectGrpField = ({ input, meta, label, optgroups, gOptsLabel="..." }) => {
 
     // console.log('SelectField -> ', options)
+
+    // const OptGroup = ({optgroups}) => (
+
+    //     optgroups.map(({label, options}, index) => (
+    //         <optgroup label={label} key={index}>
+
+    //         {options.map((opt) => {
+
+    //             // console.log('option --->', opt)
+    //             if(opt.options){
+    //                 console.log('Inside ... :)', opt)
+    //                 return <OptGroup optgroups={[ opt ]} />
+    //             }
+    //             return <option key={opt.value} value={opt.value}>{opt.label}</option>
+    //         })}
+
+    //         </optgroup>
+    //     ))
+    // )
+    const OptGroup = ({optgroups}) => (
+        optgroups.map(({label, options}, index) => (
+            <optgroup label={label} key={index}>
+                {options.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+            </optgroup>
+        ))
+    )
+
     return (
         <SimpleField label={label} meta={meta} >
 
@@ -237,13 +264,7 @@ export const SelectGrpField = ({ input, meta, label, optgroups, gOptsLabel="..."
                 value={input.value}
             >
                 <option value='' disabled >{gOptsLabel}</option>
-                {   
-                    optgroups.map(({label, options}, index) => (
-                        <optgroup label={label} key={index}>
-                            { options.map(({value, label}) => <option key={value} value={value}>{label}</option>) }
-                        </optgroup>
-                    )) 
-                }
+                <OptGroup optgroups={optgroups} />
             </select>
         </SimpleField>
     )
@@ -305,7 +326,7 @@ export const SliderCheckbox = ({ input, meta, label, options, apiFetch }) => {
                         <SwitchSlider 
                             id={option.value}
                             onChange={(e) => {
-                                if(apiFetch) apiFetch(option.value)
+                                if(apiFetch && e.target.checked) apiFetch(option.value)
                                 const newValues = [...input.value];
                                 if (e.target.checked) { newValues.push(option.value) } 
                                 else { newValues.splice(newValues.indexOf(option.value), 1) }

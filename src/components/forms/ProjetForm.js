@@ -37,12 +37,13 @@ const vMod = (value, formValues, props, name) => (
 )
 
 
+
+
 const formName = 'projetForm'
 
 let ProjetForm = ({ 
             handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage, 
-            programmes,
-            dispatch, match, initialValues, history,    
+            dispatch, match, initialValues, history, nature   
         }) => {
 
 
@@ -50,8 +51,7 @@ let ProjetForm = ({
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
     const [financements, setFinancements] = useState([]);
-    const [programmesItems, setProgrammesItems] = useState([]);
-    const [subProgrammes, setSubProgrammes] = useState([]);
+    const [programmes, setProgrammes] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
     const [errors, setErrors] = useState(false);
@@ -73,6 +73,8 @@ let ProjetForm = ({
 
         initForm()
 
+        // fetchProgrammes();
+
         useAjaxFetch({
             url: 'secteurs',
             success: (data) => setSecteurs(data),
@@ -83,11 +85,7 @@ let ProjetForm = ({
             success: (data) => setLocalisationItems(data),
             error: (err) => setErrors(true)
         })
-        useAjaxFetch({
-            url: 'parent/programmes',
-            success: (data) => setProgrammesItems(data),
-            error: (err) => setErrors(true)
-        })
+
 
         // EDIT MODE
         if(idProjet) {
@@ -124,10 +122,13 @@ let ProjetForm = ({
         })
     }
     
-    const fetchSubProgrammes = (parent) => {
+    const fetchIndhProgrammes = () => {
+
+        if( programmes.length === 0 )
         useAjaxFetch({
-            url: `/programmes/${parent}`,
-            success: (data) => { setSubProgrammes(data) },
+            url: `/parent/programmes`,
+            // url: `/getProgrammesWithPhases`,
+            success: (data) => { setProgrammes(data) },
             error: (err) => setErrors(true)
         })
     }
@@ -207,21 +208,23 @@ let ProjetForm = ({
             <div className="sep-line"></div>
 
             <Field
-                name="programmes"
+                name="nature"
                 component={SliderCheckbox}
-                options={programmesItems}
-                label="Programme"
-                apiFetch={(parent) => {
-                    if(parent === constants.INDH) fetchSubProgrammes(parent)
+                options={[{value:1, label: 'I.N.D.H'}, {value:2, label: 'P.R.D.T.S'}]}
+                label="Nature du Projet"
+                apiFetch={ (bigProgramme) => {
+                    if( constants.INDH === bigProgramme ){
+                        fetchIndhProgrammes()
+                    }
                 }}
             />
 
-            { programmes && programmes.includes(constants.INDH) && subProgrammes.length > 0 &&
+            { nature && nature.includes(constants.INDH) && programmes.length > 0 &&
             <Field
-                name="subProgramme"
+                name="programme"
                 component={SelectGrpField}
                 // label="Programme"
-                optgroups={subProgrammes}
+                optgroups={programmes}
                 gOptsLabel="Choisir un programme..."
                 validate={[required]}
             />
@@ -328,7 +331,7 @@ let ProjetForm = ({
                     component={SelectField}
                     label="Source de Financement"
                     options={financements}
-                    // validate={[required]}
+                    validate={[required]}
                 />
             }
 
@@ -433,7 +436,7 @@ export default connect(
         //     isMaitreOuvrageDel: false,
         // },
         initialValues: getInitialFormValues(state),
-        programmes: selector(state, 'programmes'),
+        nature: selector(state, 'nature'),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         maitreOuvrage: selector(state, 'maitreOuvrage'),
@@ -443,27 +446,6 @@ export default connect(
     }),
 )(ProjetForm);
 
-
-// const mapItems = (items) => {
-
-//     console.log(`Mapping items -------------------------------------> !!!`)
-
-//     const mapProperties = ({ items, parentPath }) => {
-
-//         items.forEach(el => {
-
-//             if (parentPath) el.path = `${parentPath}.${el.value}`
-//             else el.path = `${el.value}`
-
-//             if (el.children)
-//                 mapProperties({ items: el.children, parentPath: `${el.path}` })
-//         });
-
-//     }
-
-//     mapProperties({ items })
-//     return items
-// }
 
 let pointsFocauxItems = [
     { value: 1, label: 'EL YOUBY Mohammed', },

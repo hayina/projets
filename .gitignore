@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 
-# package.json 
+package.json 
 .vscode
+
 # /.vscode/setting.json

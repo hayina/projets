@@ -11,9 +11,9 @@
   
   .circular-chart {
     display: block;
-    margin: 10px auto;
-    max-width: 80%;
-    max-height: 250px;
+    margin: 10px 0px 0px;
+    /* max-width: 80%; */
+    /* max-height: 250px; */
   }
   
   .circle-bg {

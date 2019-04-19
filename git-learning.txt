@@ -1,3 +1,5 @@
+git clone ...git -> first time
+
 //////////////
 
 git add .
@@ -15,3 +17,10 @@ to override all local changes
 
 git reset --hard
 git pull
+
+////
+git checkout -> merge problem
+
+/////////////
+add file already tracked to git ignore
+git rm --cached <file>
