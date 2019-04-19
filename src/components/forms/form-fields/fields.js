@@ -209,14 +209,18 @@ const SwitchSlider = (props) => (
 
 ////////////// SELECT
 
-export const SelectField = ({ input, meta, label, options, defaultLabel="..." }) => {
+export const SelectField = ({ input, meta, label, options, defaultLabel="...", onlyValue=true }) => {
 
     // console.log('SelectField -> ', options)
     return (
         <SimpleField label={label} meta={meta} >
             <select
                 className={`${fieldCss(meta)}`}
-                onChange={input.onChange}
+                onChange={ (e) => {
+                    const index = e.nativeEvent.target.selectedIndex;
+                    const label = e.nativeEvent.target[index].text
+                    const value = e.target.value
+                    input.onChange( onlyValue ? value : {value, label})} }
                 value={input.value}
             >
                 <option value='' disabled >{defaultLabel}</option>

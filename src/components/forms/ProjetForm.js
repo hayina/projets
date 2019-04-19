@@ -135,6 +135,9 @@ let ProjetForm = ({
     
     const onSubmit = (formValues) => {
 
+        
+        nameElem.classList.add("bounce-text")
+        
         setSubmitting(true)
         setErrors(false)
 
@@ -252,7 +255,7 @@ let ProjetForm = ({
 
             {(isConvention && partners) && (
                 <div className="form-group">
-                    {partners.map(({ partner, montant }, i) => (
+                    {partners.map(({ partner, montant, srcFinancement }, i) => (
                         <div className="partner-item" key={partner.value}>
                             <SimpleListItem item={partner} 
                                 onDelete={ () => dispatch(arrayDeletingByIndex('partners', i)) } 
@@ -263,6 +266,7 @@ let ProjetForm = ({
                                 }}
                             />
                             <div className="partner-montant">{Number(montant).toLocaleString()} DH</div>
+                            <div className="partner-srcFi">{ srcFinancement && srcFinancement.label }</div>
                         </div>
                     ))}
                 </div>

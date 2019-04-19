@@ -18,13 +18,11 @@ export const formName = 'conventionForm';
 
 const onSubmit = (formValues, dispatch, { editMode, index, partners }) => {
 
-    console.log(formValues)
-    if (!editMode) {
+    console.log(formValues.srcFinancement)
+
+    if ( !editMode ) {
         if ( partners.some((el) => el.partner.value === formValues.partner.value) ) {
-            throw new SubmissionError({
-                partner: 'Vous avez déjà ajouter ce partenaire',
-                // _error: 'Login failed!'
-            })
+            throw new SubmissionError({ partner: 'Vous avez déjà ajouter ce partenaire' })
         }
         dispatch(arrayPushing('partners', formValues));
     }
@@ -38,7 +36,7 @@ let Convention = ({ handleSubmit, dispatch, editMode, initialValues, submitFaile
 
     const [financements, setFinancements] = useState([]);
 
-    console.log('submitFailed -> ', submitFailed)
+    console.log('initialValues -> ', initialValues)
 
     useEffect(() => {
         if( editMode && initialValues.srcFinancement ) 
@@ -56,16 +54,8 @@ let Convention = ({ handleSubmit, dispatch, editMode, initialValues, submitFaile
     return (
 
         <Modal
-            handleValidation={() => {
-
-                dispatch(submit('conventionForm'))
-                // asyncFunc(() => dispatch(submit('conventionForm'))).then(() => {
-                //     if(!submitFailed) dispatch(hideModal())
-                // })
-
-            }}
+            handleValidation={ () => dispatch(submit('conventionForm')) }
             title={ `${ editMode ? 'editer' : 'ajouter' } un partenaire` }
-            // modalName='convention'
         >
             <div className="conv-container">
                 <form onSubmit={handleSubmit}>
@@ -89,9 +79,10 @@ let Convention = ({ handleSubmit, dispatch, editMode, initialValues, submitFaile
                         <Field
                             name="srcFinancement"
                             component={SelectField}
+                            onlyValue={false}
                             label="Source de Financement"
                             options={financements}
-                            // validate={[required]}
+                            validate={[required]}
                         />
                     }
 
