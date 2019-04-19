@@ -118,7 +118,7 @@ export const NestedTree = ({items, onDelete}) =>
                     className="fa fa-times delete-item-list" 
                     onClick={ () => onDelete(item.path) }
                 />
-                <span className="item-label">{item.label}</span>
+                <span className="item-label i-color">{item.label}</span>
             </span>
 
             { item.children && item.children.length > 0 && <NestedTree items={item.children} onDelete={onDelete} /> }

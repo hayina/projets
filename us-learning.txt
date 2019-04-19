@@ -59,3 +59,4 @@ throttle = étrangler, accélérateur
 eager = impatient, pressé, enthousiaste
 silly = idiot, stupid ...
 brag = se vanter
+Ripple = Ondulation

@@ -288,12 +288,7 @@ let ProjetForm = ({
                 />
             </SimpleField>
 
-            <Field
-                name="localaisation2"
-                component={EmptyField}
-                arrayValues={localisations}
-                validate={[emptyArray]}
-            />
+            <Field name="localaisation2" component={EmptyField} arrayValues={localisations} validate={[emptyArray]} />
 
 
             { localisations && localisations.length > 0 &&

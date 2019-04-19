@@ -66,7 +66,7 @@ let ProjetList = ({dispatch}) => {
     const dropDownEl = useRef(null);
     useClickOutside(dropDownEl, () => {
         console.log('show-drop', dropDownEl.current.classList)
-        dropDownEl.current.classList.toggle('show-drop2')
+        dropDownEl.current.classList.remove('show-drop')
     });
 
     const renderResultsList = () => (
@@ -83,14 +83,13 @@ let ProjetList = ({dispatch}) => {
         projets.map((projet, index) => {
 
             return (
-                <div className="projet-item box-sh box-br" key={projet.id}>
+                <div className="projet-item box-sh box-br no_dc" key={projet.id}>
 
-                    <span id="_3_bar" className="ct_pr" ref={dropDownEl} onClick={(e) => {
-                        console.log(e.currentTarget.offsetTop, e.currentTarget.offsetRight)
+                    <span id="_3_bar" className="ct_pr ripple" ref={dropDownEl} onClick={(e) => {
                         e.currentTarget.classList.toggle('show-drop')
                     }}>
                         <div className="_drop-down">
-                            <Link to={`/projets/edit/${projet.id}`} className="_dr-item">Editer</Link>
+                            <Link to={`/projets/edit/${projet.id}`} className="_dr-item">Editer projet</Link>
                             <a href="javascript:void(0)" className="_dr-item" onClick={ 
                                 () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
                                         onDanger: () => deleteProjet(projet.id, index)  ,
@@ -99,7 +98,8 @@ let ProjetList = ({dispatch}) => {
                                         // dangerText: `Voulez vous vraiment sûr supprimer le projet 
                                         // ${projet.intitule} ?`
                                 }))
-                            }>Supprimer</a>
+                            }>Supprimer projet</a>
+                            <Link to={`/marches/edit/${1}`} className="_dr-item">Editer marchés</Link>
                         </div>
                         <i className="fas fa-ellipsis-v dp-t"></i>
                         {/* <svg class="j2dfb39" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">

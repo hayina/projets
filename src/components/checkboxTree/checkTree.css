@@ -94,7 +94,12 @@
 
 
 .item-tree-wr {
-    padding-left: 14px;
+    line-height: 1;
+    /* display: flex;
+    align-items: center; */
+}
+
+.item-label {
 }
 
 .leaf-info {

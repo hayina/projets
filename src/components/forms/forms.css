@@ -123,6 +123,7 @@
     color: #ec4e4e;
     cursor: pointer;
     float: right;
+    font-size: 16px;
 }
 
 .delete-item-list:hover {

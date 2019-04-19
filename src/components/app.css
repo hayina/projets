@@ -241,3 +241,24 @@
 .api-error > .fa-info-circle {
     vertical-align: middle;
 }
+
+/* Ripple effect */
+.ripple {
+    background-position: center;
+    transition: background 0.4s;
+}
+.ripple:hover {
+    background: #e9ecef radial-gradient(circle, transparent 1%, #e9ecef 1%) center/15000%;
+}
+
+.ripple:active {
+    background-color: #6eb9f7;
+    background-size: 100%;
+    transition: background 0s;
+}
+  
+.i-color {
+    color: #07C;
+    font-weight: 600;
+    font-size: 15px;
+}    

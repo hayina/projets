@@ -138,12 +138,14 @@
 ._drop-down {
     display: none;
     position: absolute;
+    /* width: 159px; */
     top: 100%;
     right: 0;
     /* transform: translate(-100%,50%); */
     border: 1px solid rgb(212, 218, 231);
     border-radius: 4px;
     padding: 6px 0px;
+    background-color: white;
 }
 ._drop-down ._dr-item {
     display: block;
@@ -151,6 +153,7 @@
     color: #0056b3;
     padding: 0px 18px;
     line-height: 2.2;
+    white-space: nowrap;
 }
 
 ._drop-down ._dr-item:hover {
@@ -164,9 +167,18 @@
 
 #_3_bar {
     position: relative;
+    /* width: 20px;
+    height: 20px; */
+    padding: 4px;
+    cursor: pointer;
 }
 
 
 .show-drop ._drop-down {
     display: block;
+}
+
+
+.localisations-wr .fa-angle {
+    font-size: inherit;
 }
