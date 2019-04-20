@@ -70,6 +70,7 @@ let Convention = ({ handleSubmit, dispatch, editMode, initialValues, submitFaile
                         }}
                         onDelete={() => {
                             dispatch(change(formName, 'partner', null))
+                            dispatch(change(formName, 'srcFinancement', null))
                             setFinancements([])
                         }}
                         validate={[required]}

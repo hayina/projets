@@ -113,7 +113,8 @@ let ProjetList = ({dispatch}) => {
                         <span className="loc-label">Commune Taourirt</span>
                     </div>
                     <div className="projet-mo">
-                        <i className="_fa_lpr far fa-building"></i>
+                        {/* <i className="_fa_lpr far fa-building"></i> */}
+                        <i className="_fa_lpr fas fa-landmark"></i>
                         <span className="mo-label">Délégation Provincial Santé - Taourirt</span>
                     </div>
                     <div className="projet-per">

@@ -136,7 +136,7 @@ let ProjetForm = ({
     const onSubmit = (formValues) => {
 
         
-        nameElem.classList.add("bounce-text")
+        // nameElem.classList.add("bounce-text")
         
         setSubmitting(true)
         setErrors(false)
@@ -150,7 +150,8 @@ let ProjetForm = ({
             `${formValues.maitreOuvrage.value}${ formValues.srcFinancement ? `:${formValues.srcFinancement}`:'' }` : null,
             maitreOuvrageDel: formValues.maitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
             localisations,
-            partners: partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? `:${cp.srcFinancement}`:''}`)
+            partners: partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? 
+                                                                        `:${cp.srcFinancement.value}`:''}`)
         }
 
         
@@ -260,8 +261,15 @@ let ProjetForm = ({
                             <SimpleListItem item={partner} 
                                 onDelete={ () => dispatch(arrayDeletingByIndex('partners', i)) } 
                                 onEdit={() => {
+
+                                    let partnerToEdit = { ...partners[i] }
+                                    // if( partners[i].srcFinancement ){
+                                    //     // for the edit we want just the value NOT the whole object
+                                    //     partnerToEdit.srcFinancement = partners[i].srcFinancement.value 
+                                    // }
+
                                     dispatch(showModal(modalTypes.ADD_CONVENTION, {
-                                        editMode: true, index: i, initialValues: partners[i]
+                                        editMode: true, index: i, initialValues: partnerToEdit
                                     }))
                                 }}
                             />

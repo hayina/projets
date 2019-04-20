@@ -209,19 +209,33 @@ const SwitchSlider = (props) => (
 
 ////////////// SELECT
 
-export const SelectField = ({ input, meta, label, options, defaultLabel="...", onlyValue=true }) => {
+export const SelectField = ({ input, meta, label, options, defaultLabel="Choisir ...", onlyValue=true }) => {
 
-    // console.log('SelectField -> ', options)
+    let selectedValue = input.value
+    if( selectedValue && !onlyValue ){
+        selectedValue = selectedValue.value
+    }
+
     return (
         <SimpleField label={label} meta={meta} >
             <select
                 className={`${fieldCss(meta)}`}
                 onChange={ (e) => {
-                    const index = e.nativeEvent.target.selectedIndex;
-                    const label = e.nativeEvent.target[index].text
+                    // input.onChange(e.target.value)
+                    // return
+                    let changedValue;
                     const value = e.target.value
-                    input.onChange( onlyValue ? value : {value, label})} }
-                value={input.value}
+                    // if we want the value to be an object {value, label}
+                    if(!onlyValue){
+                        const index = e.nativeEvent.target.selectedIndex;
+                        changedValue = { value,  label: e.nativeEvent.target[index].text }
+                    } else { // we want just the value of option select
+                        changedValue = value;
+                    }
+
+                    input.onChange(changedValue)
+                }}
+                value={selectedValue}
             >
                 <option value='' disabled >{defaultLabel}</option>
                 {options.map((op) => <option key={op.value} value={op.value}>{op.label}</option>)}
