@@ -90,7 +90,7 @@
     color: #065ebd;
     color: #1384ff;
     display: inline-block;
-    font-weight: 600;
+    /* font-weight: 600; */
 }
 
 .projet-label:hover {

@@ -9,8 +9,8 @@ import { SimpleListItem } from '../SimpleList';
 
 const fieldCss = (meta) => `form-control ${ gotError(meta) ? 'is-invalid' : '' }`;
 
-const gotError = ({ touched, error, dirty }) => touched && error
-// const gotError = ({ touched, error, dirty }) => (dirty || touched) && error
+// const gotError = ({ touched, error, dirty }) => touched && error
+const gotError = ({ touched, error, dirty }) => (dirty || touched) && error
 
 const renderErrorField = (meta) => {
     if (gotError(meta)) {

@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { change} from 'redux-form';
 
-import { arraySetting } from '../../actions';
 import Modal from './Modal';
 import { hideModal } from '../../actions';
 
@@ -9,7 +9,7 @@ import { CheckTree } from '../checkboxTree/CheckTree';
 import { convertToSelectionByParent } from '../checkboxTree/helpers';
 
 
-
+import {formName as projetForm } from '../forms/ProjetForm'
 
 
 let Localisation = ({ dispatch, items, initialSelection=[] }) => {
@@ -22,9 +22,7 @@ let Localisation = ({ dispatch, items, initialSelection=[] }) => {
 
         <Modal
             handleValidation={() => {
-                dispatch(
-                    arraySetting('localisations', convertToSelectionByParent(selection, items))
-                )
+                dispatch(change(projetForm, 'localisations', convertToSelectionByParent(selection, items)))
                 dispatch(hideModal())
             }}
             title="Choisir la localisation du projet"

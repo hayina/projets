@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, submit, change, SubmissionError } from 'redux-form';
+import { Field, reduxForm, submit, change, SubmissionError, arrayPush, arrayInsert } from 'redux-form';
 
 import Modal from './Modal';
 import { hideModal } from '../../actions';
@@ -13,30 +13,35 @@ import { getExtPartners } from '../../reducers/externalForms';
 import { asyncFunc } from '../../helpers'
 import useAjaxFetch from '../hooks/useAjaxFetch';
 
+import {formName as projetForm } from '../forms/ProjetForm'
+
 
 export const formName = 'conventionForm';
 
 const onSubmit = (formValues, dispatch, { editMode, index, partners }) => {
 
-    console.log(formValues.srcFinancement)
+    console.log(partners)
 
     if ( !editMode ) {
         if ( partners.some((el) => el.partner.value === formValues.partner.value) ) {
             throw new SubmissionError({ partner: 'Vous avez déjà ajouter ce partenaire' })
         }
-        dispatch(arrayPushing('partners', formValues));
+        dispatch(arrayPush(projetForm, 'partners', formValues));
+        // dispatch(arrayPushing('partners', formValues));
     }
     else {
-        dispatch(arrayUpdating('partners', formValues, index));
+        dispatch(change(projetForm, `partners[${index}]`, formValues));
+        // dispatch(arrayInsert(projetForm, 'partners', index, formValues));
+        // dispatch(arrayUpdating('partners', formValues, index));
     }
     dispatch(hideModal())
 }
 
-let Convention = ({ handleSubmit, dispatch, editMode, initialValues, submitFailed }) => {
+let Convention = ({ handleSubmit, dispatch, editMode, initialValues, partners }) => {
 
     const [financements, setFinancements] = useState([]);
 
-    console.log('initialValues -> ', initialValues)
+    console.log('partners -> ', partners)
 
     useEffect(() => {
         if( editMode && initialValues.srcFinancement ) 
@@ -109,6 +114,6 @@ Convention = reduxForm({
 
 export default connect(
     (state) => ({
-        partners: getExtPartners(state),
+        // partners: getExtPartners(state),
     })
 )(Convention)

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, formValueSelector, initialize, change } from 'redux-form'
+import { Field, Fields, reduxForm, formValueSelector, initialize, change } from 'redux-form'
 
 import useApi from '../hooks/useApi';
 
@@ -24,9 +24,11 @@ import './forms.css';
 import types, { constants } from '../../types';
 // import { programmes } from '../../dataSource';
 import { ApiError } from '../helpers';
+import PartnerLine from './PartnerLine';
+import LocationLine from './LocationLine';
 
 
-const vPartners = (array, formValues, props, name) => (
+const vPartners = (array=[], formValues, props, name) => (
     ((formValues.isConvention === true) && array && array.length === 0) ? 
          'Veuillez ajouter des partenaires' : undefined
 )
@@ -39,11 +41,11 @@ const vMod = (value, formValues, props, name) => (
 
 
 
-const formName = 'projetForm'
+export const formName = 'projetForm'
 
 let ProjetForm = ({ 
-            handleSubmit, isConvention, partners, localisations, pointsFocaux, isMaitreOuvrageDel, maitreOuvrage, 
-            dispatch, match, initialValues, history, nature   
+            handleSubmit, isConvention, pointsFocaux, isMaitreOuvrageDel, 
+            dispatch, match, history, nature   
         }) => {
 
 
@@ -64,7 +66,7 @@ let ProjetForm = ({
     const initForm = () => {
         dispatch(initFormValues({}))
         dispatch(arraySetting('localisations', []))
-        dispatch(arraySetting('partners', []))
+        // dispatch(arraySetting('partners', []))
     }
 
     useEffect(() => {
@@ -149,15 +151,12 @@ let ProjetForm = ({
             maitreOuvrage: formValues.maitreOuvrage ? 
             `${formValues.maitreOuvrage.value}${ formValues.srcFinancement ? `:${formValues.srcFinancement}`:'' }` : null,
             maitreOuvrageDel: formValues.maitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
-            localisations,
-            partners: partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? 
+            partners: formValues.partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? 
                                                                         `:${cp.srcFinancement.value}`:''}`)
         }
 
         
         console.log(apiValues)
-        console.log(JSON.stringify(apiValues))
-
 
         // dispatch(arrayPushing('projets', apiValues));
         // setTimeout(() => {
@@ -236,82 +235,17 @@ let ProjetForm = ({
             
             <div className="sep-line"></div>
 
-            <Field
-                name="isConvention"
-                component={LineRadio}
-                label="Conventionné"
-                // options={[{ label: 'Oui', value: true }, { label: 'Non', value: false }]}
-                btnText="Ajouter un partenaire"
-                btnOnClick={() => dispatch(showModal(modalTypes.ADD_CONVENTION, { editMode: false }))}
+            <Fields 
+                names={[ 'isConvention', 'partners' ]} component={PartnerLine} 
+                validate={{ partners: vPartners }}
             />
-
-            <Field
-                name="partners2"
-                component={EmptyField}
-                arrayValues={partners}
-                validate={vPartners}
-            />
-
-            {/* ({partners.length})-({isConvention ? 'true':'false'}) */}
-
-            {(isConvention && partners) && (
-                <div className="form-group">
-                    {partners.map(({ partner, montant, srcFinancement }, i) => (
-                        <div className="partner-item" key={partner.value}>
-                            <SimpleListItem item={partner} 
-                                onDelete={ () => dispatch(arrayDeletingByIndex('partners', i)) } 
-                                onEdit={() => {
-
-                                    let partnerToEdit = { ...partners[i] }
-                                    // if( partners[i].srcFinancement ){
-                                    //     // for the edit we want just the value NOT the whole object
-                                    //     partnerToEdit.srcFinancement = partners[i].srcFinancement.value 
-                                    // }
-
-                                    dispatch(showModal(modalTypes.ADD_CONVENTION, {
-                                        editMode: true, index: i, initialValues: partnerToEdit
-                                    }))
-                                }}
-                            />
-                            <div className="partner-montant">{Number(montant).toLocaleString()} DH</div>
-                            <div className="partner-srcFi">{ srcFinancement && srcFinancement.label }</div>
-                        </div>
-                    ))}
-                </div>
-            )}
 
             <div className="sep-line"></div>
 
-            <SimpleField label='Localisation'>
-                <input type="button" className="btn btn-info show-modal" 
-                    value={ localisations.length > 0 ? `Editer` : `Choisir`}
-                    style={{ float: 'right' }}
-                    onClick={
-                        () => {
-                            dispatch(showModal(modalTypes.ADD_LOCALISATION, 
-                                { 
-                                    items: localisationItems, 
-                                    initialSelection: convertToSelectionByLeafs(localisations, localisationItems) 
-                                }
-                            ))
-                            
-                        }
-                    }
-                />
-            </SimpleField>
-
-            <Field name="localaisation2" component={EmptyField} arrayValues={localisations} validate={[emptyArray]} />
-
-
-            { localisations && localisations.length > 0 &&
-            <div className="localisations-wr tree-wr">
-                <NestedTree 
-                    items={ nestedTree(localisations, localisationItems) }
-                    onDelete= { (path) => dispatch(arrayDeletingByPath('localisations', path)) }
-                /> 
-            </div>
-            }
-
+            <Field 
+                name="localisations" component={LocationLine} 
+                localisationItems={localisationItems} validate={[emptyArray]} 
+            />
 
             <div className="sep-line"></div>
 
@@ -447,8 +381,8 @@ export default connect(
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         maitreOuvrage: selector(state, 'maitreOuvrage'),
-        partners: getExtPartners(state),
-        localisations: getLocalisations(state),
+        // partners: getExtPartners(state),
+        // localisations: getLocalisations(state),
         pointsFocaux: getPointsFocaux(state),
     }),
 )(ProjetForm);

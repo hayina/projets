@@ -2,8 +2,8 @@ import types from '../types';
 
 
 const initialState = {
-    partners: [],
-    localisations: [],
+    // partners: [],
+    // localisations: [],
     pointsFocaux: [
         // {
         //     value: 5,
