@@ -1,17 +1,17 @@
 .flex-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
+    /* display: flex;
+    flex-flow: row nowrap; */
   }
   
   .single-chart {
-    width: 33%;
-    width: 10%;
+    /* width: 10%;
     justify-content: space-around ;
+    margin-left: auto; */
   }
   
   .circular-chart {
     display: block;
-    margin: 10px 0px 0px;
+    /* margin: 10px 0px 0px; */
     /* max-width: 80%; */
     /* max-height: 250px; */
   }

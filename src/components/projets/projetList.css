@@ -8,7 +8,7 @@
     /* opacity: 1; */
     /* display: flex; */
     /* align-items: center; */
-    padding: 10px;
+    padding: 10px 14px !important;
     border: 1px solid rgb(212, 218, 231);
     border-radius: 4px;
 }
@@ -84,15 +84,17 @@
 
 .cr-input {
     width: 61%;
-    padding: 6px 0px;
+    padding: 4px 0px;
     padding-left: 4px;
+    border-radius: 3px;
+    border: 1px solid #ced4da;
 }
 
 .projet-label {
     color: #065ebd;
     color: #1384ff;
     display: inline-block;
-    width: 95%;
+    width: 94%;
     /* font-weight: 600; */
 }
 
@@ -113,6 +115,11 @@
 
 .loc-label {
     font-size: 14px;
+    /* text-transform: lowercase; */
+}
+
+.loc-label::first-letter {
+    /* text-transform: uppercase; */
 }
 
 .ct_pr {
@@ -193,3 +200,25 @@
     font-weight: 600;
 }
 
+.proj-infos-wr {
+    display: flex;
+    width: 100%;
+}
+
+.proj-infos {
+    width: 90%;
+}
+
+.projet-per {
+    width: 10%;
+}
+
+.loc-label::after {
+    content: ',';
+    margin-right: 4px;
+}
+
+.loc-label:last-child::after {
+    content: '';
+    margin-right: 0px;
+}

@@ -109,18 +109,30 @@ let ProjetList = ({dispatch}) => {
                     </span>
                     <div className="projet-label"><strong>{index+1}.</strong> {projet.intitule}</div>
                     {/* <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div> */}
-                    <div className="projet-loc">
-                        <i className="_fa_lpr fas fa-map-marker-alt"></i>
-                        <span className="loc-label">Commune Taourirt</span>
+
+                    <div className="proj-infos-wr">                    
+
+                        <div className="proj-infos">
+                            <div className="projet-loc">
+                                <i className="_fa_lpr fas fa-map-marker-alt"></i>
+                                { 
+                                    projet.localisations.map((loc, index) => {
+                                        return <span className="loc-label" key={index}>{loc}</span>
+                                    })
+                                }
+                                
+                            </div>
+                            <div className="projet-mo">
+                                {/* <i className="_fa_lpr far fa-building"></i> */}
+                                <i className="_fa_lpr fas fa-landmark"></i>
+                                <span className="mo-label">{projet.maitreOuvrage}</span>
+                            </div>
+                        </div>
+                        <div className="projet-per">
+                            <Percentage percentage={projet.taux} />
+                        </div>
                     </div>
-                    <div className="projet-mo">
-                        {/* <i className="_fa_lpr far fa-building"></i> */}
-                        <i className="_fa_lpr fas fa-landmark"></i>
-                        <span className="mo-label">Délégation Provincial Santé - Taourirt</span>
-                    </div>
-                    <div className="projet-per">
-                        <Percentage percentage="40" />
-                    </div>
+
 
                 </div>
             )
