@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Field, Fields, reduxForm, formValueSelector, initialize, change } from 'redux-form'
+import { Field, Fields, reduxForm, formValueSelector, change } from 'redux-form'
 
-import useApi from '../hooks/useApi';
-
-import { showModal, arraySetting, initFormValues, arrayPushing, hideModal } from '../../actions';
+import { showModal, arraySetting, initFormValues, hideModal, arrayDeletingByIndex } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
-import { TextField, RadioField, SelectField, SimpleField, 
-    AutoCompleteField, ToggleField, LineRadio, SelectGrpField, SliderCheckbox, EmptyField } from './form-fields/fields'
-import { getExtPartners, getLocalisations, getPointsFocaux, getInitialFormValues } from '../../reducers/externalForms';
-import { arrayDeletingByIndex, arrayDeletingByPath } from '../../actions';
-import { nestedTree, convertToSelectionByLeafs } from '../checkboxTree/helpers';
-import { NestedTree } from '../checkboxTree/CheckTree';
-import CheckListModal from '../modals/CheckListModal';
-// import { formName as conventionFormName } from '../modals/Convention';
-
-
-import SimpleList, { SimpleListItem } from './SimpleList';
+import { TextField, SelectField, SimpleField, AutoCompleteField, ToggleField, EmptyField } from './form-fields/fields'
+import { getPointsFocaux, getInitialFormValues } from '../../reducers/externalForms';
+import SimpleList from './SimpleList';
 import useAjaxFetch from '../hooks/useAjaxFetch';
-
-import './forms.css';
-import types, { constants } from '../../types';
-// import { programmes } from '../../dataSource';
 import { ApiError } from '../helpers';
 import PartnerLine from './PartnerLine';
 import LocationLine from './LocationLine';
+import ProgLine from './ProgLine';
+
+import './forms.css';
 
 
+const vIndh = (value, formValues, props, name) => (
+    (formValues.indh === true) && (!value) ? 
+         'Ce champs est obligatoire' : undefined
+)
 const vPartners = (array=[], formValues, props, name) => (
     ((formValues.isConvention === true) && array && array.length === 0) ? 
          'Veuillez ajouter des partenaires' : undefined
@@ -43,39 +36,28 @@ const vMod = (value, formValues, props, name) => (
 
 export const formName = 'projetForm'
 
-let ProjetForm = ({ 
-            handleSubmit, isConvention, pointsFocaux, isMaitreOuvrageDel, 
-            dispatch, match, history, nature   
-        }) => {
-
-
+let ProjetForm = ({ handleSubmit, isConvention, pointsFocaux, isMaitreOuvrageDel, dispatch, match, history }) => {
 
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
     const [financements, setFinancements] = useState([]);
-    const [programmes, setProgrammes] = useState([]);
+    const [indhProgrammes, setIndhProgrammes] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
     const [errors, setErrors] = useState(false);
 
-    // console.log("initialValues ->", initialValues)
-    // console.log("match.params ->", match.params.idProjet)
-
+    // get id projet from params to determine if we are in edit mode
     const { idProjet } = match.params
 
     const initForm = () => {
         dispatch(initFormValues({}))
         dispatch(arraySetting('localisations', []))
-        // dispatch(arraySetting('partners', []))
     }
 
     useEffect(() => {
 
         // BOTH MODES
-
         initForm()
-
-        // fetchProgrammes();
 
         useAjaxFetch({
             url: 'secteurs',
@@ -88,7 +70,6 @@ let ProjetForm = ({
             error: (err) => setErrors(true)
         })
 
-
         // EDIT MODE
         if(idProjet) {
             setEditLoading(true)
@@ -98,12 +79,11 @@ let ProjetForm = ({
                     console.log(`/projets/edit/${idProjet} ->`, data)
                     // dispatch(initialize(formName, data))
                     setEditLoading(false)
-                    dispatch(arraySetting('localisations', data.localisations))
-                    dispatch(arraySetting('partners', data.partners))
                     dispatch(initFormValues(data))
                     //load src financement for this specific maitre ouvrage
                     // si pas Conventionné pour ne pas rentrer en confli avec src financement des partenaire 
                     if(!data.isConvention) fetchFinancements(data.maitreOuvrage.value)
+                    if(data.indh) fetchIndhProgrammes()
                 },
                 error: (err) => setErrors(true)
             })
@@ -126,18 +106,18 @@ let ProjetForm = ({
     
     const fetchIndhProgrammes = () => {
 
-        if( programmes.length === 0 )
-        useAjaxFetch({
-            url: `/parent/programmes`,
-            // url: `/getProgrammesWithPhases`,
-            success: (data) => { setProgrammes(data) },
-            error: (err) => setErrors(true)
-        })
+        if( indhProgrammes.length === 0 ){
+            useAjaxFetch({
+                url: `/parent/programmes`,
+                // url: `/getProgrammesWithPhases`,
+                success: (data) => { setIndhProgrammes(data) },
+                error: (err) => setErrors(true)
+            })
+        }
     }
     
     const onSubmit = (formValues) => {
 
-        
         // nameElem.classList.add("bounce-text")
         
         setSubmitting(true)
@@ -148,11 +128,15 @@ let ProjetForm = ({
         let apiValues = { 
             ...formValues,
             idProjet,
+            // maitre ouvrage
             maitreOuvrage: formValues.maitreOuvrage ? 
             `${formValues.maitreOuvrage.value}${ formValues.srcFinancement ? `:${formValues.srcFinancement}`:'' }` : null,
+            // maitre ouvrage delegué
             maitreOuvrageDel: formValues.maitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
-            partners: formValues.partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? 
-                                                                        `:${cp.srcFinancement.value}`:''}`)
+            // partenaires
+            partners: formValues.isConvention ? 
+                formValues.partners.map(cp => `${cp.partner.value}:${cp.montant}${cp.srcFinancement ? 
+                    `:${cp.srcFinancement.value}`:''}`):[]
         }
 
         
@@ -192,46 +176,23 @@ let ProjetForm = ({
             <div className="form-title hide">PROJET FORMULAIRE</div>
 
             <div className={`form-content ${ submitting || editLoading ? 'form-submitting is-submitting':'' }`}>
+
             <Field
-                name="intitule"
-                component={TextField}
-                label="Intitulé"
-                fieldType="textarea"
-                validate={[required]}
+                name="intitule" component={TextField} label="Intitulé" fieldType="textarea" validate={[required]}
             />
 
             <Field
-                name="montant"
-                component={TextField}
-                label="Montant"
-                fieldType="input"
-                validate={[required, number]}
+                name="montant" component={TextField} label="Montant" fieldType="input" validate={[required, number]}
             />
 
             <div className="sep-line"></div>
 
-            <Field
-                name="nature"
-                component={SliderCheckbox}
-                options={[{value:1, label: 'I.N.D.H'}, {value:2, label: 'P.R.D.T.S'}]}
-                label="Nature du Projet"
-                apiFetch={ (bigProgramme) => {
-                    if( constants.INDH === bigProgramme ){
-                        fetchIndhProgrammes()
-                    }
-                }}
+            <Fields 
+                names={[ 'indh', 'prdts', 'indhProgramme' ]} component={ProgLine} 
+                indhProgrammes={indhProgrammes}
+                indhCallback={fetchIndhProgrammes}
+                validate={{ indhProgramme: vIndh }}
             />
-
-            { nature && nature.includes(constants.INDH) && programmes.length > 0 &&
-            <Field
-                name="programme"
-                component={SelectGrpField}
-                // label="Programme"
-                optgroups={programmes}
-                gOptsLabel="Choisir un programme..."
-                validate={[required]}
-            />
-            }
             
             <div className="sep-line"></div>
 
@@ -252,7 +213,6 @@ let ProjetForm = ({
             <Field name="maitreOuvrage" label="Maître d'ouvrage" component={AutoCompleteField}
 
                 url='/acheteurs'
-                // url='/get_acheteurs'
                 onSelect={(suggestion) => {
                     dispatch(change(formName, 'maitreOuvrage', suggestion));
                     fetchFinancements(suggestion.value)
@@ -261,7 +221,6 @@ let ProjetForm = ({
                     dispatch(change(formName, 'maitreOuvrage', null))
                     setFinancements([])
                 }}
-                // suggestion={maitreOuvrage}
                 validate={[required]}
             />
 
@@ -281,12 +240,9 @@ let ProjetForm = ({
 
             { isMaitreOuvrageDel &&
             <Field name="maitreOuvrageDel"  component={AutoCompleteField}
-
-                // url='/get_acheteurs'
                 url='/acheteurs'
                 onSelect={ (suggestion) => dispatch(change(formName, 'maitreOuvrageDel', suggestion)) }
                 onDelete={ () => dispatch(change(formName, 'maitreOuvrageDel', null)) }
-                // suggestion={maitreOuvrage}
                 validate={vMod}
             />
             }
@@ -316,10 +272,7 @@ let ProjetForm = ({
             </SimpleField>
 
             <Field
-                name="pointsFocaux2"
-                component={EmptyField}
-                arrayValues={pointsFocaux}
-                validate={[emptyArray]}
+                name="pointsFocaux2" component={EmptyField} arrayValues={pointsFocaux} validate={[emptyArray]}
             />
 
             
@@ -332,11 +285,7 @@ let ProjetForm = ({
             <div className="sep-line"></div>
 
             <Field
-                name="secteur"
-                component={SelectField}
-                label="Secteur"
-                options={secteurs}
-                defaultLabel="Choisir ..."
+                name="secteur" component={SelectField} label="Secteur" options={secteurs} defaultLabel="Choisir ..."
                 validate={[required]}
             />
 
@@ -351,7 +300,7 @@ let ProjetForm = ({
                 </button>
             </div>
             
-            { errors && <ApiError cssClass="va-errors"/>}
+            { errors && <ApiError cssClass="va-errors"/> }
 
         </form>
     )
@@ -377,7 +326,6 @@ export default connect(
         //     isMaitreOuvrageDel: false,
         // },
         initialValues: getInitialFormValues(state),
-        nature: selector(state, 'nature'),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         maitreOuvrage: selector(state, 'maitreOuvrage'),
@@ -396,29 +344,3 @@ let pointsFocauxItems = [
     { value: 5, label: 'Sahli Hamzaoui', },
     { value: 6, label: 'BACHAOUI ABDERRAHMANE', },
 ]
-
-
-
-// @ResponseBody
-// @RequestMapping(value="/ajax/localisations") 
-// public Collection<TreeDto>  ajax_localisations(HttpServletRequest request) {
-    
-//     List<LocalisationBean> communes = localisationDao.getCommunesWithFractions2();
-    
-//     Map<Integer, TreeDto> communetree = new LinkedHashMap<Integer, TreeDto>();
-    
-//     communes.forEach((com) -> {
-        
-//         if (!communetree.containsKey(com.idCommune)){
-//             communetree.put(com.idCommune, new TreeDto(com.idCommune, com.commune));
-//         }
-        
-//         communetree.get(com.idCommune).children.add(new TreeDto(com.idFraction, com.fraction));
-        
-//     });
-    
-//     return communetree.values();
-    
-// }
-
-

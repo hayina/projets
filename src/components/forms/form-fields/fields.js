@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { change } from 'redux-form'
 
 import AutoComplete from './autocomplete/AutoComplete';
 import SelectedAC from './SelectedAC'
 import { SimpleListItem } from '../SimpleList';
+import { uniqueID, uniqueHtmlID } from '../../../helpers';
 
 ////////////// helpers
 
@@ -167,19 +168,27 @@ export const RadioField = ({ input, meta, label, options }) => {
 
 }
 
-export const RadioList = ({options, input}) => 
-    options.map((option) => (
-        <div className="form-check" key={option.label}>
-            <input id={option.label} className="form-check-input" type="radio"
+export const RadioList = ({options, input, meta }) => (
+    
+    options.map((option) => {
+
+        const inputID = uniqueHtmlID();
+
+        return (<div className="form-check" key={option.label}>
+            <input id={inputID} className="form-check-input" type="radio"
                 value={option.value}
                 checked={option.value === input.value}
                 onChange={(e) => input.onChange(option.value)}
             />
-            <label htmlFor={option.label} className="radio-label form-check-label">
+            <label htmlFor={inputID} className="radio-label form-check-label">
                 {option.label}
             </label>
-        </div>
-    ))
+        </div>)
+    })
+)
+    
+
+
 
 
 export const LineRadio = ({input, label, btnText, btnOnClick}) => {
@@ -202,7 +211,7 @@ export const LineRadio = ({input, label, btnText, btnOnClick}) => {
 
 const SwitchSlider = (props) => (
     <label className="switch">
-        <input type="checkbox" name="cloture" {...props} />
+        <input type="checkbox" {...props} />
         <div className="slider round"></div>
     </label>
 )
@@ -245,26 +254,6 @@ export const SelectField = ({ input, meta, label, options, defaultLabel="Choisir
 }
 export const SelectGrpField = ({ input, meta, label, optgroups, gOptsLabel="..." }) => {
 
-    // console.log('SelectField -> ', options)
-
-    // const OptGroup = ({optgroups}) => (
-
-    //     optgroups.map(({label, options}, index) => (
-    //         <optgroup label={label} key={index}>
-
-    //         {options.map((opt) => {
-
-    //             // console.log('option --->', opt)
-    //             if(opt.options){
-    //                 console.log('Inside ... :)', opt)
-    //                 return <OptGroup optgroups={[ opt ]} />
-    //             }
-    //             return <option key={opt.value} value={opt.value}>{opt.label}</option>
-    //         })}
-
-    //         </optgroup>
-    //     ))
-    // )
     const OptGroup = ({optgroups}) => (
         optgroups.map(({label, options}, index) => (
             <optgroup label={label} key={index}>
@@ -371,19 +360,24 @@ export const SliderCheckbox = ({ input, meta, label, options, apiFetch }) => {
 
 /////////////////// TOGGLE
 
-export const ToggleField = ({label, input}) => {
+export const ToggleField = ({label, input, callback}) => {
+
 
     const checked = input.value ? true:false
+    const inputID = uniqueHtmlID();
 
     return (
         <div className="form-group simple-field-wr">
             <input 
-                id={`toggle-field`}
+                id={inputID}
                 type="checkbox"
                 className="hide"
                 checked={checked}
                 onFocus={ input.onFocus }
-                onChange={ (e) => input.onChange(e.target.checked) }
+                onChange={ (e) => {
+                    if(callback && e.target.checked) { callback() };
+                    input.onChange(e.target.checked)
+                }}
             />
             <i className={
                 `_fa_check fa-${ checked ? 'check-square checked fas' : 'square far' }`
@@ -392,7 +386,7 @@ export const ToggleField = ({label, input}) => {
             <label 
                 className={`field-label form-check-label`}
                 // className={`form-check-label`}
-                htmlFor={`toggle-field`}
+                htmlFor={inputID}
             >
                 {label}
             </label>

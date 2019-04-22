@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { TextInput, ToggleField, CheckboxField } from '../forms/form-fields/fields';
+import { TextInput, ToggleField, CheckboxField, RadioList } from '../forms/form-fields/fields';
 import { hideModal} from '../../actions';
 import Modal from '../modals/Modal';
 import { required, number, emptyArray } from '../forms/validator';
@@ -37,7 +37,7 @@ const rules = {
 let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser }) => {
     
     const { state, dispatchForm, onSubmit } = useContext(FormContext);
-    const [roles, setRoles] = useState([])
+    const [profiles, setProfiles] = useState([])
     const [editLoading, setEditLoading] = useState(false)
 
 
@@ -47,10 +47,10 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
         
 
         useAjaxFetch({
-            url: 'roles',
+            url: 'profiles',
             method: 'GET',
             success: (data) => {
-                setRoles(data)
+                setProfiles(data)
             },
             // error: () => setEditLoading(false)
         })
@@ -141,7 +141,16 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                     { props => <TextInput placeholder= "Prénom" {...props} /> }
                 </Field>
 
-                <Field name="roles" validate={[required]}>
+                <Field name="profile" validate={[required]}>
+                    { props =>   
+                        <RadioList
+                            label="Choisir les profiles de l'utilisateur"
+                            options={profiles} 
+                            {...props} 
+                        /> 
+                    }
+                </Field>
+                {/* <Field name="roles" validate={[required]}>
                     { props =>   
                         <CheckboxField
                             label="Choisir les profiles de l'utilisateur"
@@ -149,7 +158,7 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                             {...props} 
                         /> 
                     }
-                </Field>
+                </Field> */}
 
                 <Field name="active" validate={[required]}>
                     { props => <ToggleField label="Actif (l'utilisateur peut se connecter)" {...props} /> }
