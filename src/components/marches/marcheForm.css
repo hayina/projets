@@ -1,0 +1,42 @@
+#marcheForm {
+    --ml: 30%;
+}
+
+#marcheForm .simple-field-wr {
+    /* display: flex;
+    align-items: center; */
+}
+
+#marcheForm .form-label {
+    width: var(--ml);
+    /* display: inline-block; */
+    margin-bottom: 0px;
+    font-size: 13px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#marcheForm .form-control {
+    width: 70%;
+    /* display: inline-block; */
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#marcheForm .invalid-feedback {
+    margin-left: var(--ml);
+    width: 100%;
+    /* display: inline-block; */
+}
+
+#societeForm .form-validation {
+    padding: 16px 0px 10px;
+}
+
+#societeForm .form-content {
+    padding: 0px;
+}
+
+#societeForm .form-content > .simple-field-wr:last-of-type {
+    margin-bottom: 0px;
+}

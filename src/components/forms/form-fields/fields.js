@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { change } from 'redux-form'
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import AutoComplete from './autocomplete/AutoComplete';
 import SelectedAC from './SelectedAC'
 import { SimpleListItem } from '../SimpleList';
@@ -428,6 +431,24 @@ export const EmptyField = ({ input, meta, arrayValues }) => {
             <div className="error-feedback">{meta.error}</div>
         }
         </React.Fragment>
+    )
+
+}
+
+///////////////// DATE
+
+export const DateField = ({ input, meta, label }) => {
+    
+    const dateValue = input.value ? input.value : new Date()
+
+    return (
+        <SimpleField label={label} meta={meta} >
+            <DatePicker
+                // dateFormat="dd/mm/yyyy"
+                selected={dateValue}
+                onChange={input.onChange}
+            />
+        </SimpleField>
     )
 
 }

@@ -6,6 +6,9 @@ import Localisation from './Localisation';
 import CheckListModal from './CheckListModal';
 import UserForm from '../users/UserForm';
 import DeleteModal from './DeleteModal';
+import SocieteForm from '../marches/SocieteForm';
+import TauxForm from '../marches/TauxForm';
+import OsForm from '../marches/OsForm';
 
 
 export const modalTypes = {
@@ -14,6 +17,9 @@ export const modalTypes = {
     ADD_CHECK_LIST_MODAL: 'ADD_CHECK_LIST_MODAL',
     ADD_USER: 'ADD_USER',
     ADD_DELETE: 'ADD_DELETE',
+    ADD_STE: 'ADD_STE',
+    ADD_TAUX: 'ADD_TAUX',
+    ADD_OS: 'ADD_OS',
 }
 
 const MODAL_COMPONENTS = {
@@ -22,6 +28,9 @@ const MODAL_COMPONENTS = {
     [modalTypes.ADD_CHECK_LIST_MODAL]: CheckListModal,
     [modalTypes.ADD_USER]: UserForm,
     [modalTypes.ADD_DELETE]: DeleteModal,
+    [modalTypes.ADD_STE]: SocieteForm,
+    [modalTypes.ADD_TAUX]: TauxForm,
+    [modalTypes.ADD_OS]: OsForm,
 }
 
 const ModalRoot = ({ modalType, modalProps }) => {

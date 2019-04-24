@@ -20,6 +20,7 @@ import useClickOutside from '../hooks/useClickOutside';
 let ProjetList = ({dispatch}) => {
 
 
+
     const [projets, setProjets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(false);
@@ -41,8 +42,6 @@ let ProjetList = ({dispatch}) => {
 
         let cancel = false
         setLoading(true)
-
-
 
         useAjaxFetch({
             url: 'projets',

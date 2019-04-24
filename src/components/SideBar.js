@@ -36,7 +36,7 @@ let SideBar = () => {
                 <SideItem label="Liste des Projets" url="/projets" >
                     <i className="_fa_sb fas fa-poll-h"></i>
                 </SideItem>
-                <SideItem label="Liste des Marchés" url="/marches" />
+                <SideItem label="Ajouter Marché" url="/marches/new" />
                 <SideItem label="Liste des Conventions" url="/conventions" />
                 <SideItem label="Gestion des localisations" url="/localisations" >
                     <i className="_fa_sb fas fa-map-marker-alt"></i>

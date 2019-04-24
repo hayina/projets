@@ -8,7 +8,7 @@ import './modal.css'
 
 
 
-const Modal = ({ title, children, handleValidation, dispatch, submitting }) => {
+const Modal = ({ title, children, handleValidation, dispatch, submitting, vBar=true }) => {
 
     const modalRef = useRef(null);
 
@@ -46,23 +46,27 @@ const Modal = ({ title, children, handleValidation, dispatch, submitting }) => {
 
                 <div className="modals-content">{children}</div>
 
-                <div className="modals-validation">
 
-                    <button className="btn btn-secondary"
-                        onClick={ () => dispatch(hideModal()) }>Annuler</button>
+                { 
+                    vBar &&
+                    <div className="modals-validation">
 
-                    {/* <button type="submit" className="btn btn-primary"
-                        onClick={ handleValidation }>Valider</button> */}
+                        <button className="btn btn-secondary"
+                            onClick={ () => dispatch(hideModal()) }>Annuler</button>
 
-                    <button type="submit" className={`btn btn-primary ${submitting ? 'btn-submitting is-submitting ':''}`}
-                        onClick={
-                            () => {
-                                handleValidation()
-                                // dispatch(hideModal())
-                            }} 
-                        >Valider{ submitting ? '...':'' }</button>
+                        {/* <button type="submit" className="btn btn-primary"
+                            onClick={ handleValidation }>Valider</button> */}
 
-                </div>
+                        <button type="submit" className={`btn btn-primary ${submitting ? 'btn-submitting is-submitting ':''}`}
+                            onClick={
+                                () => {
+                                    handleValidation()
+                                    // dispatch(hideModal())
+                                }} 
+                            >Valider{ submitting ? '...':'' }</button>
+
+                    </div>
+                }
             </div>
 
         </div>

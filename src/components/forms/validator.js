@@ -1,12 +1,21 @@
 
 
 export const required = value => value  ? undefined : 'Ce champs est obligatoire'
+
+export const percentage = value => value && (value > 100 || value < 0)  ? 'Valeur incorrect' : undefined
     // value || typeof value === 'number' ? undefined : 'Required'
 
     
 
 export const number = value =>
     value && isNaN(Number(value)) ? 'Ce champs doit être un nombre' : undefined
+
+export const integer = value => {
+
+    console.log(value, isNaN(parseInt(value, 10)))
+    return value && isNaN(parseInt(value, 10))
+    ? 'Ce champs doit être un nombre naturel' : undefined
+}
 
 export const email = value =>
     value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)

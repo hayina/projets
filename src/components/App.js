@@ -11,6 +11,7 @@ import UserList from './users/UserList';
 import SideBar from './SideBar';
 
 import './app.css'
+import MarcheForm from './marches/MarcheForm';
 
 const App = () => {
 
@@ -36,10 +37,12 @@ const App = () => {
                             <span className="path-link">Ajouter un projet</span>
                         </div>
 
-                        <Route path="/" exact component={UserList} />
+                        <Route path="/" exact component={ProjetList} />
                         <Route path="/projets/new" exact component={ProjetForm} />
                         <Route path="/projets/edit/:idProjet" exact component={ProjetForm} />
                         <Route path="/projets" exact component={ProjetList} />
+                        <Route path="/marches/new" exact component={MarcheForm} />
+                        <Route path="/marches/edit/:idMarche" exact component={MarcheForm} />
                         <Route path="/users" exact component={UserList} />
                     </div>
 
