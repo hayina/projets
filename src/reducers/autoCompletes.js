@@ -3,9 +3,7 @@ import types from '../types'
 
 
 //////// INITIAL_STATE
-const INITIAL_STATE = {
-    partner: null
-};
+const INITIAL_STATE = {};
 
 
 //////// SELECTORS

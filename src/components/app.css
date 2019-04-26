@@ -279,3 +279,8 @@
        transform: translateX(0);
     }
  } 
+
+
+ .datepicker {
+     /* pointer-events: none; */
+ }

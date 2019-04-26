@@ -13,7 +13,7 @@ import SideBar from './SideBar';
 import './app.css'
 import MarcheForm from './marches/MarcheForm';
 
-const App = () => {
+const App = ({breadCrumb}) => {
 
     // const { dispatch, projetForm } = props;
 
@@ -34,7 +34,7 @@ const App = () => {
                         <div className="bread-crumb">
                             <i className="fas fa-home"></i>
                             <i className="fas fa-angle-right _fa-sep"></i>
-                            <span className="path-link">Ajouter un projet</span>
+                            <span className="path-link">{breadCrumb}</span>
                         </div>
 
                         <Route path="/" exact component={ProjetList} />
@@ -59,7 +59,7 @@ const App = () => {
 }
 
 export default connect(
-    // (state) => ({
-    //     modal: isModal(state)
-    // })
+    (state) => ({
+        breadCrumb: state.breadCrumb
+    })
 )(App);

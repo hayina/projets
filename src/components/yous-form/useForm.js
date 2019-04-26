@@ -54,7 +54,7 @@ export const setFirstTimeValidation = (value) => ({ type: 'FIRST_TIME_VALIDATION
 export const FormContext = createContext({});
 
 
-export const FormProvider = ({ intialValues, rules, children }) => {
+export const FormProvider = ({ intialValues, rules, children, submitOnChange=false }) => {
 
     const [state, dispatchForm] = useReducer(reducer, { ...initialState, values: intialValues })
 
@@ -72,14 +72,16 @@ export const FormProvider = ({ intialValues, rules, children }) => {
 
     const validate = (field, validators, value) => {
 
-        if ( validators === undefined ) return
+        if ( validators === undefined ) return undefined
 
         for (let rule of validators) {
             let error = rule(value)
             // console.log(field, error)
             dispatchForm(setErrors(field, error))
-            if( error !== undefined ) break
+            if( error !== undefined ) return error
         }
+
+        return undefined
     }
 
     
@@ -112,9 +114,14 @@ export const FormProvider = ({ intialValues, rules, children }) => {
     }
 
     const onChange = (field, value) => {
+        
         dispatchForm(setValues(field, value))
         dispatchForm(setDirty(field, true))
         validate(field, rules[field], value)
+
+        if(submitOnChange) {
+
+        }
     }
 
     const onFocus = (field) => {

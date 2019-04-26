@@ -9,6 +9,7 @@ import DeleteModal from './DeleteModal';
 import SocieteForm from '../marches/SocieteForm';
 import TauxForm from '../marches/TauxForm';
 import OsForm from '../marches/OsForm';
+import DecompteForm from '../marches/DecompteForm';
 
 
 export const modalTypes = {
@@ -20,6 +21,7 @@ export const modalTypes = {
     ADD_STE: 'ADD_STE',
     ADD_TAUX: 'ADD_TAUX',
     ADD_OS: 'ADD_OS',
+    ADD_DECOMPTE: 'ADD_DECOMPTE',
 }
 
 const MODAL_COMPONENTS = {
@@ -31,6 +33,7 @@ const MODAL_COMPONENTS = {
     [modalTypes.ADD_STE]: SocieteForm,
     [modalTypes.ADD_TAUX]: TauxForm,
     [modalTypes.ADD_OS]: OsForm,
+    [modalTypes.ADD_DECOMPTE]: DecompteForm,
 }
 
 const ModalRoot = ({ modalType, modalProps }) => {

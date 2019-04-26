@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { showModal, hideModal } from '../../actions';
+import { showModal, hideModal, setBreadCrumb } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot';
 import useAjaxFetch from '../hooks/useAjaxFetch'
 
@@ -14,6 +14,9 @@ let UserList = ({ dispatch }) => {
     const [users, setUsers] = useState([])
 
     useEffect(() => {
+
+        dispatch(setBreadCrumb("Gestion des utilisateurs"))
+
 
         useAjaxFetch({
             url: 'users',

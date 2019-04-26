@@ -3,6 +3,7 @@
 
 body {
     font-family: 'Google Sans',sans-serif;
+    overflow-y:scroll;
 }
 
 textarea {

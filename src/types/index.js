@@ -35,6 +35,9 @@ const types = {
     ///// USERS
     
     ADD_USER: `${users} ADD`,
+
+
+    SET_BREAD_CRUMB: `SET_BREAD_CRUMB`,
 }
 
 

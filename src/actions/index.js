@@ -8,8 +8,9 @@ import types from '../types'
 //     payload: { modalName, modalToggle }
 // })
 
-export const showModal = (modalType, modalProps) => ({ type: types.SHOW_MODAL, modalType, modalProps })
+export const setBreadCrumb = (payload) => ({ type: types.SET_BREAD_CRUMB, payload })
 
+export const showModal = (modalType, modalProps) => ({ type: types.SHOW_MODAL, modalType, modalProps })
 export const hideModal = () => ({ type: types.HIDE_MODAL })
 
 

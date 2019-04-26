@@ -14,14 +14,14 @@ const initialState = {
         //     label: 'Rachid Ech-choudany'
         // }
     ],
-    projets: [],
+    // projets: [],
 }
 
-export const getExtPartners = (state) => state.externalForms.partners;
-export const getLocalisations = (state) => state.externalForms.localisations;
 export const getPointsFocaux = (state) => state.externalForms.pointsFocaux;
-export const getUsers = (state) => state.externalForms.users;
-export const getProjets = (state) => state.externalForms.projets;
+// export const getExtPartners = (state) => state.externalForms.partners;
+// export const getLocalisations = (state) => state.externalForms.localisations;
+// export const getUsers = (state) => state.externalForms.users;
+// export const getProjets = (state) => state.externalForms.projets;
 
 export const externalForms = (state = initialState, action) => {
 
@@ -77,15 +77,15 @@ export const externalForms = (state = initialState, action) => {
 }
 
 
-export const getInitialFormValues = (state) => state.initialFormValues;
+// export const getInitialFormValues = (state) => state.initialFormValues;
 
-export const initialFormValues = (state = {}, action) => {
+// export const initialFormValues = (state = {}, action) => {
 
-    if (action.type === types.EDIT_FORM_VALUES) {
-        // let newState = { ...state, ...action.initialValues }
-        // console.log('REDUCER initialFormValues --->', newState)
-        return action.initialValues;
-    }
+//     if (action.type === types.EDIT_FORM_VALUES) {
+//         // let newState = { ...state, ...action.initialValues }
+//         // console.log('REDUCER initialFormValues --->', newState)
+//         return action.initialValues;
+//     }
 
-    return state;
-}
+//     return state;
+// }

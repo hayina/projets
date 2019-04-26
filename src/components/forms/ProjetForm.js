@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Field, Fields, reduxForm, formValueSelector, change } from 'redux-form'
 
-import { showModal, arraySetting, initFormValues, hideModal, arrayDeletingByIndex } from '../../actions';
+import { showModal, arraySetting, initFormValues, hideModal, arrayDeletingByIndex, setBreadCrumb } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot'
 import { required, number, emptyArray } from './validator'
 import { TextField, SelectField, SimpleField, AutoCompleteField, ToggleField, EmptyField } from './form-fields/fields'
-import { getPointsFocaux, getInitialFormValues } from '../../reducers/externalForms';
+import { getPointsFocaux } from '../../reducers/externalForms';
+import { getInitialFormValues } from '../../reducers';
 import SimpleList from './SimpleList';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 import { ApiError } from '../helpers';
@@ -51,10 +52,13 @@ let ProjetForm = ({ handleSubmit, isConvention, pointsFocaux, isMaitreOuvrageDel
 
     const initForm = () => {
         dispatch(initFormValues({}))
-        dispatch(arraySetting('localisations', []))
+        // dispatch(arraySetting('localisations', []))
     }
 
+
     useEffect(() => {
+
+        dispatch(setBreadCrumb("Ajouter un projet"))
 
         // BOTH MODES
         initForm()

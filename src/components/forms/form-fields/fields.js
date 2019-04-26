@@ -84,7 +84,7 @@ export const SimpleField2 = ({ children, label, error }) => (
 
 export const TextField = (props) => {
 
-    const { input, meta, label, fieldType } = props;
+    const { input, meta, label, fieldType='input' } = props;
     // console.log('TextField', props);
 
     const fieldProps = {
@@ -177,16 +177,18 @@ export const RadioList = ({options, input, meta }) => (
 
         const inputID = uniqueHtmlID();
 
-        return (<div className="form-check" key={option.label}>
-            <input id={inputID} className="form-check-input" type="radio"
-                value={option.value}
-                checked={option.value === input.value}
-                onChange={(e) => input.onChange(option.value)}
-            />
-            <label htmlFor={inputID} className="radio-label form-check-label">
-                {option.label}
-            </label>
-        </div>)
+        return (
+            <div className="form-check" key={option.label}>
+                <input id={inputID} className="form-check-input" type="radio"
+                    value={option.value}
+                    checked={option.value === input.value}
+                    onChange={(e) => input.onChange(option.value)}
+                />
+                <label htmlFor={inputID} className="radio-label form-check-label">
+                    {option.label}
+                </label>
+            </div>
+        )
     })
 )
     
@@ -439,12 +441,16 @@ export const EmptyField = ({ input, meta, arrayValues }) => {
 
 export const DateField = ({ input, meta, label }) => {
     
-    const dateValue = input.value ? input.value : new Date()
+    const dateValue = input.value 
+    ? input.value : null
+    // ? input.value : new Date()
+
 
     return (
         <SimpleField label={label} meta={meta} >
             <DatePicker
-                // dateFormat="dd/mm/yyyy"
+                className="datepicker form-control"
+                dateFormat="dd/MM/yyyy"
                 selected={dateValue}
                 onChange={input.onChange}
             />

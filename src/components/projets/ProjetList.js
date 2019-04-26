@@ -10,7 +10,7 @@ import useAjaxFetch from '../hooks/useAjaxFetch';
 
 import './projetList.css'
 import { modalTypes } from '../modals/ModalRoot';
-import { showModal } from '../../actions';
+import { showModal, setBreadCrumb } from '../../actions';
 import { getProjets } from '../../reducers/externalForms';
 import { CretereItem } from './components';
 import SearchBar from './SearchBar';
@@ -24,6 +24,7 @@ let ProjetList = ({dispatch}) => {
     const [projets, setProjets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(false);
+    const [filters, setFilters] = useState({});
 
 
     function deleteProjet(idProjet, index) {
@@ -39,18 +40,26 @@ let ProjetList = ({dispatch}) => {
     }
 
     useEffect(() => {
+        dispatch(setBreadCrumb("Rechercher les projets"))
+    }, [])
+
+    useEffect(() => {
+
+        console.log('filters', filters)
+
+        if( Object.keys(filters).length === 0 ) return
 
         let cancel = false
         setLoading(true)
+        setErrors(false)
 
         useAjaxFetch({
             url: 'projets',
+            params: filters,
             success: (data) => {
-                setTimeout(() => {
-                    if(cancel) return
-                    setProjets(data)
-                    setLoading(false)
-                },600)
+                if(cancel) return
+                setProjets(data)
+                setLoading(false)
             },
             error: (err) => {
                 if(cancel) return
@@ -60,7 +69,7 @@ let ProjetList = ({dispatch}) => {
             }
         })
         return () => cancel = true
-    }, [])
+    }, [filters])
 
     const dropDownEl = useRef(null);
     useClickOutside(dropDownEl, () => {
@@ -151,7 +160,7 @@ let ProjetList = ({dispatch}) => {
 
     return (
         <div className="projets-wr">
-            <SearchBar />
+            <SearchBar setFilters={setFilters}/>
             { loading ? renderLoading() : ( !errors ? renderResultsList() : renderErrors() ) }
         </div>
     )

@@ -46,7 +46,7 @@ let OsForm = ({ dispatch, handleSubmit, editMode, index }) => {
                         options={ [{value:1, label: 'Reprise'}, {value:2, label: 'Arrêt'}] }
                     />
                     <Field
-                        name="dateOs" component={DateField} label="Date Taux" fieldType="input" validate={[required]}
+                        name="dateOs" component={DateField} label="Date Taux" validate={[required]}
                     />
                     <Field
                         name="commentaire" component={TextField} label="Commentaire" fieldType="textarea" 

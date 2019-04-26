@@ -11,8 +11,6 @@ export const number = value =>
     value && isNaN(Number(value)) ? 'Ce champs doit être un nombre' : undefined
 
 export const integer = value => {
-
-    console.log(value, isNaN(parseInt(value, 10)))
     return value && isNaN(parseInt(value, 10))
     ? 'Ce champs doit être un nombre naturel' : undefined
 }

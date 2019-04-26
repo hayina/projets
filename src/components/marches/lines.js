@@ -66,7 +66,7 @@ let TauxLine = ({ dispatch, input, meta : { touched, error } }) => {
                     {   
                         taux.map(({ valueTaux, dateTaux, commentaire }, i) => (
                         <div className="partner-item" key={i}>
-                            <SimpleListItem item={{ label: `${valueTaux}% : ${formatDate(dateTaux)}` }} 
+                            <SimpleListItem item={{ label: `${formatDate(dateTaux)} : ${valueTaux}%` }} 
                                 onDelete={ () => dispatch(arrayRemove(marcheFormName, 'taux', i)) } 
                                 onEdit={() => {
 
@@ -146,6 +146,59 @@ let OrdreServiceLine = ({ dispatch, input, meta : { touched, error } }) => {
 
 OrdreServiceLine = connect()(OrdreServiceLine)
 
+
+///////////////// DECOMPTES
+
+let DecompteLine = ({ dispatch, input, meta : { touched, error } }) => {
+
+    let decomptes = input.value ? input.value:[]
+
+    return (
+        <React.Fragment>
+            <SimpleField label="Décomptes">
+                <input type="button" className="btn btn-info show-modal" 
+                    value={ `Ajouter`}
+                    style={{ float: 'right' }}
+                    onClick={
+                        () => {
+                            dispatch(showModal(modalTypes.ADD_DECOMPTE, {}
+                            ))
+                        }
+                    }
+                />
+            </SimpleField>
+
+            {   
+                decomptes && 
+                <div className="form-group">
+                    {   
+                        decomptes.map(({ montant, dateDec, commentaire }, i) => (
+                        <div className="partner-item" key={i}>
+                            <SimpleListItem item={{ label: `${formatDate(dateDec)} : ${Number(montant).toLocaleString()} DH` }} 
+                                onDelete={ () => dispatch(arrayRemove(marcheFormName, 'decomptes', i)) } 
+                                onEdit={() => {
+
+                                    dispatch(showModal(modalTypes.ADD_DECOMPTE, {
+                                        editMode: true, index: i, 
+                                        initialValues: decomptes[i], 
+                                        // partners: partnersValues
+                                    }))
+                                }}
+                            />
+                            <div className="taux-com">{ commentaire }</div>
+                        </div>
+                    ))}
+                </div>
+            }
+
+            { touched && error &&  <div className="error-feedback">{ error }</div> }
+
+        </React.Fragment>
+    )
+}
+
+DecompteLine = connect()(DecompteLine)
+
 //////// EXPORT
 
-export { SocieteLine, TauxLine, OrdreServiceLine }
+export { SocieteLine, TauxLine, OrdreServiceLine, DecompteLine }
