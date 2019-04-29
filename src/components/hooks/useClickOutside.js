@@ -1,21 +1,21 @@
 import { useEffect } from 'react';
 
 
-const useClickOutside = (nodeElement, f, deps=[]) => {
+
+const useClickOutside = (nodeElement, f) => {
 
     
     function handleClickOutside(event) {
-        
-        if ( event.which === 1 && nodeElement.current && !nodeElement.current.contains(event.target)) {
-            // console.log('Click Outside DETECTED !!!', event.target, event.which)
+        if ( event.which === 1 && !nodeElement.current.contains(event.target)) {
             f();
         }
     }
 
+
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () =>  document.removeEventListener('mousedown', handleClickOutside);
-    }, deps);
+    }, []);
     
 } 
 

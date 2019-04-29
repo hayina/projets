@@ -44,6 +44,8 @@ let ProjetList = ({dispatch}) => {
     }, [])
 
     useEffect(() => {
+        
+    
 
         console.log('filters', filters)
 
@@ -71,11 +73,24 @@ let ProjetList = ({dispatch}) => {
         return () => cancel = true
     }, [filters])
 
-    const dropDownEl = useRef(null);
-    useClickOutside(dropDownEl, () => {
-        console.log('show-drop', dropDownEl.current.classList)
-        dropDownEl.current.classList.remove('show-drop')
-    });
+
+
+    function clickOutSide(e) {
+
+        if(e.which !== 1) return
+
+        [ ...document.querySelectorAll("._3_bar.show-drop") ].forEach((node) => {
+            if(!node.contains(e.target)) {
+                node.classList.remove('show-drop')
+            }
+        })
+    }
+
+    useEffect(() => {
+        document.addEventListener('mousedown', clickOutSide);
+        return () =>  document.removeEventListener('mousedown', clickOutSide);
+    }, []);
+
 
     const renderResultsList = () => (
 
@@ -93,7 +108,7 @@ let ProjetList = ({dispatch}) => {
             return (
                 <div className="projet-item box-sh box-br no_dc" key={projet.id}>
 
-                    <span id="_3_bar" className="ct_pr ripple" ref={dropDownEl} onClick={(e) => {
+                    <span className="_3_bar ct_pr ripple" onClick={(e) => {
                         e.currentTarget.classList.toggle('show-drop')
                     }}>
                         <div className="_drop-down">
@@ -102,9 +117,7 @@ let ProjetList = ({dispatch}) => {
                                 () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
                                         onDanger: () => deleteProjet(projet.id, index)  ,
                                         dangerText: ["Voulez vous vraiment supprimer le projet ", 
-                                        <strong>{projet.intitule}</strong>,  " ?"]
-                                        // dangerText: `Voulez vous vraiment sûr supprimer le projet 
-                                        // ${projet.intitule} ?`
+                                        <strong>{projet.intitule}</strong>, " ?"]
                                 }))
                             }>Supprimer projet</a>
                             <Link to={`/marches/edit/${1}`} className="_dr-item">Editer marchés</Link>
