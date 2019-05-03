@@ -14,14 +14,16 @@ export const osFormName = 'osForm'
 
 
 
-let OsForm = ({ dispatch, handleSubmit, editMode, index }) => {
+let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes }) => {
 
-    console.log('TauxForm', editMode, index)
+    console.log('osTypes', osTypes)
 
+    // useEffect(() => {
+    //     fetchOsTypes()
+    // }, [osTypes])
 
     const onSubmit = (formValues) => {
 
-        console.log(formValues, editMode, index)
         if ( !editMode ) {
             dispatch(arrayPush(marcheFormName, 'os', formValues))
         } else {
@@ -43,10 +45,10 @@ let OsForm = ({ dispatch, handleSubmit, editMode, index }) => {
                 <div className={`form-content`}>
                     <Field
                         name="typeOs" component={RadioField} validate={[required]}
-                        options={ [{value:1, label: 'Reprise'}, {value:2, label: 'Arrêt'}] }
+                        options={ osTypes }
                     />
                     <Field
-                        name="dateOs" component={DateField} label="Date Taux" validate={[required]}
+                        name="dateOs" component={DateField} label="Date de l'Ordre de Service" validate={[required]}
                     />
                     <Field
                         name="commentaire" component={TextField} label="Commentaire" fieldType="textarea" 

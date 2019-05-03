@@ -16,6 +16,7 @@ import { CretereItem } from './components';
 import SearchBar from './SearchBar';
 import Percentage from './Percentage';
 import useClickOutside from '../hooks/useClickOutside';
+import DropDown from './DropDown';
 
 let ProjetList = ({dispatch}) => {
 
@@ -75,21 +76,7 @@ let ProjetList = ({dispatch}) => {
 
 
 
-    function clickOutSide(e) {
 
-        if(e.which !== 1) return
-
-        [ ...document.querySelectorAll("._3_bar.show-drop") ].forEach((node) => {
-            if(!node.contains(e.target)) {
-                node.classList.remove('show-drop')
-            }
-        })
-    }
-
-    useEffect(() => {
-        document.addEventListener('mousedown', clickOutSide);
-        return () =>  document.removeEventListener('mousedown', clickOutSide);
-    }, []);
 
 
     const renderResultsList = () => (
@@ -105,29 +92,13 @@ let ProjetList = ({dispatch}) => {
 
         projets.map((projet, index) => {
 
+         
+
             return (
                 <div className="projet-item box-sh box-br no_dc" key={projet.id}>
 
-                    <span className="_3_bar ct_pr ripple" onClick={(e) => {
-                        e.currentTarget.classList.toggle('show-drop')
-                    }}>
-                        <div className="_drop-down">
-                            <Link to={`/projets/edit/${projet.id}`} className="_dr-item">Editer projet</Link>
-                            <a href="javascript:void(0)" className="_dr-item" onClick={ 
-                                () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
-                                        onDanger: () => deleteProjet(projet.id, index)  ,
-                                        dangerText: ["Voulez vous vraiment supprimer le projet ", 
-                                        <strong>{projet.intitule}</strong>, " ?"]
-                                }))
-                            }>Supprimer projet</a>
-                            <Link to={`/marches/edit/${1}`} className="_dr-item">Editer marchés</Link>
-                        </div>
-                        <i className="fas fa-ellipsis-v dp-t"></i>
-                        {/* <svg class="j2dfb39" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation">
-                            <path fill="none" d="M0 0h24v24H0z"></path>
-                            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
-                        </svg> */}
-                    </span>
+                    <DropDown { ...{ projet, deleteProjet, index } } />
+
                     <div className="projet-label"><strong>{index+1}.</strong> {projet.intitule}</div>
                     {/* <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div> */}
 
@@ -137,8 +108,8 @@ let ProjetList = ({dispatch}) => {
                             <div className="projet-loc">
                                 <i className="_fa_lpr fas fa-map-marker-alt"></i>
                                 { 
-                                    projet.localisations.map((loc, index) => {
-                                        return <span className="loc-label" key={index}>{loc}</span>
+                                    Object.keys(projet.localisations).map((key) => {
+                                        return <span className="loc-label" key={key}>{projet.localisations[key]}</span>
                                     })
                                 }
                                 

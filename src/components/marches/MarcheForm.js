@@ -14,16 +14,19 @@ import DatePicker from '../forms/DatePicker';
 
 export const marcheFormName = 'marcheForm'
 
-let MarcheForm = ({ dispatch, handleSubmit, match }) => {
+let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
 
     const [submitting, setSubmitting] = useState(false);
     const [errors, setErrors] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
 
     const [marcheTypes, setMarcheTypes] = useState([]);
+    const [marcheEtats, setMarcheEtats] = useState([]);
+    const [osTypes, setOsTypes] = useState([])
 
     // get id projet from params to determine if we are in edit mode
     const { idMarche } = match.params
+    const { idProjet } = match.params
 
     const initForm = () => {
         dispatch(initFormValues({}))
@@ -31,6 +34,8 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
     }
 
     useEffect(() => {
+
+        
 
         dispatch(setBreadCrumb("Ajouter un marché"))
 
@@ -42,26 +47,53 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
             success: (data) => setMarcheTypes(data),
             error: (err) => setErrors(true)
         })
+        useAjaxFetch({
+            url: '/marcheEtats',
+            success: (data) => setMarcheEtats(data),
+            error: (err) => setErrors(true)
+        })
+
+        fetchOsTypes();
 
         if(idMarche) {
+            setEditLoading(true)
+            useAjaxFetch({
+                url: `/marches/edit/${idMarche}`,
+                success: (data) => {
+                    console.log('EDIT DATA ->', data)
+                    setEditLoading(false)
+                    dispatch(initFormValues(data))
 
+                },
+                error: (err) => setErrors(true)
+            })
         }
 
     }, []);
 
+    const fetchOsTypes = () => {
+        useAjaxFetch({
+            url: '/osTypes',
+            success: (data) => setOsTypes(data),
+            error: (err) => setErrors(true)
+        })
+    }
+
 
     const onSubmit = (formValues) => {
 
-        console.log(formValues)
+        // console.log(formValues)
 
         setSubmitting(true)
         setErrors(false)
 
-        console.log(formValues)
+        // console.log(formValues)
         // return false
         let apiValues = { 
             ...formValues,
+            ...(formValues.societes !== undefined && {societes: formValues.societes.map((ste) => ste.value)}),
             idMarche,
+            idProjet,
         }
 
         
@@ -81,7 +113,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
             success: () => {
                 // initForm()
                 setSubmitting(false)
-                // history.push("/projets")
+                history.push("/projets")
             },
             error: (err) => {
                 setErrors(true)
@@ -104,32 +136,34 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
                     name="marcheType" component={SelectField} label="Type de marché" options={marcheTypes} 
                     // validate={[required]}
                 />
+                <Field
+                    name="marcheEtat" component={SelectField} label="Etat du marché" options={marcheEtats} 
+                    // validate={[required]}
+                />
 
                 <Field
-                    name="intitule" component={TextField} label="Intitulé" fieldType="textarea" validate={[required]}
+                    name="intitule" component={TextField} label="Intitulé" fieldType="textarea" 
+                    validate={[required]}
                 />
                 
                 <Field
-                    name="delai" component={TextField} label="Délai exécution (Mois)" fieldType="input" validate={[required, integer]}
+                    name="delai" component={TextField} label="Délai exécution (Mois)" fieldType="input" 
+                    validate={[required, integer]}
                 />
                 
                 <Field
-                    name="montant" component={TextField} label="Montant" fieldType="input" validate={[required, number]}
+                    name="montant" component={TextField} label="Montant" fieldType="input" 
+                    validate={[required, number]}
                 />
-
- 
 
                 <div className="sep-line"></div>
-                <Field name="societe" component={SocieteLine} />
+
+                <Field name="societes" component={SocieteLine} />
 
                 <div className="sep-line"></div>  
                       
-                <Field
-                    name="dateStart" component={DateField} label="Date Commencement"
-                />
-
-
-                <Field name="os" component={OrdreServiceLine} />
+                <Field name="dateStart" component={DateField} label="Date Commencement" />
+                <Field name="os" component={OrdreServiceLine} osTypes={osTypes} />
 
                 <div className="sep-line"></div>
 
@@ -141,12 +175,8 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
 
                 <div className="sep-line"></div>
 
-                <Field
-                    name="dateReceptionProv" component={DateField} label="Date Réception Provisoire" 
-                />
-                <Field
-                    name="dateReceptionDef" component={DateField} label="Date Réception Définitive" 
-                />
+                <Field name="dateReceptionProv" component={DateField} label="Date Réception Provisoire" />
+                <Field name="dateReceptionDef" component={DateField} label="Date Réception Définitive" />
 
             </div>
 
@@ -172,11 +202,11 @@ const selector = formValueSelector(marcheFormName);
 
 export default connect(
     (state) => ({
-        initialValues: {
-            intitule: 'marche 3',
-            delai: 15,
-            montant: 8000000,
-        },
-        // initialValues: getInitialFormValues(state),
+        // initialValues: {
+        //     intitule: 'marche 3',
+        //     delai: 15,
+        //     montant: 8000000,
+        // },
+        initialValues: getInitialFormValues(state),
     }),
 )(MarcheForm);

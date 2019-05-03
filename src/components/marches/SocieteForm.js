@@ -34,7 +34,7 @@ let SocieteForm = ({ dispatch, handleSubmit }) => {
             body: JSON.stringify(formValues),
             success: (idSte) => {
                 setSubmitting(false)
-                dispatch(change(marcheFormName, 'societe', { value: idSte, label: formValues.name }))
+                dispatch(change(marcheFormName, 'societes', { value: idSte, label: formValues.name }))
                 dispatch(hideModal())
             },
             error: (err) => {

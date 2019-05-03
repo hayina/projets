@@ -41,7 +41,7 @@ const App = ({breadCrumb}) => {
                         <Route path="/projets/new" exact component={ProjetForm} />
                         <Route path="/projets/edit/:idProjet" exact component={ProjetForm} />
                         <Route path="/projets" exact component={ProjetList} />
-                        <Route path="/marches/new" exact component={MarcheForm} />
+                        <Route path="/marches/new/:idProjet" exact component={MarcheForm} />
                         <Route path="/marches/edit/:idMarche" exact component={MarcheForm} />
                         <Route path="/users" exact component={UserList} />
                     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { change, arrayRemove } from 'redux-form'
+import { change, arrayRemove, arrayPush } from 'redux-form'
 
 import { SimpleField } from '../forms/form-fields/fields';
 import AutoComplete from '../forms/form-fields/autocomplete/AutoComplete';
@@ -10,27 +10,48 @@ import { modalTypes } from '../modals/ModalRoot';
 
 import { marcheFormName } from './MarcheForm'
 import { formatDate } from '../../helpers';
+import useAjaxFetch from '../hooks/useAjaxFetch';
 
 
 ///////////////// SOCIETE
 
 let SocieteLine = ({ label, input, meta, dispatch }) => {
 
+    const [steGroups, setSteGroups] = useState(false);
+
+    let societies = input.value || []
+
     return (
         <SimpleField label="Société Titulaire" meta={meta} >
 
-            { input.value ?
-                <SimpleListItem item={input.value} 
-                    onDelete={ () => dispatch(change(marcheFormName, 'societe', null)) }
-                />
-                :
+
+            { 
+                societies.map((ste, i) => (
+                    <SimpleListItem item={ste} key={ste.value}
+                        onDelete={ () => {
+                            dispatch(arrayRemove(marcheFormName, `societes`, i)) 
+                        }}
+                    />
+                ))
+            }
+            {
+                ( societies.length === 0 || steGroups ) &&
                 <AutoComplete url={`/societes`} 
-                    onSelect={ (suggestion) => dispatch(change(marcheFormName, 'societe', suggestion)) }
+                    onSelect={ (suggestion) => {
+                        dispatch(arrayPush(marcheFormName, 'societes', suggestion))
+                        setSteGroups(false)
+                    }}
                 /> 
             }
 
             <input type="button" className={`btn btn-info show-modal`} 
                 value={`Nouvelle Société`} onClick={() => dispatch(showModal(modalTypes.ADD_STE, {}))} />
+
+            {   societies.length > 0 &&
+                <span className="add-ste l_ho" onClick={ () => setSteGroups(true) }>
+                    ajouter regroupement
+                </span>
+            }
 
         </SimpleField>
     )
@@ -66,7 +87,7 @@ let TauxLine = ({ dispatch, input, meta : { touched, error } }) => {
                     {   
                         taux.map(({ valueTaux, dateTaux, commentaire }, i) => (
                         <div className="partner-item" key={i}>
-                            <SimpleListItem item={{ label: `${formatDate(dateTaux)} : ${valueTaux}%` }} 
+                            <SimpleListItem item={{ label: `${formatDate(new Date(dateTaux))} : ${valueTaux}%` }} 
                                 onDelete={ () => dispatch(arrayRemove(marcheFormName, 'taux', i)) } 
                                 onEdit={() => {
 
@@ -96,9 +117,14 @@ TauxLine = connect()(TauxLine)
 
 ///////////////// ORDRE SERVICE
 
-let OrdreServiceLine = ({ dispatch, input, meta : { touched, error } }) => {
+let OrdreServiceLine = ({ osTypes, dispatch, input, meta : { touched, error } }) => {
 
-    let os = input.value ? input.value:[]
+    let os = input.value || []
+
+    
+    // console.log(osTypes)
+
+    const modalProps = { osTypes }
 
     return (
         <React.Fragment>
@@ -106,12 +132,7 @@ let OrdreServiceLine = ({ dispatch, input, meta : { touched, error } }) => {
                 <input type="button" className="btn btn-info show-modal" 
                     value={ `Ajouter`}
                     style={{ float: 'right' }}
-                    onClick={
-                        () => {
-                            dispatch(showModal(modalTypes.ADD_OS, {}
-                            ))
-                        }
-                    }
+                    onClick={ () => dispatch(showModal(modalTypes.ADD_OS, { ...modalProps })) }
                 />
             </SimpleField>
 
@@ -121,14 +142,15 @@ let OrdreServiceLine = ({ dispatch, input, meta : { touched, error } }) => {
                     {   
                         os.map(({ typeOs, dateOs, commentaire }, i) => (
                         <div className="partner-item" key={i}>
-                            <SimpleListItem item={{ label: `${formatDate(dateOs)} : [${ typeOs ===1 ? 'Reprise' : 'Arrêt'  }]` }} 
+                            <SimpleListItem item={{ label: `${formatDate(new Date(dateOs))} : [${ typeOs ===1 ? 'Reprise' : 'Arrêt'  }]` }} 
                                 onDelete={ () => dispatch(arrayRemove(marcheFormName, 'os', i)) } 
                                 onEdit={() => {
 
                                     dispatch(showModal(modalTypes.ADD_OS, {
-                                        editMode: true, index: i, 
+                                        ...modalProps,
+                                        editMode: true, 
+                                        index: i, 
                                         initialValues: os[i], 
-                                        // partners: partnersValues
                                     }))
                                 }}
                             />
@@ -174,7 +196,7 @@ let DecompteLine = ({ dispatch, input, meta : { touched, error } }) => {
                     {   
                         decomptes.map(({ montant, dateDec, commentaire }, i) => (
                         <div className="partner-item" key={i}>
-                            <SimpleListItem item={{ label: `${formatDate(dateDec)} : ${Number(montant).toLocaleString()} DH` }} 
+                            <SimpleListItem item={{ label: `${formatDate(new Date(dateDec))} : ${Number(montant).toLocaleString()} DH` }} 
                                 onDelete={ () => dispatch(arrayRemove(marcheFormName, 'decomptes', i)) } 
                                 onEdit={() => {
 

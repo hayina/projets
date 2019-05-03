@@ -40,3 +40,11 @@
 #societeForm .form-content > .simple-field-wr:last-of-type {
     margin-bottom: 0px;
 }
+
+.add-ste {
+    color: #1384ff;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: right;
+}

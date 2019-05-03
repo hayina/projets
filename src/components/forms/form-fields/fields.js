@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import AutoComplete from './autocomplete/AutoComplete';
 import SelectedAC from './SelectedAC'
 import { SimpleListItem } from '../SimpleList';
-import { uniqueID, uniqueHtmlID } from '../../../helpers';
+import { uniqueID, uniqueHtmlID, formatDate } from '../../../helpers';
 
 ////////////// helpers
 
@@ -441,9 +441,16 @@ export const EmptyField = ({ input, meta, arrayValues }) => {
 
 export const DateField = ({ input, meta, label }) => {
     
-    const dateValue = input.value 
-    ? input.value : null
+
+    let dateValue = input.value || null
+    // ? input.value : null
     // ? input.value : new Date()
+
+    if(dateValue != null) {
+        dateValue = new Date(dateValue)
+    }
+
+    console.log(dateValue)
 
 
     return (
@@ -452,7 +459,12 @@ export const DateField = ({ input, meta, label }) => {
                 className="datepicker form-control"
                 dateFormat="dd/MM/yyyy"
                 selected={dateValue}
-                onChange={input.onChange}
+                onChange={ (e) => {
+                    input.onChange(e) 
+                    console.log(e)
+                    // input.onChange(formatDate(e.target.value)) 
+                }}
+                // onChange={ input.onChange }
             />
         </SimpleField>
     )
