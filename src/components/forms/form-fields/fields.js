@@ -99,7 +99,7 @@ export const TextField = (props) => {
     }
 
     else if (fieldType === 'textarea') {
-        renderTextField = <textarea {...fieldProps} />
+        renderTextField = <textarea {...fieldProps} rows="3" />
     }
     
     return (
@@ -450,7 +450,7 @@ export const DateField = ({ input, meta, label }) => {
         dateValue = new Date(dateValue)
     }
 
-    console.log(dateValue)
+    // console.log(dateValue)
 
 
     return (

@@ -77,7 +77,7 @@ export const CheckTree = ({ items, selection, setSelection }) => {
 
                     <label className={`checkbox-label form-check-label ${checkClass} ${checkedInState ? 'bold-label' : ''}`}
                         htmlFor={`${node.path}`}>
-                        {node.label} 
+                        {node.label.toLowerCase()} 
                         {/* - {node.path} */}
                     </label>
 
@@ -118,7 +118,7 @@ export const NestedTree = ({items, onDelete}) =>
                     className="fa fa-times delete-item-list" 
                     onClick={ () => onDelete(item.path) }
                 />
-                <span className="item-label i-color">{item.label}</span>
+                <span className="item-label i-color">{item.label.toLowerCase()}</span>
             </span>
 
             { item.children && item.children.length > 0 && <NestedTree items={item.children} onDelete={onDelete} /> }

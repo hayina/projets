@@ -24,6 +24,8 @@ let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes }) => {
 
     const onSubmit = (formValues) => {
 
+        formValues.typeOs = osTypes.find(ot => ot.value === formValues.typeOs)
+
         if ( !editMode ) {
             dispatch(arrayPush(marcheFormName, 'os', formValues))
         } else {

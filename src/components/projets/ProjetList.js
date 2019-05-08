@@ -99,7 +99,11 @@ let ProjetList = ({dispatch}) => {
 
                     <DropDown { ...{ projet, deleteProjet, index } } />
 
-                    <div className="projet-label"><strong>{index+1}.</strong> {projet.intitule}</div>
+                    <div className="projet-label">
+                        <Link to={`/projets/detail/${projet.id}`} >
+                            <strong>{index+1}.</strong> {projet.intitule}
+                        </Link>
+                    </div>
                     {/* <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div> */}
 
                     <div className="proj-infos-wr">                    

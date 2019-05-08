@@ -1,0 +1,254 @@
+#pr-detail-wr::before {
+    border-top: 6px solid #007bff;
+    content: '';
+    display: block;
+}
+
+#pr-detail-wr {
+
+    
+
+    padding: 0px;
+    padding-bottom: 20px;
+} 
+
+#pr-detail-wr .tabs-wr {
+
+    --tab-border: 1px solid #b3b3b3;
+    --tab-radius: 3px;
+    --tab-border-size: 6px;
+    display: flex;
+    justify-content: center;
+    /* margin-bottom: 20px; */
+} 
+
+#pr-detail-wr .tab-item {
+    padding: 6px 10px;
+    /* border: var(--tab-border); */
+    margin: 0px 2px;
+    border-left: none;
+    cursor: pointer;
+    background-color: #007bff;
+    background-color: #0062cc;
+    color: #eef4fc;
+    border-left: var(--tab-border-size) solid transparent;
+    border-right: var(--tab-border-size) solid transparent;
+    border-radius: 2px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    line-height: 1;
+    
+} 
+
+#pr-detail-wr .tab-item:hover {
+    color: white;
+    /* color: #eef4fc; */
+    background-color: #007bffe6;
+    /* border-top: 4px solid #ffc107; */
+
+} 
+
+#pr-detail-wr .tab-item.active {
+    border-left: var(--tab-border-size) solid #ffc107;
+    background-color: #007bffe6;
+    background-color: #007bff;
+    color: white;
+} 
+
+#pr-detail-wr .tab-item:first-child {
+    /* border-left: var(--tab-border);
+    border-top-left-radius: var(--tab-radius);
+    border-bottom-left-radius: var(--tab-radius); */
+} 
+
+#pr-detail-wr .tab-item:last-child {
+    /* border-top-right-radius: var(--tab-radius);
+    border-bottom-right-radius: var(--tab-radius); */
+} 
+
+#pr-detail-wr .l-item {
+    /* margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ced4da; */
+} 
+
+#pr-detail-wr .line-data .l-item:last-child {
+    
+} 
+
+#pr-detail-wr .prj-info-wr {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+} 
+
+#pr-detail-wr .l-item > span {
+    display: block;
+} 
+
+#pr-detail-wr .l-date-w {
+
+} 
+
+#pr-detail-wr .l-name {
+
+} 
+
+#pr-detail-wr .fa-arrow-circle-right {
+    color: #216ba5;
+} 
+
+#pr-detail-wr .fa-calendar-alt {
+    color: #216ba5;
+    margin-left: 0px;
+} 
+
+#pr-detail-wr .l-date {
+    color: #007bff;
+} 
+#pr-detail-wr .l-date:after {
+    content: ':';
+    margin: 0px 4px;
+} 
+
+#pr-detail-wr .l-com {
+
+} 
+
+#pr-detail-wr .big-header {
+    font-weight: 600;
+    margin: 20px auto 10px;
+    width: 80%;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: underline;
+} 
+
+#pr-detail-wr .mh-wr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 0px auto;
+    margin-bottom: 20px;
+} 
+#pr-detail-wr ._mh_2 {
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    /* text-decoration: underline; */
+    width: 30%;
+} 
+
+
+#pr-detail-wr .line-info {
+    display: flex;
+    margin-bottom: 14px;
+}
+#pr-detail-wr .line-label {
+    width: 30%;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: underline;
+    margin-bottom: 0px;
+    text-align: right;
+}
+
+#pr-detail-wr .line-label:after {
+    content: ':';
+    margin-left: 4px;
+    margin-right: 10px;
+    text-decoration: none;
+    display: inline-block;
+
+}
+
+
+
+#pr-detail-wr .line-data {
+    font-size: 15px;
+    color: #2f3030;
+    width: 68%;
+}
+
+#pr-detail-wr .fa-map-marker-alt {
+    color: #007bff;
+    font-size: 14px;
+    margin-left: 0px;
+}
+
+#pr-detail-wr .partners-wr {
+    display: flex;
+}
+
+#pr-detail-wr .hleft-lb {
+    
+}
+
+#pr-detail-wr .partners-data {
+    
+}
+
+#pr-detail-wr .ptr-name {
+    color: #07C;
+}
+
+#pr-detail-wr .partner-item > span {
+    display: block;
+}
+
+#pr-detail-wr .tree-wr {
+    margin-bottom: 0px;
+}
+
+#pr-detail-wr .line-data > .tree-item {
+    padding-left: 0px;
+}
+
+#pr-detail-wr .tree-item {
+    display: block;
+    padding-left: 12px;
+}
+
+#pr-detail-wr .item-data {
+    display: flex;
+    align-items: center;
+}
+
+#pr-detail-wr .tree-item-label {
+    text-transform: capitalize;
+    color: #07C;
+}
+
+
+
+#pr-detail-wr .pr-header {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 20px auto 20px;
+}
+
+#pr-detail-wr .pr-title {
+    font-weight: 600;
+    width: 80%;
+    text-align: center;
+}
+
+
+#pr-detail-wr .per-wr {
+    width: 10%;
+}
+
+#pr-detail-wr .ptr-src {
+    margin-left: 6px;
+    color: black;
+}
+
+#pr-detail-wr .ptr-montant {
+    color: #495057;
+}
+
+#pr-detail-wr .data-font-1 {
+    color: #07C;
+}

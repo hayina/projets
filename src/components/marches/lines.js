@@ -142,7 +142,7 @@ let OrdreServiceLine = ({ osTypes, dispatch, input, meta : { touched, error } })
                     {   
                         os.map(({ typeOs, dateOs, commentaire }, i) => (
                         <div className="partner-item" key={i}>
-                            <SimpleListItem item={{ label: `${formatDate(new Date(dateOs))} : [${ typeOs ===1 ? 'Reprise' : 'Arrêt'  }]` }} 
+                            <SimpleListItem item={{ label: `${formatDate(new Date(dateOs))} : [${ typeOs.label }]` }} 
                                 onDelete={ () => dispatch(arrayRemove(marcheFormName, 'os', i)) } 
                                 onEdit={() => {
 
@@ -150,7 +150,7 @@ let OrdreServiceLine = ({ osTypes, dispatch, input, meta : { touched, error } })
                                         ...modalProps,
                                         editMode: true, 
                                         index: i, 
-                                        initialValues: os[i], 
+                                        initialValues: { ...os[i], typeOs: typeOs.value }, 
                                     }))
                                 }}
                             />

@@ -60,9 +60,15 @@ let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
             useAjaxFetch({
                 url: `/marches/edit/${idMarche}`,
                 success: (data) => {
-                    console.log('EDIT DATA ->', data)
+                    const editData = { ...data,
+                        marcheType: data.marcheType.value,
+                        marcheEtat: data.marcheEtat.value,
+                        // societes: data.societes ? data.societes.map(ste => ste.value) : [],
+                        // os: data.os ? data.os.map(os => ({ ...os, typeOs: os.typeOs.value })) : [],
+                    }
+                    console.log(editData)
                     setEditLoading(false)
-                    dispatch(initFormValues(data))
+                    dispatch(initFormValues(editData))
 
                 },
                 error: (err) => setErrors(true)
@@ -91,20 +97,15 @@ let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
         // return false
         let apiValues = { 
             ...formValues,
-            ...(formValues.societes !== undefined && {societes: formValues.societes.map((ste) => ste.value)}),
             idMarche,
             idProjet,
+            marcheType: { value: formValues.marcheType },
+            marcheEtat: { value: formValues.marcheEtat },
+            // societes: formValues.societes ? formValues.societes.map(ste => ({ value: ste })) : [],
+            // os: formValues.os ? formValues.os.map(os => ({ ...os, typeOs: { value: os.typeOs } })) : [],
         }
 
-        
         console.log(apiValues)
-
-        // dispatch(arrayPushing('projets', apiValues));
-        // setTimeout(() => {
-        //     setSubmitting(false)
-        // },300)
-
-        // return
 
         useAjaxFetch({
             url: 'marches',

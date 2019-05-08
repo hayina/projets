@@ -217,3 +217,7 @@
 .invalid-feedback {
     display: block;
 }
+
+.check-list-container .checkbox-label {
+    text-transform: capitalize;
+}
