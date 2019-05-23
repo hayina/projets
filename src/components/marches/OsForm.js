@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Field, submit, reduxForm, formValueSelector, change, arrayPush } from 'redux-form'
+import { Field, submit, reduxForm, change, arrayPush } from 'redux-form'
 import Modal from '../modals/Modal';
 import { TextField, DateField, RadioField } from '../forms/form-fields/fields';
-import { required, percentage, number } from '../forms/validator';
+import { required } from '../forms/validator';
 
 
 
@@ -23,6 +23,8 @@ let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes }) => {
     // }, [osTypes])
 
     const onSubmit = (formValues) => {
+
+        console.log(formValues)
 
         formValues.typeOs = osTypes.find(ot => ot.value === formValues.typeOs)
 
@@ -66,15 +68,6 @@ let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes }) => {
     )
 }
 
-OsForm = reduxForm({
-    form: osFormName,
-    enableReinitialize: true,
-    // onSubmit
-})(OsForm)
+OsForm = reduxForm({ form: osFormName })(OsForm)
 
-const selector = formValueSelector(osFormName);
-
-export default connect(
-    (state) => ({
-    }),
-)(OsForm);
+export default connect()(OsForm);

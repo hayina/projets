@@ -1,21 +1,13 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
-
 import useAjaxFetch from '../hooks/useAjaxFetch';
-
-
-
 import './projetList.css'
-import { modalTypes } from '../modals/ModalRoot';
-import { showModal, setBreadCrumb } from '../../actions';
-import { getProjets } from '../../reducers/externalForms';
-import { CretereItem } from './components';
+import { setBreadCrumb } from '../../actions';
 import SearchBar from './SearchBar';
 import Percentage from './Percentage';
-import useClickOutside from '../hooks/useClickOutside';
 import DropDown from './DropDown';
 
 let ProjetList = ({dispatch}) => {
@@ -52,6 +44,8 @@ let ProjetList = ({dispatch}) => {
 
         if( Object.keys(filters).length === 0 ) return
 
+        // if( ! filters.acheteur )
+
         let cancel = false
         setLoading(true)
         setErrors(false)
@@ -64,7 +58,7 @@ let ProjetList = ({dispatch}) => {
                 setProjets(data)
                 setLoading(false)
             },
-            error: (err) => {
+            error: () => {
                 if(cancel) return
                 setLoading(false)
                 setErrors(true)

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { change} from 'redux-form';
 
-import { SimpleField } from './form-fields/fields';
+import { SimpleField, LineRadio, LineRadio2 } from './form-fields/fields';
 import { showModal } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot';
 import { convertToSelectionByLeafs, nestedTree } from '../checkboxTree/helpers';
@@ -19,7 +19,7 @@ const LocationLine = ({ localisationItems, dispatch, input, meta : { touched, er
     
     return (
         <React.Fragment>
-            <SimpleField label='Localisation'>
+            {/* <SimpleField label='Localisation'>
                 <input type="button" className="btn btn-info show-modal" 
                     value={ localisations.length > 0 ? `Editer` : `Choisir`}
                     style={{ float: 'right' }}
@@ -34,7 +34,22 @@ const LocationLine = ({ localisationItems, dispatch, input, meta : { touched, er
                         }
                     }
                 />
-            </SimpleField>
+            </SimpleField> */}
+
+            <LineRadio2                 
+                label="Localisation"
+                btnText={ localisations.length > 0 ? `Editer` : `Choisir` }
+                btnOnClick={
+                    () => {
+                        dispatch(showModal(modalTypes.ADD_LOCALISATION, 
+                            { 
+                                items: localisationItems, 
+                                initialSelection: convertToSelectionByLeafs(localisations, localisationItems) 
+                            }
+                        ))
+                    }
+                }
+            />
 
 
             { 

@@ -38,6 +38,9 @@ const types = {
 
 
     SET_BREAD_CRUMB: `SET_BREAD_CRUMB`,
+
+    LOGIN: `LOGIN`,
+    LOGOUT: `LOGOUT`,
 }
 
 
@@ -47,6 +50,19 @@ export const constants = {
     PROVINCE_TAOURIRT: 8,
     INDH: 1,
     PRDTS: 2,
+}
+
+export const TYPE_OS = {
+    ARRET: 1,
+    REPRISE: 2,
+}
+
+export const USER_PROFILES = {
+    root: 1, charge_suivi: 2, division_supervisor: 3, supervisor_general: 4, consultation: 5
+}
+
+export const SRC_FINANCEMENT = {
+    BG: 1, BP: 2, INDH: 3, PRDTS_INDH: 4, PRDTS_FDRZM: 5, CT: 10
 }
 
 export const fieldType = {

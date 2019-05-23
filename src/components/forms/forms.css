@@ -133,7 +133,7 @@
 }
 
 .delete-item-list:hover {
-    text-shadow: 0px 0px 5px #dc35455c;
+    /* text-shadow: 0px 0px 5px #dc35455c; */
     color: #dc3545;
 }
 
@@ -182,7 +182,7 @@
 
 
 .partner-item ._item_ls {
-    margin-bottom: 0px;
+    /* margin-bottom: 0px; */
 }
 
 .slider-check-array {
@@ -220,4 +220,52 @@
 
 .check-list-container .checkbox-label {
     text-transform: capitalize;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+}
+
+.partner-item > div {
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+
+.partner-item > div:last-child {
+    margin-bottom: 0px;
+}
+
+
+
+
+.simple-field-wr .simple-label {
+    
+}
+
+.simple-field-wr .simple-data {
+   
+}
+
+.flex-field-wr {
+    display: flex;
+}
+
+.flex-field-wr .flex-label {
+    
+}
+
+.flex-field-wr .flex-data {
+    width: 70%;
+}
+
+
+.form-sp-line {
+    margin-bottom: 6px;
+}
+
+
+.react-datepicker-wrapper {
+    width: 10em;
 }

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Field, Fields, reduxForm, formValueSelector, change } from 'redux-form'
+import { Field, reduxForm, initialize } from 'redux-form'
 import { required, number, integer } from '../forms/validator';
-import { TextField, AutoCompleteField, DateField, SelectField } from '../forms/form-fields/fields';
+import { TextField, DateField, SelectField } from '../forms/form-fields/fields';
 
-import './marcheForm.css'
+
 import { SocieteLine, TauxLine, OrdreServiceLine, DecompteLine } from './lines';
 import useAjaxFetch from '../hooks/useAjaxFetch';
-import { setBreadCrumb, initFormValues } from '../../actions';
+import { setBreadCrumb } from '../../actions';
 import { ApiError } from '../helpers';
-import { getInitialFormValues } from '../../reducers';
-import DatePicker from '../forms/DatePicker';
+
+import './marcheForm.css'
 
 export const marcheFormName = 'marcheForm'
 
@@ -29,8 +29,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
     const { idProjet } = match.params
 
     const initForm = () => {
-        dispatch(initFormValues({}))
-        // dispatch(arraySetting('localisations', []))
+        dispatch(initialize(marcheFormName, {}))
     }
 
     useEffect(() => {
@@ -40,6 +39,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
         dispatch(setBreadCrumb("Ajouter un marché"))
 
         initForm()
+        
 
         
         useAjaxFetch({
@@ -68,7 +68,8 @@ let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
                     }
                     console.log(editData)
                     setEditLoading(false)
-                    dispatch(initFormValues(editData))
+                    dispatch(initialize(marcheFormName, editData))
+                    // dispatch(initFormValues(editData))
 
                 },
                 error: (err) => setErrors(true)
@@ -114,7 +115,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
             success: () => {
                 // initForm()
                 setSubmitting(false)
-                history.push("/projets")
+                // history.push("/projets")
             },
             error: (err) => {
                 setErrors(true)
@@ -134,27 +135,32 @@ let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
             <div className={`form-content ${ submitting || editLoading ? 'form-submitting is-submitting':'' }`}>
 
                 <Field
-                    name="marcheType" component={SelectField} label="Type de marché" options={marcheTypes} 
+                    name="marcheType" component={SelectField} label="Type de marché" options={marcheTypes} flex={true}
                     // validate={[required]}
                 />
                 <Field
-                    name="marcheEtat" component={SelectField} label="Etat du marché" options={marcheEtats} 
+                    name="marcheEtat" component={SelectField} label="Etat du marché" options={marcheEtats} flex={true}
                     // validate={[required]}
                 />
 
                 <Field
-                    name="intitule" component={TextField} label="Intitulé" fieldType="textarea" 
+                    name="intitule" component={TextField} label="Intitulé" fieldType="textarea" flex={true}
                     validate={[required]}
                 />
                 
                 <Field
-                    name="delai" component={TextField} label="Délai exécution (Mois)" fieldType="input" 
+                    name="delai" component={TextField} label="Délai exécution (Mois)" fieldType="input" flex={true}
                     validate={[required, integer]}
                 />
                 
                 <Field
-                    name="montant" component={TextField} label="Montant" fieldType="input" 
+                    name="montant" component={TextField} label="Montant" fieldType="input" flex={true}
                     validate={[required, number]}
+                />
+
+                <Field
+                    name="numMarche" component={TextField} label="Num marché" fieldType="input" flex={true}
+                    validate={[required]}
                 />
 
                 <div className="sep-line"></div>
@@ -196,18 +202,9 @@ let MarcheForm = ({ dispatch, handleSubmit, match, history }) => {
 
 MarcheForm = reduxForm({
     form: marcheFormName,
-    enableReinitialize: true
+    // enableReinitialize: true
 })(MarcheForm)
 
-const selector = formValueSelector(marcheFormName);
 
-export default connect(
-    (state) => ({
-        // initialValues: {
-        //     intitule: 'marche 3',
-        //     delai: 15,
-        //     montant: 8000000,
-        // },
-        initialValues: getInitialFormValues(state),
-    }),
-)(MarcheForm);
+
+export default connect()(MarcheForm);

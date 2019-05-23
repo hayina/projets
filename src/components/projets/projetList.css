@@ -79,7 +79,7 @@
 .cr-line {
     display: flex;
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 .cr-input {
@@ -101,9 +101,10 @@
     margin-left: 4px;
     cursor: pointer;
     font-size: 14px;
+    text-transform: uppercase;
 }
 
-.cr-line-2 select {
+.cr-line-2 > select, .cr-line-2 > div {
     width: 48%;
 }
 .cr-line-2 {
@@ -122,6 +123,10 @@
 .projet-label:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+.projet-label a {
+    display: inline-block;
 }
 
 .projet-loc {
@@ -245,7 +250,7 @@
     margin-right: 0px;
 }
 
-.one-cr-line .cr-input {
+.one-cr-line .cr-input, .one-cr-line > div  {
     width: 100%;
 }
 

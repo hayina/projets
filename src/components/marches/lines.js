@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { change, arrayRemove, arrayPush } from 'redux-form'
+import { arrayRemove, arrayPush } from 'redux-form'
 
-import { SimpleField } from '../forms/form-fields/fields';
+import { SimpleField, SpecialLine } from '../forms/form-fields/fields';
 import AutoComplete from '../forms/form-fields/autocomplete/AutoComplete';
 import { SimpleListItem } from '../forms/SimpleList';
 import { showModal } from '../../actions';
@@ -10,48 +10,60 @@ import { modalTypes } from '../modals/ModalRoot';
 
 import { marcheFormName } from './MarcheForm'
 import { formatDate } from '../../helpers';
-import useAjaxFetch from '../hooks/useAjaxFetch';
+import DropDown from '../helpers/DropDown2';
 
 
 ///////////////// SOCIETE
 
 let SocieteLine = ({ label, input, meta, dispatch }) => {
 
-    const [steGroups, setSteGroups] = useState(false);
+    const [steAC, setSteAC] = useState(false);
 
     let societies = input.value || []
 
+
+
     return (
-        <SimpleField label="Société Titulaire" meta={meta} >
+        <SimpleField label="Société Titulaire" meta={meta}>
 
 
             { 
                 societies.map((ste, i) => (
-                    <SimpleListItem item={ste} key={ste.value}
-                        onDelete={ () => {
-                            dispatch(arrayRemove(marcheFormName, `societes`, i)) 
-                        }}
-                    />
+                    <SpecialLine key={ste.value} className="ste-item">
+                        <SimpleListItem item={ste} 
+                            onDelete={ () => dispatch(arrayRemove(marcheFormName, `societes`, i)) }
+                            onEdit={ () => {
+                                dispatch(showModal(modalTypes.ADD_STE, {editMode: true, index: i, idSte: ste.value }))
+                            }}
+                        />
+                    </SpecialLine>
                 ))
             }
             {
-                ( societies.length === 0 || steGroups ) &&
-                <AutoComplete url={`/societes`} 
-                    onSelect={ (suggestion) => {
-                        dispatch(arrayPush(marcheFormName, 'societes', suggestion))
-                        setSteGroups(false)
-                    }}
-                /> 
+                ( societies.length === 0 || steAC ) &&
+                <div className="ste-inp-wr">
+                    <DropDown 
+                        links={[{ label: 'Créer nouvelle société', callback: () => dispatch(showModal(modalTypes.ADD_STE, {}))}]}
+                    />
+                    <AutoComplete url={`/societes`} 
+                        onSelect={ (suggestion) => {
+                            dispatch(arrayPush(marcheFormName, 'societes', suggestion))
+                            setSteAC(false)
+                        }}
+                        className="ste-input"
+                    /> 
+
+
+                </div>          
             }
 
-            <input type="button" className={`btn btn-info show-modal`} 
-                value={`Nouvelle Société`} onClick={() => dispatch(showModal(modalTypes.ADD_STE, {}))} />
-
-            {   societies.length > 0 &&
-                <span className="add-ste l_ho" onClick={ () => setSteGroups(true) }>
-                    ajouter regroupement
+            {   societies.length > 0 && !steAC &&
+                <span className="add-ste l_ho" onClick={ () => setSteAC(true) }>
+                    ajouter groupement
                 </span>
             }
+
+
 
         </SimpleField>
     )
@@ -64,7 +76,11 @@ SocieteLine = connect()(SocieteLine);
 
 let TauxLine = ({ dispatch, input, meta : { touched, error } }) => {
 
-    let taux = input.value ? input.value:[]
+    let taux = input.value || []
+
+
+    taux.sort((a, b) => new Date(a.dateTaux) - new Date(b.dateTaux))
+    // console.log(taux)
 
     return (
         <React.Fragment>
@@ -86,7 +102,7 @@ let TauxLine = ({ dispatch, input, meta : { touched, error } }) => {
                 <div className="form-group">
                     {   
                         taux.map(({ valueTaux, dateTaux, commentaire }, i) => (
-                        <div className="partner-item" key={i}>
+                        <SpecialLine className="form-sp-line" key={i}>
                             <SimpleListItem item={{ label: `${formatDate(new Date(dateTaux))} : ${valueTaux}%` }} 
                                 onDelete={ () => dispatch(arrayRemove(marcheFormName, 'taux', i)) } 
                                 onEdit={() => {
@@ -98,8 +114,9 @@ let TauxLine = ({ dispatch, input, meta : { touched, error } }) => {
                                     }))
                                 }}
                             />
+                            
                             <div className="taux-com">{ commentaire }</div>
-                        </div>
+                        </SpecialLine>
                     ))}
                 </div>
             }
@@ -122,7 +139,9 @@ let OrdreServiceLine = ({ osTypes, dispatch, input, meta : { touched, error } })
     let os = input.value || []
 
     
-    // console.log(osTypes)
+    os.sort((a, b) => new Date(a.dateOs) - new Date(b.dateOs))
+
+    console.log(os)
 
     const modalProps = { osTypes }
 
@@ -141,8 +160,17 @@ let OrdreServiceLine = ({ osTypes, dispatch, input, meta : { touched, error } })
                 <div className="form-group">
                     {   
                         os.map(({ typeOs, dateOs, commentaire }, i) => (
-                        <div className="partner-item" key={i}>
-                            <SimpleListItem item={{ label: `${formatDate(new Date(dateOs))} : [${ typeOs.label }]` }} 
+                        <SpecialLine className="form-sp-line" key={i}>
+
+                            <SimpleListItem 
+                                item={{ 
+                                    // label: [
+                                    //     `${dateOs} ${formatDate(new Date(dateOs))} : `, 
+                                    //     <i className={`far fa-${ typeOs.value === TYPE_OS.ARRET ? 'pause' : 'play' }-circle`}></i>, 
+                                    //     ` [${ typeOs.label }]`
+                                    // ]
+                                    label: `${formatDate(new Date(dateOs))} : [${ typeOs.label }]`
+                                }} 
                                 onDelete={ () => dispatch(arrayRemove(marcheFormName, 'os', i)) } 
                                 onEdit={() => {
 
@@ -153,9 +181,11 @@ let OrdreServiceLine = ({ osTypes, dispatch, input, meta : { touched, error } })
                                         initialValues: { ...os[i], typeOs: typeOs.value }, 
                                     }))
                                 }}
+                                icon={<i className="fas fa-pause-circle"></i>}
                             />
+                            
                             <div className="taux-com">{ commentaire }</div>
-                        </div>
+                        </SpecialLine>
                     ))}
                 </div>
             }
@@ -173,7 +203,9 @@ OrdreServiceLine = connect()(OrdreServiceLine)
 
 let DecompteLine = ({ dispatch, input, meta : { touched, error } }) => {
 
-    let decomptes = input.value ? input.value:[]
+    let decomptes = input.value || []
+
+    decomptes.sort((a, b) => new Date(a.dateDec) - new Date(b.dateDec))
 
     return (
         <React.Fragment>
@@ -195,7 +227,7 @@ let DecompteLine = ({ dispatch, input, meta : { touched, error } }) => {
                 <div className="form-group">
                     {   
                         decomptes.map(({ montant, dateDec, commentaire }, i) => (
-                        <div className="partner-item" key={i}>
+                        <SpecialLine className="form-sp-line" key={i}>
                             <SimpleListItem item={{ label: `${formatDate(new Date(dateDec))} : ${Number(montant).toLocaleString()} DH` }} 
                                 onDelete={ () => dispatch(arrayRemove(marcheFormName, 'decomptes', i)) } 
                                 onEdit={() => {
@@ -207,8 +239,9 @@ let DecompteLine = ({ dispatch, input, meta : { touched, error } }) => {
                                     }))
                                 }}
                             />
+                            
                             <div className="taux-com">{ commentaire }</div>
-                        </div>
+                        </SpecialLine>
                     ))}
                 </div>
             }

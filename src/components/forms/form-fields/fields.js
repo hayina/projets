@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { change } from 'redux-form'
+import React, { useEffect } from 'react';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import AutoComplete from './autocomplete/AutoComplete';
-import SelectedAC from './SelectedAC'
 import { SimpleListItem } from '../SimpleList';
-import { uniqueID, uniqueHtmlID, formatDate } from '../../../helpers';
+import { uniqueHtmlID } from '../../../helpers';
 
 ////////////// helpers
 
@@ -24,15 +22,15 @@ const renderErrorField = (meta) => {
 
 ////////////// SIMPLE FIELD
 
-export const SimpleField = ({ children, meta, label, errors }) => {
+export const SimpleField = ({ children, meta, label, flex=false }) => {
 
     // console.log('SimpleField RENDERING ---------------------------->')
 
     // const hasErors = errors !== undefined ? true : false
     return (
-        <div className="form-group simple-field-wr">
-            { label && <label className="field-label form-label">{label}</label> }
-            { children }
+        <div className={`form-group ${ flex ? 'flex-field-wr' : 'simple-field-wr' }`}>
+            { label && <label className={`field-label form-label ${ flex ? 'flex-label' : 'simple-label' }`}>{label}</label> }
+            <div className={`${ flex ? 'flex-data' : 'simple-data' }`}>{ children }</div>
             { meta && renderErrorField(meta) }
         </div>
     )
@@ -48,6 +46,19 @@ export const SimpleField2 = ({ children, label, error }) => (
         { error && <div className="error-feedback">{error}</div> }
     </div>
 )
+
+export const FlexField = ({ children, meta, label }) => {
+
+    return (
+        <div className="form-group flex-field-wr">
+            { label && <label className="field-label flex-label">{label}</label> }
+            <div className="flex-data">
+                { children }
+            </div>
+            { meta && renderErrorField(meta) }
+        </div>
+    )
+}
 
 
 // props -> { input, meta }
@@ -114,24 +125,17 @@ export const TextField = (props) => {
 
 export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete }) => {
 
-    // const acProps = { ...ac, meta }
-
     return (
         <SimpleField label={label} meta={meta} >
             { input.value ?
-                // <React.Fragment>
-                // <SelectedAC suggestion={input.value} onDelete={onDelete} />
-                <SimpleListItem item={input.value} onDelete= {onDelete} />
-                // </React.Fragment>
+                <div className="mtem_ls">
+                    <SimpleListItem item={input.value} onDelete= {onDelete} />
+                </div>
                 :
-                // <div className={`${fieldCss(meta)}`}>
-                    <AutoComplete onSelect={onSelect} url={url} validateClass={fieldCss(meta)}/> 
-                // </div>
-                // fieldCss(meta)
+                <AutoComplete onSelect={onSelect} url={url} validateClass={fieldCss(meta)}/> 
             }
         </SimpleField>
     )
-
 
 }
 
@@ -173,7 +177,9 @@ export const RadioField = ({ input, meta, label, options }) => {
 
 export const RadioList = ({options, input, meta }) => (
     
-    options.map((option) => {
+    <div className="radio-list-wr">
+    {
+        options.map((option) => {
 
         const inputID = uniqueHtmlID();
 
@@ -189,7 +195,8 @@ export const RadioList = ({options, input, meta }) => (
                 </label>
             </div>
         )
-    })
+    })}
+    </div>
 )
     
 
@@ -208,6 +215,22 @@ export const LineRadio = ({input, label, btnText, btnOnClick}) => {
             { btnText && btnOnClick && 
                 <input type="button" className={`btn btn-info show-modal ${input.value ? '':'hide'}`} 
                     value={btnText} onClick={btnOnClick} />
+            }
+            
+        </div>
+    )
+}
+
+
+export const LineRadio2 = ({ label, btnText, btnOnClick }) => {
+
+    return (
+        <div className="radio-line form-group">
+            
+            <label className="field-label form-label">{label}</label>
+
+            { btnText && btnOnClick && 
+                <input type="button" className={`btn btn-info show-modal`} value={btnText} onClick={btnOnClick} />
             }
             
         </div>
@@ -460,7 +483,7 @@ export const DateField = ({ input, meta, label }) => {
                 dateFormat="dd/MM/yyyy"
                 selected={dateValue}
                 onChange={ (e) => {
-                    input.onChange(e) 
+                    input.onChange(e.setHours(10)) 
                     console.log(e)
                     // input.onChange(formatDate(e.target.value)) 
                 }}
@@ -470,3 +493,11 @@ export const DateField = ({ input, meta, label }) => {
     )
 
 }
+
+//////////
+
+export const SpecialLine = ({ children, className='' }) => (                
+    <div className={`mtem_ls ${className}`} >
+        { children }
+    </div>
+)

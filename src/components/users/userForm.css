@@ -14,6 +14,10 @@
     
 }
 
+#userForm .radio-list-wr {
+    margin: 10px 0px;
+}
+
 #userForm .simple-field-wr  {
     display: flex;
     flex-wrap: wrap;

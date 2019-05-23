@@ -8,25 +8,25 @@
 }
 
 #marcheForm .form-label {
-    width: var(--ml);
-    /* display: inline-block; */
-    margin-bottom: 0px;
-    font-size: 13px;
-    display: inline-block;
-    vertical-align: middle;
+
 }
 
 #marcheForm .form-control {
-    width: 70%;
-    /* display: inline-block; */
-    display: inline-block;
-    vertical-align: middle;
+
 }
 
 #marcheForm .invalid-feedback {
     margin-left: var(--ml);
     width: 100%;
     /* display: inline-block; */
+}
+
+#marcheForm .ste-item {
+    margin-bottom: 8px;
+}
+
+#marcheForm .ste-item:last-child {
+    /* margin-top: 8px 0px; */
 }
 
 #societeForm .form-validation {
@@ -41,10 +41,41 @@
     margin-bottom: 0px;
 }
 
-.add-ste {
+#marcheForm .add-ste {
     color: #1384ff;
     text-transform: uppercase;
     cursor: pointer;
     font-size: 14px;
     text-align: right;
+}
+
+
+#marcheForm .simple-field-wr {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#marcheForm .simple-label {
+    width: var(--ml);
+    /* display: inline-block; */
+    margin-bottom: 0px;
+    font-size: 13px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#marcheForm .simple-data {
+    width: 70%;
+}
+
+#marcheForm .ste-input {
+    width: 90%;
+}
+#marcheForm .ste-input .autocomplete-input {
+
+}
+
+#marcheForm .ste-inp-wr {
+
 }

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Field, submit, reduxForm, formValueSelector, change, arrayPush } from 'redux-form'
+import { Field, submit, reduxForm, change, arrayPush } from 'redux-form'
 import Modal from '../modals/Modal';
 import { TextField, DateField } from '../forms/form-fields/fields';
 import { required, percentage, number } from '../forms/validator';
@@ -68,9 +68,5 @@ TauxForm = reduxForm({
     // onSubmit
 })(TauxForm)
 
-const selector = formValueSelector(tauxFormName);
 
-export default connect(
-    (state) => ({
-    }),
-)(TauxForm);
+export default connect()(TauxForm);

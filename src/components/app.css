@@ -103,6 +103,7 @@
 .radio-line {
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
     /* padding: 10px 0px 18px; */
 }
 
@@ -219,13 +220,26 @@
     font-weight: 600;
     font-size: 11pt;
     line-height: 1;
-    margin: 10px 0px;
-    padding: 2px 0px;
+    /* margin: 10px 0px; */
+    /* padding: 2px 0px; */
     color: #07C;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 15px; 
 }
 
+.mtem_ls {
+
+
+    border: 1px solid #dadce0;
+    border-radius: 18px;
+    padding: 10px 14px;
+
+    
+}
+
+.mtem_ls:hover {
+    background-color: #f8f9fa;
+}
 
 .api-error {
     color: #dc3545;
@@ -288,4 +302,8 @@
  .waiting {
     pointer-events: none;
     opacity: 0.4;
+ }
+
+ .inp-submitting {
+     opacity: 0.5;
  }

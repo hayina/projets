@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { CretereItem, Select, Input, Radio } from './components';
-import { fieldType } from '../../types';
+import { Select, Input, Radio } from './components';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 import { FormProvider, FormContext, Field, reset } from '../yous-form/useForm';
+import { SimpleListItem } from '../forms/SimpleList';
 
 
 const intialValues = {
@@ -12,6 +12,7 @@ const intialValues = {
     secteur: '',
     acheteurType: 1,
     acheteur: '',
+    prSouffrance: 0,
 }
 
 
@@ -21,9 +22,9 @@ const SearchBar = ({ setFilters }) => {
     const [maitreOuvrages, setMaitreOuvrages] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
     const [srcFinancements, setSrcFinancements] = useState([]);
-    const [partners, setPartners] = useState([]);
 
-    const { state, dispatchForm, onSubmit } = useContext(FormContext);
+
+    const { state, dispatchForm } = useContext(FormContext);
 
     useEffect(() => {
 
@@ -41,6 +42,19 @@ const SearchBar = ({ setFilters }) => {
         setFilters(state.values)
         
     } ,[state.values])
+
+    const renderSelectInfo = ({renderProps , defaultOption, items }) => (
+
+        renderProps.input.value ?
+        <div className="mtem_ls">
+            <SimpleListItem 
+                item={ items.find(i => i.value === parseInt(renderProps.input.value)) } 
+                onDelete= { () => renderProps.input.onChange('') } 
+            />
+        </div>
+        :
+        <Select defaultOption={defaultOption} options={items} {...renderProps} /> 
+    )
 
     return (
 
@@ -66,10 +80,23 @@ const SearchBar = ({ setFilters }) => {
 
                 <div className="cr-line cr-line-2">   
                     <Field name="commune">
-                        { props => <Select defaultOption="Choisir une commune ..." options={communes} {...props} /> } 
+                    {   
+                        props => renderSelectInfo({ 
+                            renderProps: props,
+                            items: communes,
+                            defaultOption: "Choisir une commune ..."
+                        })
+                    } 
                     </Field>  
                     <Field name="secteur">
-                        { props => <Select defaultOption="Choisir un secteur" options={secteurs} {...props} /> } 
+                    {   
+                        props => renderSelectInfo({ 
+                            renderProps: props,
+                            items: secteurs,
+                            defaultOption: "Choisir une secteur ..."
+                        })
+                        
+                    }
                     </Field>                     
                 </div>
 
@@ -88,8 +115,27 @@ const SearchBar = ({ setFilters }) => {
                 </div>
                 <div className="cr-line one-cr-line">   
                     <Field name="acheteur">
-                        { props => <Select defaultOption="Choisir ..." options={maitreOuvrages} {...props} /> } 
+                    { 
+                        props => renderSelectInfo({ 
+                            renderProps: props,
+                            items: maitreOuvrages,
+                            defaultOption: "Choisir une secteur ..."
+                        })
+                    } 
                     </Field>   
+                </div>
+
+                <div className="sep-line"></div>
+                
+                <div className="cr-line">   
+                    <Field name="prSouffrance">
+                        { props => <Radio options={[
+                            { value: 0, label: 'N/A'},
+                            { value: 1, label: 'En arrêt'},
+                            { value: 2, label: 'En retard'},
+                            { value: 3, label: 'Délai exécution depassé'},
+                        ]} {...props} /> } 
+                    </Field>               
                 </div>
 
         

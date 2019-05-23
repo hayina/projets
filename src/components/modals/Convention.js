@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, submit, change, SubmissionError, arrayPush, arrayInsert } from 'redux-form';
+import { Field, reduxForm, submit, change, SubmissionError, arrayPush } from 'redux-form';
 
 import Modal from './Modal';
 import { hideModal } from '../../actions';
@@ -8,10 +8,7 @@ import { hideModal } from '../../actions';
 
 import { required, number } from '../forms/validator'
 import { TextField, AutoCompleteField, SelectField } from '../forms/form-fields/fields'
-import { arrayPushing, arrayUpdating } from '../../actions';
-import { getExtPartners } from '../../reducers/externalForms';
-import { asyncFunc } from '../../helpers'
-import useAjaxFetch from '../hooks/useAjaxFetch';
+
 
 import {formName as projetForm } from '../forms/ProjetForm'
 
@@ -37,25 +34,12 @@ const onSubmit = (formValues, dispatch, { editMode, index, partners }) => {
     dispatch(hideModal())
 }
 
-let Convention = ({ handleSubmit, dispatch, editMode, initialValues, partners }) => {
+let Convention = ({ handleSubmit, dispatch, editMode, partners }) => {
 
-    const [financements, setFinancements] = useState([]);
 
     console.log('partners -> ', partners)
 
-    useEffect(() => {
-        if( editMode && initialValues.srcFinancement ) 
-            fetchFinancements(initialValues.partner.value)
-    }, [])
 
-    const fetchFinancements = (acheteur) => {
-
-        useAjaxFetch({
-            url: `/financements/${acheteur}`,
-            success: (data) => { setFinancements(data) },
-        })
-    }
-    
     return (
 
         <Modal
@@ -69,28 +53,10 @@ let Convention = ({ handleSubmit, dispatch, editMode, initialValues, partners })
 
                         url='/acheteurs'
                         // url='/get_partners'
-                        onSelect={(suggestion) => {
-                            dispatch(change(formName, 'partner', suggestion));
-                            fetchFinancements(suggestion.value)
-                        }}
-                        onDelete={() => {
-                            dispatch(change(formName, 'partner', null))
-                            dispatch(change(formName, 'srcFinancement', null))
-                            setFinancements([])
-                        }}
+                        onSelect={(suggestion) => dispatch(change(formName, 'partner', suggestion)) }
+                        onDelete={() => dispatch(change(formName, 'partner', null)) }
                         validate={[required]}
                     />
-
-                    { financements && financements.length > 0 &&
-                        <Field
-                            name="srcFinancement"
-                            component={SelectField}
-                            onlyValue={false}
-                            label="Source de Financement"
-                            options={financements}
-                            validate={[required]}
-                        />
-                    }
 
                     <Field name="montant" label="Montant" component={TextField} fieldType="input"
                         validate={[required, number]}

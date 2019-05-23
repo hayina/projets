@@ -1,10 +1,17 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from 'react'
-import { Link } from "react-router-dom";
+import React from 'react'
+import { connect } from 'react-redux';
+import { Link, withRouter } from "react-router-dom";
 
 import './header.css'
+import { isAuthenticated, getFullName } from '../reducers/login';
+import useAjaxFetch from './hooks/useAjaxFetch';
+import { logoutUser } from '../actions';
+// import { history } from './App';
 
-let Header = () => {
+
+
+let Header = ({ isAuth, fullName, history, dispatch }) => {
 
     // const NavItem = ({url, label}) => (
     //     <div className="nav-item">
@@ -12,8 +19,24 @@ let Header = () => {
     //     </div>
     // )
 
+    console.log('fullName >', fullName)
+
+
+    const logout = () => {
+        
+
+        useAjaxFetch({
+            url: '/logout',
+            success: () => { 
+                localStorage.removeItem("userInfo");
+                dispatch(logoutUser())
+                history.push('/login') 
+            },
+        })
+    }
+
     return (
-        <nav className="header">
+        <nav id="pageHeader" className="header">
 
             <div id="logo">
                 <Link to={`/`}>
@@ -25,6 +48,11 @@ let Header = () => {
                 Suivi des projets au niveau de la Province de Taourirt
             </div>
 
+            { !isAuth && 
+                <span className="login-link l_ho" onClick={ () =>  history.push('/login') }>Connexion</span>
+            }
+
+            { isAuth &&
             <div className="user-profile">
 
 
@@ -35,7 +63,7 @@ let Header = () => {
                     <a
                         className="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Youssef Lechqar
+                        { fullName }
                     </a>
                     {/* <div className="dropdown-toggle" id="dropdownMenuLink"></div> */}
 
@@ -45,10 +73,10 @@ let Header = () => {
 
                      
                             
-                            <Link className="dropdown-item" to="/logout">
+                            <span className="dropdown-item" onClick={ logout } >
                                 <i className="fas fa-power-off"></i>
                                 <span className="dropdown-label">Déconnexion</span>
-                            </Link>
+                            </span>
                             
                             <Link className="dropdown-item" to="/profile">
                                 <i className="fas fa-user-circle"></i>
@@ -62,6 +90,7 @@ let Header = () => {
 
 
             </div>
+            }
 
 
 
@@ -71,4 +100,9 @@ let Header = () => {
     )
 }
 
-export default Header
+export default connect((state) => ({ 
+    isAuth: isAuthenticated(state),
+    fullName: getFullName(state)
+}))(withRouter(Header));
+
+

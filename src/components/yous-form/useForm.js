@@ -141,9 +141,6 @@ export const Field = ({ name, children }) => {
 
     const { state, onChange, onFocus } = useContext(FormContext);
 
-    // console.log(`Field`, state);
-
-
     return (
         <Fragment>
             { 

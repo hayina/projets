@@ -32,7 +32,7 @@ const PartnerLine = ({ dispatch, isConvention, partners }) => {
                 <div className="form-group">
                     {   
                         partnersValues.map(({ partner, montant, srcFinancement }, i) => (
-                        <div className="partner-item" key={partner.value}>
+                        <div className="partner-item mtem_ls" key={partner.value}>
                             <SimpleListItem item={partner} 
                                 onDelete={ () => dispatch(arrayRemove(projetForm, 'partners', i)) } 
                                 // onDelete={ () => dispatch(arrayDeletingByIndex('partners', i)) } 

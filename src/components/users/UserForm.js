@@ -23,11 +23,11 @@ const intialValues = {
 
 
 const rules = {
-    // login: [required],
-    // password: [required],
+    login: [required],
+    password: [required],
     nom: [required],
-    // prenom: [required],
-    roles: [emptyArray],
+    prenom: [required],
+    profile: [required],
     // active: [required],
 }
 
@@ -38,6 +38,7 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
     
     const { state, dispatchForm, onSubmit } = useContext(FormContext);
     const [profiles, setProfiles] = useState([])
+    const [divisions, setDivisions] = useState([])
     const [editLoading, setEditLoading] = useState(false)
 
 
@@ -49,9 +50,14 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
         useAjaxFetch({
             url: 'profiles',
             method: 'GET',
-            success: (data) => {
-                setProfiles(data)
-            },
+            success: (data) => setProfiles(data),
+            // error: () => setEditLoading(false)
+        })
+
+        useAjaxFetch({
+            url: 'divisions',
+            method: 'GET',
+            success: (data) => setDivisions(data),
             // error: () => setEditLoading(false)
         })
 
@@ -146,6 +152,16 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                         <RadioList
                             label="Choisir les profiles de l'utilisateur"
                             options={profiles} 
+                            {...props} 
+                        /> 
+                    }
+                </Field>
+
+                <Field name="division">
+                    { props =>   
+                        <RadioList
+                            label="Choisir une division"
+                            options={divisions} 
                             {...props} 
                         /> 
                     }

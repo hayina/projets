@@ -1,21 +1,12 @@
-import React, { useRef, useReducer, useEffect, useCallback } from 'react';
-import { connect } from 'react-redux';
-import { change } from 'redux-form';
+import React, { useRef, useReducer } from 'react';
 import axios from 'axios';
-
 import { reducer, initialState } from './acReducer';
-
 import useClickOutside from '../../../hooks/useClickOutside';
-
-// import { getLoadingStatus, getErrorsStatus } from '../../../reducers/autocomplete'
-
 import './autocomplete.css'
-import useApi from '../../../hooks/useApi';
-import useAjaxFetch from '../../../hooks/useAjaxFetch';
 import { ApiError } from '../../../helpers';
 
 
-const AutoComplete = ({ onSelect, url, validateClass }) => {
+const AutoComplete = ({ onSelect, url, validateClass='', className='' }) => {
 
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -173,7 +164,7 @@ const AutoComplete = ({ onSelect, url, validateClass }) => {
     }
 
     return (
-        <div className="autocomplete-wrapper" ref={autocompleteRef}>
+        <div className={`autocomplete-wrapper ${className}`} ref={autocompleteRef}>
             <div className="oc-input-wr">
                 <input type="text" className={`form-control autocomplete-input ${validateClass}`}
                     onChange={onChange}

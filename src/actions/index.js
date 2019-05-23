@@ -37,6 +37,8 @@ export const setCheckboxProp = (values, checkboxType, checkboxProp) => ({
         checkboxProp
 })
 
+export const loginUser = (userInfo) => ({ type: types.LOGIN, userInfo })
+export const logoutUser = () => ({ type: types.LOGOUT })
 
 
 ////////////// auto complete

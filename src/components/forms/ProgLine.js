@@ -1,24 +1,61 @@
-import React from 'react';
-import { SliderCheckbox, ToggleField, SelectGrpField } from './form-fields/fields';
-import { constants } from '../../types';
+import React, { useEffect, useState } from 'react';
+import { SliderCheckbox, ToggleField, SelectGrpField, SelectField } from './form-fields/fields';
+import { constants, SRC_FINANCEMENT } from '../../types';
 import { required } from './validator';
+import useAjaxFetch from '../hooks/useAjaxFetch';
 
 
-const ProgLine = ({ indh, prdts, indhProgramme, indhProgrammes, indhCallback }) => {
+const ProgLine = ({ srcFinancement, indhProgramme, setErrors }) => {
 
+    const [indhProgrammes, setIndhProgrammes] = useState([]);
+    const [financements, setFinancements] = useState([]);
+
+    const srcFinancementVal = srcFinancement.input.value
+
+    const showIndh = ( Number(srcFinancementVal) === SRC_FINANCEMENT.INDH )
+    // ||  Number(srcFinancementVal) === SRC_FINANCEMENT.PRDTS_INDH
+
+    useEffect(() => {
+
+        if( indhProgrammes.length === 0 && showIndh ) {
+            useAjaxFetch({
+                url: `/parent/programmes`,
+                // url: `/getProgrammesWithPhases`,
+                success: (data) => { setIndhProgrammes(data) },
+                error: (err) => setErrors(true)
+            })
+        }
+        
+        
+    }, [srcFinancementVal])
+
+    useEffect(() => {
+        useAjaxFetch({
+            url: `/srcFinancements`,
+            success: (data) => { setFinancements(data) },
+            error: () => setErrors(true)
+        })
+    }, [])
 
     return (
 
         <React.Fragment>
 
-            <ToggleField label="I.N.D.H" callback={indhCallback} { ...indh } />
-            <ToggleField label="P.R.D.T.S" input={ prdts.input } { ...prdts } />
+            {/* <ToggleField label="I.N.D.H" callback={indhCallback} { ...indh } />
+            <ToggleField label="P.R.D.T.S" input={ prdts.input } { ...prdts } /> */}
 
-            { 
-                indh.input.value && indhProgrammes.length > 0 &&
+            
+            <SelectField
+                // name="srcFinancement"
+                label="Source de Financement"
+                options={financements}
+                { ...srcFinancement }
+            />
+
+            { showIndh && indhProgrammes.length > 0 &&
                 <SelectGrpField
-                    name="indhProgramme"
-                    // label="Programme"
+                    // name="indhProgramme"
+                    // // label="Programme"
                     optgroups={indhProgrammes}
                     gOptsLabel="Choisir un programme..."
                     { ...indhProgramme }

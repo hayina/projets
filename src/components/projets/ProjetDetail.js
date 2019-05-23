@@ -7,10 +7,12 @@ import { NestedTree } from '../checkboxTree/CheckTree';
 import { nestedTree } from '../checkboxTree/helpers';
 
 import './projetDetail.css'
-import { setBreadCrumb } from '../../actions';
+import { setBreadCrumb, showModal } from '../../actions';
 import { formatDate } from '../../helpers';
+import DropDown from '../helpers/DropDown2';
+import { modalTypes } from '../modals/ModalRoot';
 
-const ProjetDetail = ({ match, dispatch }) => {
+const ProjetDetail = ({ match, history, dispatch }) => {
 
     const [loading, setLoading] = useState(false)
     const [marcheLoading, setMarcheLoading] = useState(false)
@@ -63,6 +65,17 @@ const ProjetDetail = ({ match, dispatch }) => {
     
     }
 
+    const deleteMarche = (idMarche) => {
+        useAjaxFetch({
+            url: `/marches/${idMarche}`,
+            method: 'DELETE',
+            success: () => {
+                setDefaultMarche({})
+            },
+            error: (err) => setErrors(true)
+        })
+    }
+
 
 
 
@@ -111,9 +124,9 @@ const ProjetDetail = ({ match, dispatch }) => {
             </LineInfo>
 
             {/* { projet.localisations && projet.localisations.length > 0 && } */}
-            <LineInfo label="Secteur">
+            {/* <LineInfo label="Secteur">
                 { projet.secteur ? projet.secteur.label : null }
-            </LineInfo>
+            </LineInfo> */}
 
             <LineInfo label="Maître d'ouvrage">
                 { projet.maitreOuvrage ? projet.maitreOuvrage.label : null }
@@ -126,15 +139,19 @@ const ProjetDetail = ({ match, dispatch }) => {
             <LineInfo label="Montant">
                 { projet.montant ? `${ Number(projet.montant).toLocaleString() } Dhs` : null }
             </LineInfo>
+            <LineInfo label="Source financement">
+                { projet.srcFinancement ? `${ projet.srcFinancement.label }` : null }
+            </LineInfo>
                         
-            <LineInfo label="Les partenaires">
+            <LineInfo label="Partenaires">
             {
                 projet.partners && projet.partners.length > 0 &&
                 projet.partners.map( ({partner, montant, srcFinancement}, i) => (
                     <div className="partner-item" key={i}>
                         <span className="ptr-name">{i+1}. {partner.label}</span>
                         <span className="ptr-montant">
-                            { `${ Number(montant).toLocaleString() } Dhs` }
+                            <i className="fas fa-arrow-circle-right"></i>
+                            { `${ Number(montant).toLocaleString() } dhs` }
                             <span className="ptr-src">{ srcFinancement && `(${ srcFinancement.label})` }</span>
                         </span>
                         
@@ -166,6 +183,7 @@ const ProjetDetail = ({ match, dispatch }) => {
                             )
                         })
                     }
+                    
                     </div>
                 </div>
 
@@ -174,7 +192,31 @@ const ProjetDetail = ({ match, dispatch }) => {
             {
                 defaultMarche &&
                 <div className={`def-marche-wr ${ marcheLoading ? 'waiting' : '' }`}>
-                    <LineInfo label="Intitulé">{ defaultMarche.intitule }</LineInfo>
+
+                    <DropDown 
+                    
+                        links={[
+                            {
+                                label: 'Editer', 
+                                callback: () => history.push(`/marches/edit/${defaultMarche.idMarche}`),
+                            },
+                            {
+                                label: 'Supprimer',
+                                callback: () => {
+                                    dispatch(showModal(modalTypes.ADD_DELETE, {
+                                        onDanger: () => deleteMarche(defaultMarche.idMarche)  ,
+                                        dangerText: ["Voulez vous vraiment supprimer le marche ", <strong>{defaultMarche.intitule}</strong>, " ?"]
+                                    }))
+                                },
+                            }
+
+                        ]}
+                    
+                    />
+
+                    
+                    <div className="pm-h m-h">{ defaultMarche.intitule }</div>
+
                     <LineInfo label="Etat du marché">
                         { defaultMarche.marcheEtat ? defaultMarche.marcheEtat.label : '-' }
                     </LineInfo>
@@ -184,8 +226,25 @@ const ProjetDetail = ({ match, dispatch }) => {
                     <LineInfo label="Montant">
                         { defaultMarche.montant ? `${Number(defaultMarche.montant).toLocaleString()} dhs` : '-' }
                     </LineInfo>
+                    <LineInfo label="Num marché">
+                        { defaultMarche.numMarche || '-' }
+                    </LineInfo>
+
                     <LineInfo label="Date commencement">
-                        { defaultMarche.delai ? formatDate(new Date(defaultMarche.dateStart)) : '-' }
+                        <CalendarIcon />
+                        { defaultMarche.dateStart ? 
+                            <span className="l-date">{formatDate(new Date(defaultMarche.dateStart))}</span> : '-' }
+                    </LineInfo>
+
+                    <LineInfo label="Société(s) titulaire(s)">
+                    {
+                        defaultMarche.societes && defaultMarche.societes.length > 0 &&
+                        defaultMarche.societes.map( ({value, label}, i) => (
+                            <div className="l-item" key={value}>
+                                <span className="l-data-lbl">{label}</span>
+                            </div>
+                        ))
+                    }
                     </LineInfo>
 
                     <LineInfo label="Ordres de service">
@@ -201,7 +260,7 @@ const ProjetDetail = ({ match, dispatch }) => {
                                     <i className="fas fa-arrow-circle-right"></i>
                                     <span className="l-name">{typeOs.label}</span>
                                 </span>
-                                <span className="l-com">{ commentaire }</span>
+                                {/* <span className="l-com">{ commentaire }</span> */}
                                 
                             </div>
                         ))
@@ -218,11 +277,11 @@ const ProjetDetail = ({ match, dispatch }) => {
                                     <span className="l-date">
                                         { dateTaux ? formatDate(new Date(dateTaux)) : '-' }
                                     </span>
-                                    {/* <i className="fas fa-arrow-circle-right"></i> */}
+                                    <i className="fas fa-arrow-circle-right"></i>
                                     <span className="l-name">{(`0${valueTaux}`).slice(-2)}</span>
                                     <i className="fas fa-percent"></i>
                                 </span>
-                                <span className="l-com">{ commentaire }</span>
+                                {/* <span className="l-com">{ commentaire }</span> */}
                                 
                             </div>
                         ))
@@ -239,10 +298,10 @@ const ProjetDetail = ({ match, dispatch }) => {
                                     <span className="l-date">
                                         { dateDec ? formatDate(new Date(dateDec)) : '-' }
                                     </span>
-                                    {/* <i className="fas fa-arrow-circle-right"></i> */}
-                                    <span className="l-name">{`${Number(montant).toLocaleString()} Dhs`}</span>
+                                    <i className="fas fa-arrow-circle-right"></i>
+                                    <span className="l-name">{`${Number(montant).toLocaleString()} dhs`}</span>
                                 </span>
-                                <span className="l-com">{ commentaire }</span>
+                                {/* <span className="l-com">{ commentaire }</span> */}
                                 
                             </div>
                         ))
@@ -251,11 +310,13 @@ const ProjetDetail = ({ match, dispatch }) => {
 
                     <LineInfo label="Date réception provisoire" >
                         <CalendarIcon />
-                        { defaultMarche.dateReceptionProv ? formatDate(new Date(defaultMarche.dateReceptionProv)) : null }
+                        { defaultMarche.dateReceptionProv ? 
+                            <span className="l-date">{formatDate(new Date(defaultMarche.dateReceptionProv))}</span> : null }
                     </LineInfo>
                     <LineInfo label="Date réception définitive">
                         <CalendarIcon />
-                        { defaultMarche.dateReceptionDef ? formatDate(new Date(defaultMarche.dateReceptionDef)) : null }
+                        { defaultMarche.dateReceptionDef ? 
+                            <span className="l-date">{formatDate(new Date(defaultMarche.dateReceptionDef))}</span> : null }
                     </LineInfo>
 
                 </div>

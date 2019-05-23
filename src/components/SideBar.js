@@ -1,9 +1,12 @@
 import React from 'react'
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { connect } from 'react-redux';
 
+import { getProfile } from '../reducers/login';
 
 import './sideBar.css'
-let SideBar = () => {
+import { USER_PROFILES } from '../types';
+let SideBar = ({ profile }) => {
 
 
     const SideItem = ({ url, label, children=(<i className="_fa_sb fas fa-bars"></i>) }) => (
@@ -27,23 +30,30 @@ let SideBar = () => {
 
             <div className="nav-bar">
 
-                <SideItem label="Tableau de bord" url="/projets/dashboard" >
+                <SideItem label="Tableau de bord" url="/projets/" >
                     <i className="_fa_sb fas fa-chart-bar"></i>
                 </SideItem>
                 <SideItem label="Ajouter Projet" url="/projets/new" >
                     <i className="_fa_sb fas fa-industry"></i>
                 </SideItem>
-                <SideItem label="Liste des Projets" url="/projets" >
+                <SideItem label="Liste des Projets" url="/projets/search" >
                     <i className="_fa_sb fas fa-poll-h"></i>
                 </SideItem>
-                {/* <SideItem label="Ajouter Marché" url="/marches/new" /> */}
-                <SideItem label="Liste des Conventions" url="/conventions" />
-                <SideItem label="Gestion des localisations" url="/localisations" >
-                    <i className="_fa_sb fas fa-map-marker-alt"></i>
-                </SideItem>
-                <SideItem label="Gestion des utilisateurs" url="/users" >
-                    <i className="_fa_sb fas fa-users-cog"></i>
-                </SideItem>
+
+                { 
+                    USER_PROFILES.root === profile && 
+                    <>
+                    <SideItem label="Liste des Conventions" url="/conventions" />
+                    <SideItem label="Gestion des localisations" url="/localisations" >
+                        <i className="_fa_sb fas fa-map-marker-alt"></i>
+                    </SideItem>
+
+
+                    <SideItem label="Gestion des utilisateurs" url="/users" >
+                        <i className="_fa_sb fas fa-users-cog"></i>
+                    </SideItem>
+                    </>
+                }
 
             </div>
 
@@ -52,4 +62,7 @@ let SideBar = () => {
 
 }
 
-export default SideBar
+
+export default connect((state) => ({ 
+    profile: getProfile(state)
+}))(SideBar);

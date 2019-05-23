@@ -108,24 +108,29 @@ export const CheckTree = ({ items, selection, setSelection }) => {
 
 export const NestedTree = ({items, onDelete}) => 
 
-    items.map((item, i) => 
+    
+    items.map((item, i) => {
 
-        <div key={item.path} className="item-tree-wr" >
+        const hasChildren = item.children && item.children.length > 0
 
-            <i className="fas fa-angle fa-checkbox fa-angle-right"></i>
-            <span className="leaf-info">
-                <i  
-                    className="fa fa-times delete-item-list" 
-                    onClick={ () => onDelete(item.path) }
-                />
-                <span className="item-label i-color">{item.label.toLowerCase()}</span>
-            </span>
+        return (
+            <div key={item.path} className={`item-tree-wr ${ hasChildren ? '':'mtm_ls' }`} >
 
-            { item.children && item.children.length > 0 && <NestedTree items={item.children} onDelete={onDelete} /> }
+                <i className={`fas fa-angle fa-checkbox fa-angle-${ hasChildren ? 'right':'right' }`}></i>
+                <span className="leaf-info">
+                    <i  
+                        className="fa fa-times delete-item-list" 
+                        onClick={ () => onDelete(item.path) }
+                    />
+                    <span className="item-label i-color">{item.label.toLowerCase()}</span>
+                </span>
 
-        </div>
+                { hasChildren && <NestedTree items={item.children} onDelete={onDelete} /> }
 
-    )
+            </div>
+        )
+
+    })
 
 
 

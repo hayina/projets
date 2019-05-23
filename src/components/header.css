@@ -56,3 +56,12 @@
 .dropdown-label {
     margin-left: 8px;
 }
+
+
+#pageHeader .login-link {
+    margin-left: auto;
+    color: #1384ff;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 14px;
+}

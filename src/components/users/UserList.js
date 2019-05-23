@@ -84,7 +84,7 @@ let UserList = ({ dispatch }) => {
                 {   users.map((user, index) => {
 
                     return (
-                        <div className="user-item" key={user.id}>
+                        <div className="user-item mtem_ls" key={user.id}>
 
                             <div className="user-info">
                                 <div className="user-label">{user.id}. {user.nom} {user.prenom}</div>

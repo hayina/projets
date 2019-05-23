@@ -1,0 +1,24 @@
+#loginForm {
+  
+}
+
+#loginForm .log-i {
+    margin-bottom: 10px;
+}
+
+#loginForm .form-validation {
+    padding: 0px
+}
+
+
+#loginForm .form-validation .submit-btn {
+    padding: 4px 40px;
+}
+
+#loginForm .err-login {
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+    background-color: #ff1900;
+    color: white;
+}

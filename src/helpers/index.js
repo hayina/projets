@@ -9,10 +9,14 @@ export const uniqueID = () => counter++;
 
 export const uniqueHtmlID = () => `uniq-${uniqueID()}`
 
-export const formatDate = (m) => 
-    ("0" + m.getUTCDate()).slice(-2)  + "/" +
+export const formatDate = (m) => {
+
+    // console.log(m)
+    return     ("0" + m.getUTCDate()).slice(-2)  + "/" +
     ("0" + (m.getUTCMonth()+1)).slice(-2) + "/" +
     m.getUTCFullYear()
+}
+
     // + " " +
     // ("0" + m.getUTCHours()).slice(-2) + ":" +
     // ("0" + m.getUTCMinutes()).slice(-2) + ":" +
