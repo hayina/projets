@@ -59,3 +59,5 @@ splice & slice & split ....
 prototype ??
 
 issue with many submitting !!!
+
+not reaload whole page hot reload after ctrl+s

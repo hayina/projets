@@ -6,7 +6,7 @@ import './autocomplete.css'
 import { ApiError } from '../../../helpers';
 
 
-const AutoComplete = ({ onSelect, url, validateClass='', className='' }) => {
+const AutoComplete = ({ onSelect, url, validateClass='', className='', placeholder='' }) => {
 
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -171,6 +171,7 @@ const AutoComplete = ({ onSelect, url, validateClass='', className='' }) => {
                     onFocus={onFocus}
                     onKeyDown={onKeyDown}
                     value={term}
+                    placeholder={placeholder}
                 // value={term}
                 />
                 { loading && 

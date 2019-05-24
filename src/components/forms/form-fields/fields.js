@@ -22,15 +22,15 @@ const renderErrorField = (meta) => {
 
 ////////////// SIMPLE FIELD
 
-export const SimpleField = ({ children, meta, label, flex=false }) => {
+export const SimpleField = ({ children, meta, label, classnames="" }) => {
 
     // console.log('SimpleField RENDERING ---------------------------->')
 
     // const hasErors = errors !== undefined ? true : false
     return (
-        <div className={`form-group ${ flex ? 'flex-field-wr' : 'simple-field-wr' }`}>
-            { label && <label className={`field-label form-label ${ flex ? 'flex-label' : 'simple-label' }`}>{label}</label> }
-            <div className={`${ flex ? 'flex-data' : 'simple-data' }`}>{ children }</div>
+        <div className={`form-group simple-field-wr ${classnames}`}>
+            { label && <label className={`field-label form-label simple-label`}>{label}</label> }
+            <div className={`simple-data`}>{ children }</div>
             { meta && renderErrorField(meta) }
         </div>
     )
@@ -95,11 +95,12 @@ export const FlexField = ({ children, meta, label }) => {
 
 export const TextField = (props) => {
 
-    const { input, meta, label, fieldType='input' } = props;
+    const { input, meta, label, fieldType='input', placeholder="" } = props;
     // console.log('TextField', props);
 
     const fieldProps = {
         ...input, // (provided by the redux-form HOC)
+        placeholder,
         className: fieldCss(meta),
     };
 
@@ -123,7 +124,7 @@ export const TextField = (props) => {
 
 ////////////// AUTO COMPLETE
 
-export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete }) => {
+export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete, placeholder="" }) => {
 
     return (
         <SimpleField label={label} meta={meta} >
@@ -132,7 +133,7 @@ export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete 
                     <SimpleListItem item={input.value} onDelete= {onDelete} />
                 </div>
                 :
-                <AutoComplete onSelect={onSelect} url={url} validateClass={fieldCss(meta)}/> 
+                <AutoComplete onSelect={onSelect} url={url} validateClass={fieldCss(meta)} placeholder={placeholder} /> 
             }
         </SimpleField>
     )
@@ -147,28 +148,27 @@ export const RadioField = ({ input, meta, label, options }) => {
 
     return (
 
-        <SimpleField label={label} meta={meta} >
-            {options.map((option) => (
-                <div className="form-check" key={option.value}>
-                    <input
-                        id={`${option.value}`}
-                        // style={{ display: 'none' }}
-                        className="form-check-input"
-                        type="radio"
-                        value={option.value}
-                        checked={option.value === input.value}
-                        onChange={(e) => input.onChange(option.value)}
-                    />
-                    {/* {   option.value === input.value ? 
-                        <i className="fas fa-dot-circle"></i>
-                        :
-                        <i className="far fa-dot-circle"></i>
-                    } */}
-                    <label htmlFor={`${option.value}`} className="radio-label form-check-label">
-                        {option.label}
-                    </label>
-                </div>
-            ))}
+        <SimpleField label={label} meta={meta} classnames="radio-line" >
+            {options.map((option) => {
+
+                const inputID = uniqueHtmlID();
+                return (
+                    <div className="radio-item" key={option.value}>
+                        <input
+                            id={`${inputID}`}
+                            // style={{ display: 'none' }}
+                            className=""
+                            type="radio"
+                            value={option.value}
+                            checked={option.value === input.value}
+                            onChange={(e) => input.onChange(option.value)}
+                        />
+                        <label htmlFor={`${inputID}`} className="radio-label">
+                            {option.label}
+                        </label>
+                    </div>
+                )
+            })}
         </SimpleField>
 
     )

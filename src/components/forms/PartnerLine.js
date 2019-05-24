@@ -8,13 +8,14 @@ import { modalTypes } from '../modals/ModalRoot';
 import { SimpleListItem } from './SimpleList';
 
 import {formName as projetForm } from './ProjetForm'
+import { CONTRIBUTION_PARTNERS } from '../../types';
 
 const PartnerLine = ({ dispatch, isConvention, partners }) => {
 
     let partnersValues = partners.input.value ? partners.input.value : []
 
-    console.log(partners.meta.touched ? true:false)
-    console.log(partners.meta.error)
+    // console.log(partners.meta.touched ? true:false)
+    // console.log(partners.meta.error)
 
     return (
         <React.Fragment>
@@ -31,13 +32,11 @@ const PartnerLine = ({ dispatch, isConvention, partners }) => {
                 isConvention.input.value && partnersValues && 
                 <div className="form-group">
                     {   
-                        partnersValues.map(({ partner, montant, srcFinancement }, i) => (
+                        partnersValues.map(({ partner, montant, contribution, commentaire }, i) => (
                         <div className="partner-item mtem_ls" key={partner.value}>
                             <SimpleListItem item={partner} 
                                 onDelete={ () => dispatch(arrayRemove(projetForm, 'partners', i)) } 
-                                // onDelete={ () => dispatch(arrayDeletingByIndex('partners', i)) } 
                                 onEdit={() => {
-
                                     dispatch(showModal(modalTypes.ADD_CONVENTION, {
                                         editMode: true, index: i, 
                                         initialValues: partnersValues[i], 
@@ -45,8 +44,15 @@ const PartnerLine = ({ dispatch, isConvention, partners }) => {
                                     }))
                                 }}
                             />
-                            <div className="partner-montant">{Number(montant).toLocaleString()} DH</div>
-                            <div className="partner-srcFi">{ srcFinancement && srcFinancement.label }</div>
+
+                            {
+                                contribution === CONTRIBUTION_PARTNERS.FINANCIERE &&
+                                <div className="partner-montant">{Number(montant).toLocaleString()} DH</div>
+                            }
+                            {
+                                contribution === CONTRIBUTION_PARTNERS.AUTRES &&
+                                <div className="partner-autres">{ commentaire }</div>
+                            }
                         </div>
                     ))}
                 </div>

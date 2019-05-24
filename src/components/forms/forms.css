@@ -162,9 +162,7 @@
     opacity: 0.5;
 }
 
-.is-submitting {
-    pointer-events:none;
-}
+
 
 
 .sep-line {
@@ -268,4 +266,22 @@
 
 .react-datepicker-wrapper {
     width: 10em;
+}
+
+.radio-line .simple-label {
+    margin-right: 8px;
+}
+.radio-line .simple-data {
+    display: flex;
+    align-items: center;
+}
+
+.radio-line .radio-item {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.radio-line .radio-item input[type=radio] {
+    margin-right: 4px;
 }

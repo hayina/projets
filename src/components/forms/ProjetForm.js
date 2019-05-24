@@ -33,7 +33,7 @@ const vMod = (value, formValues, props, name) => (
 
 export const formName = 'projetForm'
 
-let ProjetForm = ({ handleSubmit, srcFinancement, isMaitreOuvrageDel, dispatch, match, history }) => {
+let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history }) => {
 
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
@@ -48,9 +48,7 @@ let ProjetForm = ({ handleSubmit, srcFinancement, isMaitreOuvrageDel, dispatch, 
     const { idProjet } = match.params
 
     const initForm = () => {
-        // dispatch(initFormValues({}))
         dispatch(initialize(formName, {}))
-        // dispatch(arraySetting('localisations', []))
     }
 
 
@@ -116,10 +114,10 @@ let ProjetForm = ({ handleSubmit, srcFinancement, isMaitreOuvrageDel, dispatch, 
         let apiValues = { 
             ...formValues,
             idProjet,
-            maitreOuvrage: formValues.maitreOuvrage ? `${formValues.maitreOuvrage.value}` : null,
+            maitreOuvrage: formValues.maitreOuvrage ? formValues.maitreOuvrage.value : null,
             maitreOuvrageDel: formValues.maitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
-            partners: formValues.isConvention ? 
-                formValues.partners.map(cp => `${cp.partner.value}:${cp.montant}`):[]
+            // partners: formValues.isConvention ? 
+            //     formValues.partners.map(cp => `${cp.partner.value}:${cp.montant}`):[]
         }
 
         
@@ -153,6 +151,17 @@ let ProjetForm = ({ handleSubmit, srcFinancement, isMaitreOuvrageDel, dispatch, 
 
     console.log('PROJET FORM -> RENDERING -->')
 
+    const genYears = () => {
+        const years = [];
+        let currentYear = new Date().getFullYear()+1;  
+        while ( currentYear >= 2015 ) {
+            years.push({ value: currentYear, label: currentYear});
+            currentYear--;
+        }   
+        // console.log('years ->>>>>', years)
+        return years;
+    }
+
     return (
         <form id={formName} className="form-wr" onSubmit={ handleSubmit(onSubmit) }>
 
@@ -165,8 +174,13 @@ let ProjetForm = ({ handleSubmit, srcFinancement, isMaitreOuvrageDel, dispatch, 
             />
 
             <Field
+                name="anneeProjet" component={SelectField} label="Année projet" options={genYears()}
+            />
+
+            <Field
                 name="montant" component={TextField} label="Montant" fieldType="input" validate={[required, number]}
             />
+
 
             <div className="sep-line"></div>
 
@@ -225,15 +239,7 @@ let ProjetForm = ({ handleSubmit, srcFinancement, isMaitreOuvrageDel, dispatch, 
                 optgroups={chargesSuivi}
                 gOptsLabel="Choisir ..."
             />
-            {/* { 
-                chargesSuivi && chargesSuivi.length > 0 &&
-                <SelectGrpField
-                    name="chargeSuivi"
-                    // label="Programme"
-                    optgroups={chargesSuivi}
-                    gOptsLabel="Choisir un chargé de suivi ..."
-                />
-            } */}
+
      
 
             <div className="sep-line"></div>

@@ -65,6 +65,10 @@ export const SRC_FINANCEMENT = {
     BG: 1, BP: 2, INDH: 3, PRDTS_INDH: 4, PRDTS_FDRZM: 5, CT: 10
 }
 
+export const CONTRIBUTION_PARTNERS = {
+    FINANCIERE: 1, AUTRES: 2
+}
+
 export const fieldType = {
     TEXT: 'text',
     SELECT: 'select',

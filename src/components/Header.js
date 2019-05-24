@@ -13,18 +13,8 @@ import { logoutUser } from '../actions';
 
 let Header = ({ isAuth, fullName, history, dispatch }) => {
 
-    // const NavItem = ({url, label}) => (
-    //     <div className="nav-item">
-    //         <Link to={url}>{label}</Link>
-    //     </div>
-    // )
-
-    console.log('fullName >', fullName)
-
-
     const logout = () => {
         
-
         useAjaxFetch({
             url: '/logout',
             success: () => { 
@@ -48,9 +38,9 @@ let Header = ({ isAuth, fullName, history, dispatch }) => {
                 Suivi des projets au niveau de la Province de Taourirt
             </div>
 
-            { !isAuth && 
+            {/* { !isAuth && 
                 <span className="login-link l_ho" onClick={ () =>  history.push('/login') }>Connexion</span>
-            }
+            } */}
 
             { isAuth &&
             <div className="user-profile">

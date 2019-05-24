@@ -72,6 +72,7 @@ const Login = ({ dispatch, history }) => {
     }
 
     const inpSubmitCss = submitting ? 'inp-submitting':''
+    const waiting = submitting ? 'waiting':''
     // ${ submitting ? 'form-submitting is-submitting':'' }
 
     return (
@@ -84,7 +85,9 @@ const Login = ({ dispatch, history }) => {
             
 
                 <div className={`form-validation`}>
-                    <button type="submit" className={`btn btn-primary submit-btn`}>login { submitting ? '...':'' }</button>
+                    <button type="submit" className={`btn btn-primary submit-btn ${waiting}`}>
+                        login { submitting ? '...':'' }
+                    </button>
                 </div>
 
                 { errMsg && <div className="err-login">{errMsg}</div> }

@@ -68,19 +68,20 @@ let UserList = ({ dispatch }) => {
 
     return (
 
-        <div className="users-wr box-sh">
+        <div className="users-wr" id="userPage">
 
-            <div className="nav-user">
+            <div className="nav-user box-sh">
 
-                <div className="add-user" onClick={() => {
+                <div className="result-info">{ users.length } utilisateurs retrouvés</div>
+
+                <div className="add-user blue-link l_ho" onClick={() => {
                         dispatch(showModal(modalTypes.ADD_USER, {editMode: false, addUser }))
                     }}>
-                    <span className="ctr_ic2 l_ho">Ajouter un utilisateur</span> 
-                    <i className="fas fa-user-plus fa-add-user" ></i>
+                    Ajouter un utilisateur
                 </div>
             </div>
 
-            <div className="user-result">
+            <div className="user-result ">
                 {   users.map((user, index) => {
 
                     return (

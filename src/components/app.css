@@ -1,6 +1,7 @@
 
 .app-container {
     display: flex;
+    justify-content: center;
 }
 
 #content {
@@ -104,11 +105,12 @@
     display: flex;
     align-items: center;
     margin-bottom: 12px;
-    /* padding: 10px 0px 18px; */
+    flex-wrap: wrap;
 }
 
 .radio-line label {
     margin-bottom: 0px;
+    cursor: pointer;
 }
 
 .radio-line .radio-list {
@@ -233,6 +235,7 @@
     border: 1px solid #dadce0;
     border-radius: 18px;
     padding: 10px 14px;
+    background-color: white;
 
     
 }
@@ -305,5 +308,19 @@
  }
 
  .inp-submitting {
-     opacity: 0.5;
+    color: #aeaeae;
  }
+
+ .is-submitting {
+    pointer-events:none;
+}
+
+.blue-link {
+    color: #1384ff;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.result-info {
+    font-weight: 600;
+}

@@ -24,11 +24,15 @@
 }
 
 .add-user {
-    margin-left: auto;
+    font-size: 14px;
 }
 
-.nav-user {
+#userPage .nav-user {
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px;
 }
 
 .user-result {
