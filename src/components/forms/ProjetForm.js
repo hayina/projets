@@ -12,6 +12,8 @@ import LocationLine from './LocationLine';
 import ProgLine from './ProgLine';
 
 import './forms.css';
+import { getRoles } from '../../reducers/login';
+import { USER_ROLES } from '../../types';
 
 
 const vIndh = (value, formValues, props, name) => (
@@ -33,7 +35,7 @@ const vMod = (value, formValues, props, name) => (
 
 export const formName = 'projetForm'
 
-let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history }) => {
+let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, roles }) => {
 
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
@@ -231,16 +233,21 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history }
 
 
 
-            <div className="sep-line"></div>
+            {
+                roles.some((role) => role === USER_ROLES.affecter_project) &&
+            
+                <>
+                <div className="sep-line"></div>
 
-            <Field
-                name="chargeSuivi" component={SelectGrpField} 
-                label="Chargé de suivi"
-                optgroups={chargesSuivi}
-                gOptsLabel="Choisir ..."
-            />
+                <Field
+                    name="chargeSuivi" component={SelectGrpField} 
+                    label="Chargé de suivi"
+                    optgroups={chargesSuivi}
+                    gOptsLabel="Choisir ..."
+                />
+                </>
 
-     
+            }
 
             <div className="sep-line"></div>
 
@@ -286,6 +293,7 @@ export default connect(
         //     isMaitreOuvrageDel: false,
         // },
         // initialValues: getInitialFormValues(state),
+        roles: getRoles(state),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         srcFinancement: selector(state, 'srcFinancement'),

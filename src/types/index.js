@@ -61,6 +61,14 @@ export const USER_PROFILES = {
     root: 1, charge_suivi: 2, division_supervisor: 3, supervisor_general: 4, consultation: 5
 }
 
+export const USER_ROLES = {
+    ajouter_projet: 1, supprimer_projet: 2, affecter_project: 3, valider_project: 4, 
+	gestion_users: 10, gestion_localisation: 11, ajouter_acheteur: 12,
+	gestion_convention: 20, 
+	gestion_all_divisions: 30, 
+	consultation: 100,
+}
+
 export const SRC_FINANCEMENT = {
     BG: 1, BP: 2, INDH: 3, PRDTS_INDH: 4, PRDTS_FDRZM: 5, CT: 10
 }

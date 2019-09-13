@@ -1,0 +1,1 @@
+export const STATIC_PATH = '/PROJET-API/resources/'

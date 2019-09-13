@@ -1,9 +1,15 @@
-import React from 'react'
+import React , { useEffect } from 'react'
+import { connect } from 'react-redux';
+
+import { setBreadCrumb } from '../actions'
 
 
-const Dashboard = () => {
+const Dashboard = ({ dispatch }) => {
 
 
+    useEffect(() => {
+        dispatch(setBreadCrumb("Tableau de bord"))
+    }, [])
 
     return (
         <div id="dashboard-page">
@@ -13,4 +19,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard
+export default connect()(Dashboard)

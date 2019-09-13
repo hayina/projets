@@ -7,6 +7,7 @@ import './header.css'
 import { isAuthenticated, getFullName } from '../reducers/login';
 import useAjaxFetch from './hooks/useAjaxFetch';
 import { logoutUser } from '../actions';
+import { STATIC_PATH } from '../conf';
 // import { history } from './App';
 
 
@@ -25,12 +26,15 @@ let Header = ({ isAuth, fullName, history, dispatch }) => {
         })
     }
 
+    console.log('public url : ', process.env.PUBLIC_URL)
+
     return (
         <nav id="pageHeader" className="header">
 
             <div id="logo">
                 <Link to={`/`}>
-                    <img id="img_logo" alt="" src={`/images/logo.jpg`}></img>
+                    {/* <img id="img_logo" alt="" src={`/images/logo.jpg`}></img> */}
+                    <img id="img_logo" alt="" src={`${process.env.PUBLIC_URL}/images/logo.jpg`}></img>
                 </Link>
             </div>
 

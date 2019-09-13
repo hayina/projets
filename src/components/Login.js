@@ -75,6 +75,8 @@ const Login = ({ dispatch, history }) => {
     const waiting = submitting ? 'waiting':''
     // ${ submitting ? 'form-submitting is-submitting':'' }
 
+    // console.log("LOGIN")
+
     return (
 
         <form onSubmit={ onSubmit } id={loginForm} 

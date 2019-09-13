@@ -8,7 +8,7 @@ import './modal.css'
 
 
 
-const Modal = ({ title, children, handleValidation, dispatch, submitting, vBar=true }) => {
+const Modal = ({ title, children, handleValidation, dispatch, submitting, styles={ width: '50%' }, vBar=true }) => {
 
     const modalRef = useRef(null);
 
@@ -36,7 +36,7 @@ const Modal = ({ title, children, handleValidation, dispatch, submitting, vBar=t
     return (
         <div className="modals-container">
 
-            <div className="modals-dialog" ref={modalRef}>
+            <div className="modals-dialog" ref={modalRef} style={styles}>
 
                 { title && 
                     <div className="modals-header">

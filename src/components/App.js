@@ -15,10 +15,11 @@ import MarcheForm from './marches/MarcheForm';
 import ProjetDetail from './projets/ProjetDetail';
 import Dashboard from './Dashboard';
 import Login from './Login';
-import { isAuthenticated } from '../reducers/login';
+import { isAuthenticated, getUserID, getProfile, getRoles } from '../reducers/login';
 
 
 import { createBrowserHistory } from 'history';
+import { USER_ROLES } from '../types';
 export const history = createBrowserHistory();
 
 
@@ -52,35 +53,50 @@ const isAuth = Cp => {
     return connect( (state) => ({ isAuthenticated: isAuthenticated(state) }) )(AuthCp)
 }
 
-let ProtectedRoute = ({ isAuth, component:Cp, ...restProps }) => {
-    return (
-        <Route {...restProps} render={ 
-            props => {
-                if(isAuth) { 
-                    return <Cp {...props} />  
-                } else {
-                    return <Redirect to="/login" />
+
+// ProtectedRoute = connect((state) => ({ isAuth: isAuthenticated(state) }))(ProtectedRoute);
+
+const App = ({ breadCrumb , isAuth, userID, profile, roles }) => {
+
+    const ProtectedRoute = ({ component:Cp, authRole, own=false, ...restProps }) => {
+
+        
+
+        return (
+            <Route {...restProps} render={ 
+                props => {
+                    if(isAuth) { 
+
+                        // if(roles.some((role) => role === authRole) ) {
+
+                        //     // if( own && )
+                        // }
+                        return <Cp {...props} />  
+                    } else {
+                        console.log("Redirect to login", restProps.path)
+                        // return <Redirect to="/login" />
+                        return <Login />
+                    }
                 }
             }
-        }
-        />
-    )
-}
-ProtectedRoute = connect((state) => ({ isAuth: isAuthenticated(state) }))(ProtectedRoute);
+            />
+        )
+    }
 
-const App = ({ breadCrumb , isAuth }) => {
 
-    // const { dispatch, projetForm } = props;
+    // console.log("MAIN APP ------>")
 
     return (
 
         <div className={`app-container`}>
 
-            <BrowserRouter>
+            <BrowserRouter basename={'/PROJET-API/routes/'}>
 
      
 
                 { isAuth && <SideBar /> }
+
+                {/* <Login/> */}
 
                 <section id="content">
                     <Header />
@@ -90,17 +106,33 @@ const App = ({ breadCrumb , isAuth }) => {
 
                         <BreadCrumb label={breadCrumb} />
 
-                        <Route path="/" exact component={Login} />
                         <Route path="/login" exact component={Login} />
 
+                        <ProtectedRoute path="/" exact component={Dashboard} />
+                        <ProtectedRoute path="/projets/" exact component={Dashboard} />
                         <ProtectedRoute path="/projets/dashboard" exact component={Dashboard} />
-                        <ProtectedRoute path="/projets/new" exact component={ProjetForm} />
-                        <ProtectedRoute path="/projets/edit/:idProjet" exact component={ProjetForm} />
+
                         <ProtectedRoute path="/projets/detail/:idProjet" exact component={ProjetDetail} />
                         <ProtectedRoute path="/projets/search" exact component={ProjetList} />
-                        <ProtectedRoute path="/marches/new/:idProjet" exact component={MarcheForm} />
-                        <ProtectedRoute path="/marches/edit/:idMarche" exact component={MarcheForm} />
-                        <ProtectedRoute path="/users" exact component={UserList} />
+                       
+                        <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true}
+                            path="/projets/new" exact component={ProjetForm} 
+                        />
+
+                        <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true} 
+                            path="/projets/edit/:idProjet" exact component={ProjetForm} 
+                        />
+
+                        <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true}
+                            path="/marches/new/:idProjet" exact component={MarcheForm}
+                        />
+
+                        <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true} 
+                            path="/marches/edit/:idMarche" exact component={MarcheForm} 
+                        />
+                       
+                        <ProtectedRoute authRole={USER_ROLES.gestion_users} path="/users" exact component={UserList} />
+
                     </div>
 
                 </section>
@@ -118,6 +150,9 @@ const App = ({ breadCrumb , isAuth }) => {
 export default connect(
     (state) => ({
         isAuth: isAuthenticated(state),
+        userID: getUserID(state),
+        profile: getProfile(state),
+        roles: getRoles(state),
         breadCrumb: state.breadCrumb
     })
 )(App);

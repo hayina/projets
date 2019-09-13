@@ -10,6 +10,7 @@ import SocieteForm from '../marches/SocieteForm';
 import TauxForm from '../marches/TauxForm';
 import OsForm from '../marches/OsForm';
 import DecompteForm from '../marches/DecompteForm';
+import RolesModal from '../users/RolesModal';
 
 
 export const modalTypes = {
@@ -22,6 +23,7 @@ export const modalTypes = {
     ADD_TAUX: 'ADD_TAUX',
     ADD_OS: 'ADD_OS',
     ADD_DECOMPTE: 'ADD_DECOMPTE',
+    MANAGE_ROLE: 'MANAGE_ROLE',
 }
 
 const MODAL_COMPONENTS = {
@@ -34,6 +36,7 @@ const MODAL_COMPONENTS = {
     [modalTypes.ADD_TAUX]: TauxForm,
     [modalTypes.ADD_OS]: OsForm,
     [modalTypes.ADD_DECOMPTE]: DecompteForm,
+    [modalTypes.MANAGE_ROLE]: RolesModal,
 }
 
 const ModalRoot = ({ modalType, modalProps }) => {

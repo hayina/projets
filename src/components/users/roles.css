@@ -1,0 +1,13 @@
+#rolesForm .radio-label {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #007bff;
+    font-weight: 600;
+}
+
+#rolesForm .checkbox-label {
+    text-transform: uppercase;
+    color: #495057;
+    font-size: 15px;
+    font-weight: 600;
+}

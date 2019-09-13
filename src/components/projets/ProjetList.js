@@ -9,8 +9,10 @@ import { setBreadCrumb } from '../../actions';
 import SearchBar from './SearchBar';
 import Percentage from './Percentage';
 import DropDown from './DropDown';
+import { USER_ROLES } from '../../types';
+import { getRoles, getUserID } from '../../reducers/login';
 
-let ProjetList = ({dispatch}) => {
+let ProjetList = ({dispatch, roles, userID}) => {
 
 
 
@@ -91,7 +93,10 @@ let ProjetList = ({dispatch}) => {
             return (
                 <div className="projet-item box-sh box-br no_dc" key={projet.id}>
 
-                    <DropDown { ...{ projet, deleteProjet, index } } />
+                    {
+                        ( userID === projet.chargeSuivID || roles.some((role) => role === USER_ROLES.valider_project) ) &&
+                        <DropDown { ...{ projet, deleteProjet, index } } />
+                    }
 
                     <div className="projet-label">
                         <Link to={`/projets/detail/${projet.id}`} >
@@ -153,6 +158,7 @@ let ProjetList = ({dispatch}) => {
 
 export default connect(
     (state) => ({
-        // _projets: getProjets(state)
+        roles: getRoles(state),
+        userID: getUserID(state),
     })
 )(ProjetList)

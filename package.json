@@ -1,6 +1,7 @@
 {
   "name": "projets",
   "version": "0.1.0",
+  "homepage": "https://localhost:8080/PROJET-API/REACT-APP/",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",

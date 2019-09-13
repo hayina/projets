@@ -108,7 +108,7 @@
     flex-wrap: wrap;
 }
 
-.radio-line label {
+.radio-line .radio-label {
     margin-bottom: 0px;
     cursor: pointer;
 }

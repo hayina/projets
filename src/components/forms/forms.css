@@ -72,6 +72,8 @@
     /* font-weight: 500;
     text-transform: uppercase;
     cursor: pointer; */
+    text-transform: uppercase;
+    font-size: 14px;
 }
 
 .checkbox-label {
@@ -270,6 +272,7 @@
 
 .radio-line .simple-label {
     margin-right: 8px;
+    margin-bottom: 0px;
 }
 .radio-line .simple-data {
     display: flex;

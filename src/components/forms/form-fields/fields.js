@@ -144,7 +144,7 @@ export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete,
 
 ////////////// RADIO
 
-export const RadioField = ({ input, meta, label, options }) => {
+export const RadioField = ({ input, meta, label, options, callback }) => {
 
     return (
 
@@ -161,7 +161,10 @@ export const RadioField = ({ input, meta, label, options }) => {
                             type="radio"
                             value={option.value}
                             checked={option.value === input.value}
-                            onChange={(e) => input.onChange(option.value)}
+                            onChange={(e) => {
+                                input.onChange(option.value)
+                                if(callback) callback(option.value);
+                            }}
                         />
                         <label htmlFor={`${inputID}`} className="radio-label">
                             {option.label}
@@ -339,7 +342,7 @@ export const CheckboxField = ({ input, meta, label, options }) => {
                 
                 )}
             </div>
-            { meta.error && <div className="error-feedback">{meta.error}</div> }
+            {/* { meta.error && <div className="error-feedback">{meta.error}</div> } */}
         </SimpleField>
 
     )

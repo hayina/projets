@@ -79,6 +79,11 @@ let UserList = ({ dispatch }) => {
                     }}>
                     Ajouter un utilisateur
                 </div>
+                <div className="add-user blue-link l_ho" onClick={() => {
+                        dispatch(showModal(modalTypes.MANAGE_ROLE, {}))
+                    }}>
+                    Gestion rôles
+                </div>
             </div>
 
             <div className="user-result ">

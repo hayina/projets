@@ -8,7 +8,7 @@ import { logoutUser } from '../../actions';
 import { store } from '../../store';
 
 
-const useAjaxFetch = ({ history, dispatch, url, method='GET', params, body, success, error, contentType="application/json" }) => {
+const useAjaxFetch = ({ always, url, method='GET', params, body, success, error, contentType="application/json" }) => {
 
     axios({
             // SETUP PARAMS
@@ -39,6 +39,9 @@ const useAjaxFetch = ({ history, dispatch, url, method='GET', params, body, succ
             } else if(errors.response.status === 403){
                 console.log("Forbidden");
             }
+        })
+        .then(() => {
+            if(always) always();
         })
 }
 
