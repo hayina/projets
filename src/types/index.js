@@ -77,6 +77,10 @@ export const CONTRIBUTION_PARTNERS = {
     FINANCIERE: 1, AUTRES: 2
 }
 
+export const ATTACH_TYPE = {
+    DEC: 'DEC', OS: 'OS'
+}
+
 export const fieldType = {
     TEXT: 'text',
     SELECT: 'select',

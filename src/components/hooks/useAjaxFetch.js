@@ -1,14 +1,13 @@
-// import { useEffect } from 'react';
 import axios from 'axios';
-import {connect} from 'react-redux'
 
-
-import { withRouter } from "react-router-dom";
 import { logoutUser } from '../../actions';
 import { store } from '../../store';
 
 
-const useAjaxFetch = ({ always, url, method='GET', params, body, success, error, contentType="application/json" }) => {
+const useAjaxFetch = ({ 
+            always, url, method='GET', params, body, success, error, 
+            // contentType="application/json"
+         }) => {
 
     axios({
             // SETUP PARAMS
@@ -16,7 +15,7 @@ const useAjaxFetch = ({ always, url, method='GET', params, body, success, error,
             headers: {
                 "Access-Control-Allow-Origin": "*",
                 "X-Requested-With": "XMLHttpRequest",
-                "Content-Type": contentType,
+                // "Content-Type": contentType,
             },
             // PASSED PARAMS
             url,

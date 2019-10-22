@@ -130,8 +130,8 @@
 .delete-item-list {
     color: #ec4e4e;
     cursor: pointer;
-    float: right;
-    font-size: 16px;
+    /* float: right; */
+    /* font-size: 16px; */
 }
 
 .delete-item-list:hover {
@@ -142,7 +142,7 @@
 .edit-item-list {
     color: #007bff;
     cursor: pointer;
-    float: right;
+    /* float: right; */
 }
 
 
@@ -287,4 +287,44 @@
 
 .radio-line .radio-item input[type=radio] {
     margin-right: 4px;
+}
+
+.attach-line {
+    display: flex;
+    justify-content: space-between;
+}
+
+.attach-line:hover {
+    background-color: aliceblue;
+}
+
+.sub-form-attachments {
+    margin: 10px 0px;
+}
+
+.attach-line .item-label {
+    /* text-decoration: underline; */
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: bold;
+    
+}
+.attach-line .item-label:hover {
+    text-decoration: none;
+    cursor: pointer;
+    /* font-weight: bold; */
+}
+
+.item-label-wrp {
+    /* display: flex;
+    align-items: center; */
+}
+
+
+.display-img-attach {
+    
+}
+
+.attach-grp-wrp {
+    margin: 10px 0px;
 }

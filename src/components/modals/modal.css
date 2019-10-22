@@ -61,4 +61,13 @@
     padding: 4px 24px;
 }
 
+.img-popup-wr {
+    display: flex;
+    justify-content: center;
+    
+}
  
+
+.img-popup {
+    max-width: 100%;
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, submit, reduxForm, change, arrayPush } from 'redux-form'
+import { Field, Fields, submit, reduxForm, change, arrayPush } from 'redux-form'
 import Modal from '../modals/Modal';
 import { TextField, DateField } from '../forms/form-fields/fields';
 import { required, number } from '../forms/validator';
@@ -9,18 +9,19 @@ import { required, number } from '../forms/validator';
 
 import { marcheFormName } from './MarcheForm'
 import { hideModal } from '../../actions';
+import { UploadLine } from './lines';
 
 export const decompteFormName = 'osForm'
 
 
 
-let DecompteForm = ({ dispatch, handleSubmit, editMode, index }) => {
+let DecompteForm = ({ dispatch, handleSubmit, editMode, index, idMarche }) => {
 
 
     const onSubmit = (formValues) => {
 
         console.log(formValues, editMode, index)
-        if ( !editMode ) {
+        if (!editMode) {
             dispatch(arrayPush(marcheFormName, 'decomptes', formValues))
         } else {
             dispatch(change(marcheFormName, `decomptes[${index}]`, formValues));
@@ -33,20 +34,25 @@ let DecompteForm = ({ dispatch, handleSubmit, editMode, index }) => {
     return (
         <Modal
             vBar={false}
-            handleValidation={ () => dispatch(submit(decompteFormName)) }
-            // title={ `Ajouter une nouvelle société` }
+            handleValidation={() => dispatch(submit(decompteFormName))}
+        // title={ `Ajouter une nouvelle société` }
         >
 
-            <form onSubmit={ handleSubmit(onSubmit) } id={decompteFormName} >
+            <form onSubmit={handleSubmit(onSubmit)} id={decompteFormName} >
                 <div className={`form-content`}>
                     <Field
                         name="montant" component={TextField} validate={[required, number]}
                     />
                     <Field
-                        name="dateDec" component={DateField} label="Date Décompte"  validate={[required]}
+                        name="dateDec" component={DateField} label="Date Décompte" validate={[required]}
                     />
                     <Field
-                        name="commentaire" component={TextField} label="Commentaire" fieldType="textarea" 
+                        name="commentaire" component={TextField} label="Commentaire" fieldType="textarea"
+                    />
+
+                    <Fields
+                        names={["attachments", "resources"]} component={UploadLine} idMarche={idMarche}
+                        formName={decompteFormName}
                     />
                 </div>
 

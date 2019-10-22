@@ -9,3 +9,5 @@ Object.entries(myObj).forEach(([key, val]) => ... )
 
 
 var size = Object.keys(myObj).length;
+
+delete element from array splice(index, 1) => attention it return the deleted element

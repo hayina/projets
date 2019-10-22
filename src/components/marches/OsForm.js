@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, submit, reduxForm, change, arrayPush } from 'redux-form'
+import { Field, Fields, submit, reduxForm, change, arrayPush, arrayRemove } from 'redux-form'
 import Modal from '../modals/Modal';
 import { TextField, DateField, RadioField } from '../forms/form-fields/fields';
 import { required } from '../forms/validator';
@@ -9,18 +9,15 @@ import { required } from '../forms/validator';
 
 import { marcheFormName } from './MarcheForm'
 import { hideModal } from '../../actions';
+import { UploadLine } from './lines';
 
 export const osFormName = 'osForm'
 
 
 
-let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes }) => {
+let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes, initialValues, idMarche }) => {
 
-    console.log('osTypes', osTypes)
-
-    // useEffect(() => {
-    //     fetchOsTypes()
-    // }, [osTypes])
+    console.log('osTypes', initialValues)
 
     const onSubmit = (formValues) => {
 
@@ -56,6 +53,10 @@ let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes }) => {
                     />
                     <Field
                         name="commentaire" component={TextField} label="Commentaire" fieldType="textarea" 
+                    />
+                    <Fields
+                        names={["attachments", "resources"]} component={UploadLine} idMarche={idMarche}
+                        formName={osFormName}
                     />
                 </div>
 

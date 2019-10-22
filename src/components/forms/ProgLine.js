@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { SliderCheckbox, ToggleField, SelectGrpField, SelectField } from './form-fields/fields';
-import { constants, SRC_FINANCEMENT } from '../../types';
-import { required } from './validator';
+import { SelectGrpField, SelectField } from './form-fields/fields';
+import { SRC_FINANCEMENT } from '../../types';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 
 
@@ -22,7 +21,7 @@ const ProgLine = ({ srcFinancement, indhProgramme, setErrors }) => {
                 url: `/parent/programmes`,
                 // url: `/getProgrammesWithPhases`,
                 success: (data) => { setIndhProgrammes(data) },
-                error: (err) => setErrors(true)
+                error: () => setErrors(true)
             })
         }
         

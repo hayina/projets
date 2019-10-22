@@ -15,6 +15,15 @@
 
 }
 
+#marcheForm .sub-form-attachments ._item_ls {
+
+}
+
+#marcheForm .fa-paperclip {
+    margin-left: 0px;
+    font-size: 12px;
+}
+
 #marcheForm .invalid-feedback {
     margin-left: var(--ml);
     width: 100%;

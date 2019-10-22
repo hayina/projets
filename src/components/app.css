@@ -218,6 +218,9 @@
 
 
 ._item_ls {
+
+    display: flex;
+    justify-content: space-between;
     color: #07C;
     font-weight: 600;
     font-size: 11pt;

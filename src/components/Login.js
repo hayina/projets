@@ -82,8 +82,16 @@ const Login = ({ dispatch, history }) => {
         <form onSubmit={ onSubmit } id={loginForm} 
             className={`form-content box-sh box-br`}>
 
-                <input className={`log-i form-control ${inpSubmitCss}`} type="text" placeholder="login" ref={ loginRef } />
-                <input className={`log-i form-control ${inpSubmitCss}`} type="password" placeholder="password" ref={ passwordRef }  />
+                <input 
+                    className={`log-i form-control ${inpSubmitCss}`} 
+                    type="text" placeholder="login" ref={ loginRef } 
+                    defaultValue="yous"
+                />
+                <input 
+                    className={`log-i form-control ${inpSubmitCss}`} 
+                    type="password" placeholder="password" ref={ passwordRef }  
+                    defaultValue="yous"
+                />
             
 
                 <div className={`form-validation`}>
