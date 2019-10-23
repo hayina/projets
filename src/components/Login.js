@@ -8,6 +8,8 @@ import { ApiError } from './helpers';
 
 const Login = ({ dispatch, history }) => {
 
+    // console.log("History -------------------------------->", history)
+
     const loginForm = 'loginForm';
 
     const [errMsg, setErrMsg] = useState('');

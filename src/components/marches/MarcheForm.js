@@ -34,7 +34,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
 
     useEffect(() => {
 
-
+        // console.log("useEffect --------------> MARCHE FORM")
 
         dispatch(setBreadCrumb("Ajouter un marché"))
 
@@ -54,6 +54,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
         })
 
         fetchOsTypes();
+
 
         if (idMarche) {
             setEditLoading(true)

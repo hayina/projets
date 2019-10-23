@@ -56,32 +56,35 @@ const isAuth = Cp => {
 
 // ProtectedRoute = connect((state) => ({ isAuth: isAuthenticated(state) }))(ProtectedRoute);
 
-const App = ({ breadCrumb , isAuth, userID, profile, roles }) => {
 
-    const ProtectedRoute = ({ component:Cp, authRole, own=false, ...restProps }) => {
+let ProtectedRoute = ({ component:Cp, authRole, own=false, ...restProps }) => {
 
         
+    // console.log("restProps", restProps)
 
-        return (
-            <Route {...restProps} render={ 
-                props => {
-                    if(isAuth) { 
-
-                        // if(roles.some((role) => role === authRole) ) {
-
-                        //     // if( own && )
-                        // }
-                        return <Cp {...props} />  
-                    } else {
-                        console.log("Redirect to login", restProps.path)
-                        // return <Redirect to="/login" />
-                        return <Login />
-                    }
+    return (
+        <Route {...restProps} render={ 
+            props => {
+                if(isAuth) { 
+                    return <Cp {...props} />  
+                } else {
+                    console.log("Redirect to login", restProps.path)
+                    // return <Redirect to="/login" />
+                    return <Login {...props} />
                 }
             }
-            />
-        )
-    }
+        }
+        />
+    )
+}
+
+ProtectedRoute = connect( state => ({
+    isAuth: isAuthenticated(state)
+}))(ProtectedRoute)
+
+const App = ({ breadCrumb , isAuth, userID, profile, roles }) => {
+
+
 
 
     // console.log("MAIN APP ------>")
@@ -108,6 +111,8 @@ const App = ({ breadCrumb , isAuth, userID, profile, roles }) => {
 
                         <Route path="/login" exact component={Login} />
 
+                        
+
                         <ProtectedRoute path="/" exact component={Dashboard} />
                         <ProtectedRoute path="/projets/" exact component={Dashboard} />
                         <ProtectedRoute path="/projets/dashboard" exact component={Dashboard} />
@@ -127,6 +132,7 @@ const App = ({ breadCrumb , isAuth, userID, profile, roles }) => {
                             path="/marches/new/:idProjet" exact component={MarcheForm}
                         />
 
+                        {/* <Route path="/marches/edit/:idMarche" exact component={MarcheForm} /> */}
                         <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true} 
                             path="/marches/edit/:idMarche" exact component={MarcheForm} 
                         />

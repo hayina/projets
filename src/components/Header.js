@@ -26,7 +26,7 @@ let Header = ({ isAuth, fullName, history, dispatch }) => {
         })
     }
 
-    console.log('public url : ', process.env.PUBLIC_URL)
+    // console.log('public url : ', process.env.PUBLIC_URL)
 
     return (
         <nav id="pageHeader" className="header">
