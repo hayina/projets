@@ -93,9 +93,8 @@ export const FlexField = ({ children, meta, label }) => {
 
 ////////////// TEXT TEXTAREA
 
-export const TextField = (props) => {
+export const TextField = ({ input, meta, label, fieldType = 'input', placeholder = "" }) => {
 
-    const { input, meta, label, fieldType = 'input', placeholder = "" } = props;
     // console.log('TextField', props);
 
     const fieldProps = {
@@ -197,29 +196,36 @@ export const RadioField = ({ input, meta, label, options, callback }) => {
 
 }
 
-export const RadioList = ({ options, input, meta }) => (
+export const RadioList = ({ options, input, meta }) => {
+
+    const inputID = uniqueHtmlID()
+    
+    return (
 
     <div className="radio-list-wr">
         {
-            options.map((option) => {
+            options.map((option, i) => {
 
-                const inputID = uniqueHtmlID();
-
+                const isChecked = option.value === input.value
                 return (
                     <div className="form-check" key={option.label}>
-                        <input id={inputID} className="form-check-input" type="radio"
+                        <input id={`${inputID}-${i}`} className="form-check-input" type="radio"
                             value={option.value}
-                            checked={option.value === input.value}
+                            checked={isChecked}
                             onChange={(e) => input.onChange(option.value)}
                         />
-                        <label htmlFor={inputID} className="radio-label form-check-label">
+                        <label htmlFor={`${inputID}-${i}`} 
+                            className={`radio-label form-check-label ${ isChecked ? 'radio-label-checked' : ''}`}>
                             {option.label}
                         </label>
                     </div>
                 )
-            })}
+                
+            
+            })
+        }
     </div>
-)
+)}
 
 
 
@@ -331,13 +337,14 @@ export const SelectGrpField = ({ input, meta, label, optgroups, gOptsLabel = "..
 
 export const CheckboxField = ({ input, meta, label, options }) => {
 
+    const checkboxVal = input.value || []
     return (
 
         <SimpleField label={label} meta={meta} >
             <div className={`check-control check-array`}>
                 {/* <div className={ meta && `${fieldCss(meta)}` }> */}
                 {options.map((option) => {
-                    let checked = input.value.indexOf(option.value) !== -1
+                    let checked = checkboxVal.indexOf(option.value) !== -1
                     return (
                         <div className="form-check" key={option.value}>
                             <input
@@ -346,14 +353,14 @@ export const CheckboxField = ({ input, meta, label, options }) => {
                                 type="checkbox"
                                 checked={checked}
                                 onChange={(e) => {
-                                    const newValues = [...input.value];
+                                    const newValues = [...checkboxVal];
                                     if (e.target.checked) { newValues.push(option.value) }
                                     else { newValues.splice(newValues.indexOf(option.value), 1) }
                                     input.onChange(newValues)
                                 }}
                             />
                             <i className={`fa-${checked ? 'check-square checked fas' : 'square far'}`} />
-                            <label className="checkbox-label form-check-label" htmlFor={option.value}>
+                            <label className={`checkbox-label form-check-label ${checked ? 'checkbox-checked' : ''}`} htmlFor={option.value}>
                                 {option.label}
                             </label>
                         </div>
@@ -449,18 +456,7 @@ export const ToggleField = ({ label, input, callback }) => {
 
 
 
-////////////// SIMPLE FIELD
 
-export const TextInput = ({ input, meta, placeholder = '', type = 'text', autoComplete = 'off' }) => (
-    <div className="in_wr">
-        <input
-            type={type} placeholder={placeholder} autoComplete={autoComplete}
-            className={`form-control ${meta.error ? 'has-errors' : ''}`}
-            {...input}
-        />
-        {meta.error && <div className="error-feedback">{meta.error}</div>}
-    </div>
-)
 ////////////// Empty Field
 
 export const EmptyField = ({ input, meta, arrayValues }) => {

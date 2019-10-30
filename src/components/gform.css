@@ -1,0 +1,60 @@
+.sf-line {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.sf-label {
+    width: var(--ml);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #212529;
+}
+
+.af_lb::after {
+    content: ':';
+    display: inline;
+    margin: 0px 4px;
+}
+
+
+/* .sf-line-wr {
+    
+} */
+.sf-data {
+    width: 70%;
+}
+
+.sf-error.error-feedback {
+    margin-left: var(--ml);
+    width: 100%;
+    /* display: inline-block; */
+}
+
+.form-line-grp {
+    border-bottom: 1px solid #dae0e5;
+    margin: 10px 0px;
+}
+
+.sf-inp {
+
+}
+
+.sf-select {
+
+}
+
+.checkbox-checked {
+    color: #007bff;
+}
+
+.radio-label-checked {
+    color: #007bff;
+}
+
+.radio-label {
+    font-weight: bold;
+}

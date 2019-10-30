@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, createContext, Fragment } from 'react';
+import React, { useReducer, useContext, createContext } from 'react';
 
  
 export const reducer = (state, action) => {
@@ -54,17 +54,17 @@ export const setFirstTimeValidation = (value) => ({ type: 'FIRST_TIME_VALIDATION
 export const FormContext = createContext({});
 
 
-export const FormProvider = ({ intialValues, rules, children, submitOnChange=false }) => {
+export const FormProvider = ({ intialValues, rules, children }) => {
 
     const [state, dispatchForm] = useReducer(reducer, { ...initialState, values: intialValues })
 
     // console.log('Form Provider State ->', state)
 
-    const validateFields = ({checkAll=true}) => {
+    const validateFields = ({ checkAll=true }) => {
 
         // let nErrors = {}
         Object.entries(rules).forEach(([field, validators]) => {
-            if( ( checkAll || state.touched[field] ) ) {
+            if( checkAll || state.touched[field] ) {
                 validate(field, validators, state.values[field])
             }
         })
@@ -118,10 +118,6 @@ export const FormProvider = ({ intialValues, rules, children, submitOnChange=fal
         dispatchForm(setValues(field, value))
         dispatchForm(setDirty(field, true))
         validate(field, rules[field], value)
-
-        if(submitOnChange) {
-
-        }
     }
 
     const onFocus = (field) => {
@@ -142,7 +138,7 @@ export const Field = ({ name, children }) => {
     const { state, onChange, onFocus } = useContext(FormContext);
 
     return (
-        <Fragment>
+        <>
             { 
                 children({ 
                     input: {
@@ -157,7 +153,7 @@ export const Field = ({ name, children }) => {
                     }       
                 }) 
             }
-        </Fragment>
+        </>
     )
 }
 

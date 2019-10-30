@@ -57,16 +57,13 @@ export const TYPE_OS = {
     REPRISE: 2,
 }
 
-export const USER_PROFILES = {
-    root: 1, charge_suivi: 2, division_supervisor: 3, supervisor_general: 4, consultation: 5
+export const USER_TYPES = {
+    UTILISATEUR: 1, ADMIN: 2, GUEST: 3
 }
 
 export const USER_ROLES = {
-    ajouter_projet: 1, supprimer_projet: 2, affecter_project: 3, valider_project: 4, 
-	gestion_users: 10, gestion_localisation: 11, ajouter_acheteur: 12,
-	gestion_convention: 20, 
-	gestion_all_divisions: 30, 
-	consultation: 100,
+    SAISIR_PROJET: 1, AFFECTER_PROJET: 2, CONTROLER_PROJET: 3, VALIDER_PROJET: 4, SUPPRIMER_PROJET: 5, 
+	GESTION_UTILISATEURS: 100
 }
 
 export const SRC_FINANCEMENT = {

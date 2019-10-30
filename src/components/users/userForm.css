@@ -11,8 +11,10 @@
 
 
 #userForm {
-    
+    --ml: 30%;
 }
+
+
 
 #userForm .radio-list-wr {
     margin: 10px 0px;
@@ -44,11 +46,10 @@
 
 #userForm .simple-field-wr .check-array .form-check-label {
     font-weight: 600;
-    color: #212529;
-    text-transform: lowercase;
-
-    color: #007bff;
-    font-style: italic;
+    /* color: #212529; */
+    /* text-transform: lowercase; */
+    /* color: #007bff; */
+    /* font-style: italic; */
     text-transform: uppercase;
     font-size: 14px;
 }

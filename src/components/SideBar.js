@@ -2,11 +2,12 @@ import React from 'react'
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 
-import { getProfile } from '../reducers/login';
+import { getUserType } from '../reducers/login';
 
 import './sideBar.css'
-import { USER_PROFILES } from '../types';
-let SideBar = ({ profile }) => {
+import { USER_TYPES } from '../types';
+
+let SideBar = ({ userType }) => {
 
 
     const SideItem = ({ url, label, children=(<i className="_fa_sb fas fa-bars"></i>) }) => (
@@ -41,7 +42,7 @@ let SideBar = ({ profile }) => {
                 </SideItem>
 
                 { 
-                    USER_PROFILES.root === profile && 
+                    userType === USER_TYPES.ADMIN && 
                     <>
                     <SideItem label="Liste des Conventions" url="/conventions" />
                     <SideItem label="Gestion des localisations" url="/localisations" >
@@ -64,5 +65,5 @@ let SideBar = ({ profile }) => {
 
 
 export default connect((state) => ({ 
-    profile: getProfile(state)
+    userType: getUserType(state)
 }))(SideBar);

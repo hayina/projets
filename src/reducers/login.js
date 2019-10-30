@@ -8,7 +8,7 @@ const initialState = {
 export const isAuthenticated = (state) => state.login.isAuthenticated
 export const getUserInfo = (state) => state.login.userInfo
 export const getUserID = (state) => state.login.userInfo.id
-export const getProfile = (state) => state.login.userInfo.profile
+export const getUserType = (state) => state.login.userInfo.userType
 export const getRoles = (state) => state.login.userInfo.roles
 export const getFullName = (state) => `${state.login.userInfo.nom} ${state.login.userInfo.prenom}`
 

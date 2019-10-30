@@ -328,3 +328,7 @@
 .attach-grp-wrp {
     margin: 10px 0px;
 }
+
+.radio-label-checked {
+    font-weight: bold;
+}

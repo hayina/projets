@@ -4,10 +4,10 @@ import { SRC_FINANCEMENT } from '../../types';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 
 
-const ProgLine = ({ srcFinancement, indhProgramme, setErrors }) => {
+const ProgLine = ({ financements=[], srcFinancement, indhProgramme, setErrors }) => {
 
     const [indhProgrammes, setIndhProgrammes] = useState([]);
-    const [financements, setFinancements] = useState([]);
+    // const [financements, setFinancements] = useState([]);
 
     const srcFinancementVal = srcFinancement.input.value
 
@@ -28,13 +28,13 @@ const ProgLine = ({ srcFinancement, indhProgramme, setErrors }) => {
         
     }, [srcFinancementVal])
 
-    useEffect(() => {
-        useAjaxFetch({
-            url: `/srcFinancements`,
-            success: (data) => { setFinancements(data) },
-            error: () => setErrors(true)
-        })
-    }, [])
+    // useEffect(() => {
+    //     useAjaxFetch({
+    //         url: `/srcFinancements`,
+    //         success: (data) => { setFinancements(data) },
+    //         error: () => setErrors(true)
+    //     })
+    // }, [])
 
     return (
 

@@ -12,8 +12,10 @@ import LocationLine from './LocationLine';
 import ProgLine from './ProgLine';
 
 import './forms.css';
-import { getRoles } from '../../reducers/login';
+import { getRoles, getUserType } from '../../reducers/login';
 import { USER_ROLES } from '../../types';
+import { canHeAffect, withForbbiden } from '../../security';
+import ForbiddenRoute from '../../security/ForbiddenRoute';
 
 
 const vIndh = (value, formValues, props, name) => (
@@ -35,13 +37,13 @@ const vMod = (value, formValues, props, name) => (
 
 export const formName = 'projetForm'
 
-let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, roles }) => {
+let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, roles, userType, setForbbiden }) => {
 
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
-
-
+    const [financements, setFinancements] = useState([]);
     const [chargesSuivi, setChargesSuivi] = useState([]);
+
     const [submitting, setSubmitting] = useState(false);
     const [editLoading, setEditLoading] = useState(false)
     const [errors, setErrors] = useState(false);
@@ -61,42 +63,72 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
         // BOTH MODES
         initForm()
 
-        useAjaxFetch({
-            url: 'secteurs',
-            success: (data) => setSecteurs(data),
-            error: (err) => setErrors(true)
-        })
-        useAjaxFetch({
-            url: 'localisations',
-            success: (data) => setLocalisationItems(data),
-            error: (err) => setErrors(true)
-        })
-        useAjaxFetch({
-            url: 'chargesSuivi',
-            success: (data) => setChargesSuivi(data),
-            error: (err) => setErrors(true)
-        })
+        // useAjaxFetch({
+        //     url: 'secteurs',
+        //     success: (data) => setSecteurs(data),
+        //     error: (err) => setErrors(true)
+        // })
+        // useAjaxFetch({
+        //     url: 'localisations',
+        //     success: (data) => setLocalisationItems(data),
+        //     error: (err) => setErrors(true)
+        // })
 
+        // if( canHeAffect(roles, userType) ) {
+        //     useAjaxFetch({
+        //         url: 'chargesSuivi',
+        //         success: (data) => setChargesSuivi(data),
+        //         error: (err) => setErrors(true)
+        //     })
+        // }
+
+
+        // PROJET LOADING !!!
+
+        setEditLoading(true)
+        useAjaxFetch({
+            url: `/projets/loading`,
+            params: idProjet ? { edit: idProjet } : {},
+            success: (result) => {
+
+
+                setEditLoading(false)
+
+                setSecteurs(result.secteurs)
+                setLocalisationItems(result.localisations)
+                setFinancements(result.srcFinancements)
+                if(result.chargesSuivi) setChargesSuivi(result.chargesSuivi)
+
+                if(idProjet) {
+                    console.log(`/projets/edit/${idProjet} ->`, result.projetData)
+                    dispatch(initialize(formName, result.projetData))
+                }
+            },
+            error: (err) => setErrors(true),
+            redirect: true,
+            history,
+            setForbbiden: () => setForbbiden(true)
+        })
 
 
         // EDIT MODE
-        if(idProjet) {
-            setEditLoading(true)
-            useAjaxFetch({
-                url: `/projets/edit/${idProjet}`,
-                success: (data) => {
-                    console.log(`/projets/edit/${idProjet} ->`, data)
+        // if(idProjet) {
+        //     setEditLoading(true)
+        //     useAjaxFetch({
+        //         url: `/projets/edit/${idProjet}`,
+        //         success: (data) => {
+        //             console.log(`/projets/edit/${idProjet} ->`, data)
 
-                    setEditLoading(false)
-                    dispatch(initialize(formName, data))
-                },
-                error: (err) => setErrors(true)
-            })
-        } 
-        // NEW MODE
-        else {
-            // initForm()
-        }
+        //             setEditLoading(false)
+        //             dispatch(initialize(formName, data))
+        //         },
+        //         error: (err) => setErrors(true)
+        //     })
+        // } 
+        // // NEW MODE
+        // else {
+        //     // initForm()
+        // }
 
     }, [])
     
@@ -189,6 +221,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
 
             <Fields 
                 names={[ 'srcFinancement', 'indhProgramme' ]} component={ProgLine} 
+                financements= { financements }
                 setErrors={ setErrors }
                 validate={{ indhProgramme: vIndh, srcFinancement:[required] }}
             />
@@ -282,7 +315,7 @@ ProjetForm = reduxForm({
 
 const selector = formValueSelector('projetForm');
 
-export default connect(
+ProjetForm = connect(
     (state) => ({
         // initialValues: {
         //     intitule: 'YOUSSEF PROJET',
@@ -294,6 +327,7 @@ export default connect(
         // },
         // initialValues: getInitialFormValues(state),
         roles: getRoles(state),
+        userType: getUserType(state),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         srcFinancement: selector(state, 'srcFinancement'),
@@ -301,5 +335,10 @@ export default connect(
     }),
 )(ProjetForm);
 
+
+
+
+
+export default withForbbiden(ProjetForm)
 
 

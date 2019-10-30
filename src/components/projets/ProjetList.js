@@ -10,9 +10,10 @@ import SearchBar from './SearchBar';
 import Percentage from './Percentage';
 import DropDown from './DropDown';
 import { USER_ROLES } from '../../types';
-import { getRoles, getUserID } from '../../reducers/login';
+import { getRoles, getUserID, getUserType } from '../../reducers/login';
+import { canHeEdit } from '../../security';
 
-let ProjetList = ({dispatch, roles, userID}) => {
+let ProjetList = ({dispatch, roles, userID, userType}) => {
 
 
 
@@ -94,7 +95,7 @@ let ProjetList = ({dispatch, roles, userID}) => {
                 <div className="projet-item box-sh box-br no_dc" key={projet.id}>
 
                     {
-                        ( userID === projet.chargeSuivID || roles.some((role) => role === USER_ROLES.valider_project) ) &&
+                        canHeEdit(userID, projet.chargeSuivID, roles, userType) &&
                         <DropDown { ...{ projet, deleteProjet, index } } />
                     }
 
@@ -160,5 +161,6 @@ export default connect(
     (state) => ({
         roles: getRoles(state),
         userID: getUserID(state),
+        userType: getUserType(state)
     })
 )(ProjetList)

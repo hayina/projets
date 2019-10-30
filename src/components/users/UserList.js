@@ -8,6 +8,7 @@ import useAjaxFetch from '../hooks/useAjaxFetch'
 
 import './users.css'
 import '../list.css'
+import DropDown from '../helpers/DropDown2';
 
 let UserList = ({ dispatch }) => {
 
@@ -15,6 +16,8 @@ let UserList = ({ dispatch }) => {
 
     useEffect(() => {
 
+        // dispatch(showModal(modalTypes.ADD_USER, {editMode: false, addUser }))
+        
         dispatch(setBreadCrumb("Gestion des utilisateurs"))
 
 
@@ -74,16 +77,21 @@ let UserList = ({ dispatch }) => {
 
                 <div className="result-info">{ users.length } utilisateurs retrouvés</div>
 
-                <div className="add-user blue-link l_ho" onClick={() => {
+                {/* <div className="add-user blue-link l_ho" onClick={() => {
                         dispatch(showModal(modalTypes.ADD_USER, {editMode: false, addUser }))
                     }}>
                     Ajouter un utilisateur
-                </div>
-                <div className="add-user blue-link l_ho" onClick={() => {
+                </div> */}
+
+                <i className="fas fa-user-plus" 
+                    onClick={() => dispatch(showModal(modalTypes.ADD_USER, {editMode: false, addUser }))}>
+                </i>
+
+                {/* <div className="add-user blue-link l_ho" onClick={() => {
                         dispatch(showModal(modalTypes.MANAGE_ROLE, {}))
                     }}>
                     Gestion rôles
-                </div>
+                </div> */}
             </div>
 
             <div className="user-result ">
@@ -93,16 +101,23 @@ let UserList = ({ dispatch }) => {
                         <div className="user-item mtem_ls" key={user.id}>
 
                             <div className="user-info">
-                                <div className="user-label">{user.id}. {user.nom} {user.prenom}</div>
+                                <div className="user-label">{user.nom} {user.prenom}</div>
                                 {/* <div className="user-lastCon">{user.lastConnexion}</div> */}
                                 {/* <div className="user-dateCr">{user.dateCreation}</div> */}
                             </div>
 
-                            <span className="control-bar">
+                            {/* <span className="control-bar">
                                 <span className="btn btn-link" onClick={ () => editUser(user.id, index) }>Edit</span>
                                 <span className="btn btn-link" onClick={ () => deleteUser(user, index) }>Delete</span>
                                 <i className="fas fa-ellipsis-v"></i>
-                            </span>
+                            </span> */}
+
+                            <DropDown
+                                links={[
+                                    { label: 'Edit', callback: () => editUser(user.id, index) },
+                                    { label: 'Delete', callback: () => deleteUser(user, index) }
+                                ]}
+                            />
 
                         </div>
                     )

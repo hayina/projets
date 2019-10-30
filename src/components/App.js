@@ -9,17 +9,19 @@ import ProjetList from './projets/ProjetList';
 import Header from './Header';
 import UserList from './users/UserList';
 import SideBar from './SideBar';
+import ForbiddenRoute from '../security/ForbiddenRoute'
 
 import './app.css'
 import MarcheForm from './marches/MarcheForm';
 import ProjetDetail from './projets/ProjetDetail';
 import Dashboard from './Dashboard';
 import Login from './Login';
-import { isAuthenticated, getUserID, getProfile, getRoles } from '../reducers/login';
+import { isAuthenticated, getUserID, getUserType, getRoles } from '../reducers/login';
 
 
 import { createBrowserHistory } from 'history';
 import { USER_ROLES } from '../types';
+import { canHeAccessRoute } from '../security';
 export const history = createBrowserHistory();
 
 
@@ -31,42 +33,26 @@ const BreadCrumb = ({ label }) => (
     </div>
 )
 
-const isAuth = Cp => {
 
-    // if(!isAuthenticated) { return <Login />  }
-    // if(!isAuthenticated) { history.push("/login") }
-
-    let AuthCp = ({ isAuthenticated, ...props }) => {
-
-
-
-        if(isAuthenticated) { return <Cp {...props} />  }
-        // if(!isAuthenticated) { return <Login />  }
-
-// 
-        return <Login />
-        // return <Redirect to='/login' />
-        // history.push("/login")
-        
-    }
-
-    return connect( (state) => ({ isAuthenticated: isAuthenticated(state) }) )(AuthCp)
-}
-
-
-// ProtectedRoute = connect((state) => ({ isAuth: isAuthenticated(state) }))(ProtectedRoute);
-
-
-let ProtectedRoute = ({ component:Cp, authRole, own=false, ...restProps }) => {
+let ProtectedRoute = ({ component:Cp, authRole, isAuth, userID, userType, roles, ...restProps }) => {
 
         
-    // console.log("restProps", restProps)
+    
 
     return (
         <Route {...restProps} render={ 
             props => {
                 if(isAuth) { 
+
+                    // console.log("authRole", authRole)
+                    // console.log("path", restProps.path)
+
+                    if( authRole && ! canHeAccessRoute(roles, authRole, userType) ) {
+                        return <ForbiddenRoute {...props} />  
+                    }
+                    
                     return <Cp {...props} />  
+                    
                 } else {
                     console.log("Redirect to login", restProps.path)
                     // return <Redirect to="/login" />
@@ -79,10 +65,13 @@ let ProtectedRoute = ({ component:Cp, authRole, own=false, ...restProps }) => {
 }
 
 ProtectedRoute = connect( state => ({
-    isAuth: isAuthenticated(state)
+    isAuth: isAuthenticated(state),
+    userID: getUserID(state),
+    userType: getUserType(state),
+    roles: getRoles(state),
 }))(ProtectedRoute)
 
-const App = ({ breadCrumb , isAuth, userID, profile, roles }) => {
+const App = ({ breadCrumb , isAuth, userID, userType, roles }) => {
 
 
 
@@ -110,6 +99,7 @@ const App = ({ breadCrumb , isAuth, userID, profile, roles }) => {
                         <BreadCrumb label={breadCrumb} />
 
                         <Route path="/login" exact component={Login} />
+                        <Route path="/forbidden" exact component={ForbiddenRoute} />
 
                         
 
@@ -120,24 +110,30 @@ const App = ({ breadCrumb , isAuth, userID, profile, roles }) => {
                         <ProtectedRoute path="/projets/detail/:idProjet" exact component={ProjetDetail} />
                         <ProtectedRoute path="/projets/search" exact component={ProjetList} />
                        
-                        <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true}
+
+                        <ProtectedRoute 
+                            authRole={USER_ROLES.SAISIR_PROJET} 
                             path="/projets/new" exact component={ProjetForm} 
                         />
 
-                        <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true} 
+
+
+                        <ProtectedRoute authRole={USER_ROLES.SAISIR_PROJET}  
                             path="/projets/edit/:idProjet" exact component={ProjetForm} 
                         />
 
-                        <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true}
+                        <ProtectedRoute authRole={USER_ROLES.SAISIR_PROJET} 
                             path="/marches/new/:idProjet" exact component={MarcheForm}
                         />
 
-                        {/* <Route path="/marches/edit/:idMarche" exact component={MarcheForm} /> */}
-                        <ProtectedRoute authRole={USER_ROLES.ajouter_projet} own={true} 
+                        <ProtectedRoute authRole={USER_ROLES.SAISIR_PROJET}  
                             path="/marches/edit/:idMarche" exact component={MarcheForm} 
                         />
                        
-                        <ProtectedRoute authRole={USER_ROLES.gestion_users} path="/users" exact component={UserList} />
+                        <ProtectedRoute 
+                            authRole={USER_ROLES.GESTION_UTILISATEURS} 
+                            path="/users" exact component={UserList} 
+                        />
 
                     </div>
 
@@ -157,7 +153,7 @@ export default connect(
     (state) => ({
         isAuth: isAuthenticated(state),
         userID: getUserID(state),
-        profile: getProfile(state),
+        userType: getUserType(state),
         roles: getRoles(state),
         breadCrumb: state.breadCrumb
     })

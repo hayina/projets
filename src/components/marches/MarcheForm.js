@@ -106,14 +106,17 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
         const formData = new FormData();
 
         const constructAttach = (fieldWithAttachs, nameField) => {
-            for (const [i, line] of fieldWithAttachs.entries()) {
 
-                // line.index = null
-                if(line.attachments) {
-                    for (const [j, file] of line.attachments.entries()) {
-                        formData.append(`${nameField}[${i}][${j}]`, file);
+            if (fieldWithAttachs) {
+                for (const [i, line] of fieldWithAttachs.entries()) {
+
+                    line.index = null
+                    if (line.attachments) {
+                        for (const [j, file] of line.attachments.entries()) {
+                            formData.append(`${nameField}[${i}][${j}]`, file);
+                        }
+                        line.index = i
                     }
-                    line.index = i
                 }
             }
         }
@@ -136,23 +139,23 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
 
 
         let apiValues = {
-                ...formValues,
-                idMarche,
-                idProjet,
-                marcheType: { value: formValues.marcheType },
-                marcheEtat: { value: formValues.marcheEtat },
-                // societes: formValues.societes ? formValues.societes.map(ste => ({ value: ste })) : [],
-                // os: formValues.os ? formValues.os.map(os => ({ ...os, typeOs: { value: os.typeOs } })) : [],
+            ...formValues,
+            idMarche,
+            idProjet,
+            marcheType: { value: formValues.marcheType },
+            marcheEtat: { value: formValues.marcheEtat },
+            // societes: formValues.societes ? formValues.societes.map(ste => ({ value: ste })) : [],
+            // os: formValues.os ? formValues.os.map(os => ({ ...os, typeOs: { value: os.typeOs } })) : [],
         }
 
         console.log(apiValues)
 
 
-        
 
-        formData.append('formJson', new Blob([JSON.stringify(apiValues)], {type:'application/json'}));
+
+        formData.append('formJson', new Blob([JSON.stringify(apiValues)], { type: 'application/json' }));
         // formData.append('formJson', JSON.stringify(apiValues));
-        
+
 
 
         // return
@@ -178,8 +181,8 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
     }
 
     return (
-        <form 
-            id={marcheFormName} 
+        <form
+            id={marcheFormName}
             className={`form-wr ${submitting ? 'form-submitting is-submitting' : ''}`}
             onSubmit={handleSubmit(onSubmit)}
         >
@@ -228,7 +231,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
 
                 <div className="sep-line"></div>
 
-                <Field name="decomptes" component={DecompteLine}  idMarche={idMarche}/>
+                <Field name="decomptes" component={DecompteLine} idMarche={idMarche} />
 
                 <div className="sep-line"></div>
 

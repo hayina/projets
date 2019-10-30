@@ -6,7 +6,9 @@ import { store } from '../../store';
 
 const useAjaxFetch = ({ 
             always, url, method='GET', params, body, success, error, 
-            // contentType="application/json"
+            contentType="application/json",
+            redirect=false, history, setForbbiden
+
          }) => {
 
     axios({
@@ -15,7 +17,7 @@ const useAjaxFetch = ({
             headers: {
                 "Access-Control-Allow-Origin": "*",
                 "X-Requested-With": "XMLHttpRequest",
-                // "Content-Type": contentType,
+                "Content-Type": contentType,
             },
             // PASSED PARAMS
             url,
@@ -37,6 +39,14 @@ const useAjaxFetch = ({
                 console.log("UnAutorized");
             } else if(errors.response.status === 403){
                 console.log("Forbidden");
+
+                if(setForbbiden) setForbbiden()
+                // if(redirect) {
+                //     // console.log("history", history);
+                //     // console.log("history.location", history.location);
+                //     // console.log("history.location.pathname", history.location.pathname);
+                //     history.push('/forbidden')
+                // }
             }
         })
         .then(() => {

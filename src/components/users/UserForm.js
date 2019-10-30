@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { TextInput, ToggleField, CheckboxField, RadioList } from '../forms/form-fields/fields';
-import { hideModal} from '../../actions';
+import { ToggleField, CheckboxField, RadioList } from '../forms/form-fields/fields';
+import { TextInput, SimpleFormLine, SfSelect } from '../forms/form-fields/fields2';
+import { hideModal } from '../../actions';
 import Modal from '../modals/Modal';
 import { required, number, emptyArray } from '../forms/validator';
 import { FormProvider, reset, FormContext, Field, setSubmitting } from '../yous-form/useForm';
 import useAjaxFetch from '../hooks/useAjaxFetch'
 
 import './userForm.css'
+import './../../components/gform.css'
+import { USER_TYPES } from '../../types';
 
 
 const intialValues = {
@@ -27,7 +30,7 @@ const rules = {
     password: [required],
     nom: [required],
     prenom: [required],
-    profile: [required],
+    // profile: [required],
     // active: [required],
 }
 
@@ -35,22 +38,30 @@ const rules = {
 
 
 let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser }) => {
-    
+
     const { state, dispatchForm, onSubmit } = useContext(FormContext);
-    const [profiles, setProfiles] = useState([])
+    const [roles, setRoles] = useState([])
     const [divisions, setDivisions] = useState([])
+    const [userTypes, setUserTypes] = useState([])
     const [editLoading, setEditLoading] = useState(false)
 
 
 
     useEffect(() => {
 
-        
+
 
         useAjaxFetch({
-            url: 'profiles',
+            url: 'roles',
             method: 'GET',
-            success: (data) => setProfiles(data),
+            success: (data) => setRoles(data),
+            // error: () => setEditLoading(false)
+        })
+
+        useAjaxFetch({
+            url: 'userTypes',
+            method: 'GET',
+            success: (data) => setUserTypes(data),
             // error: () => setEditLoading(false)
         })
 
@@ -61,7 +72,7 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
             // error: () => setEditLoading(false)
         })
 
-        if(editMode) {
+        if (editMode) {
             setEditLoading(true)
             useAjaxFetch({
                 url: `users/edit/${userToEdit}`,
@@ -73,7 +84,7 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                 error: () => setEditLoading(false)
             })
         }
-        
+
     }, [])
 
 
@@ -81,7 +92,7 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
 
     const handleSubmit = () => {
 
-        // console.log('onSubmit State ->', state.values)
+        console.log('onSubmit State ->', state.values)
 
         dispatchForm(setSubmitting(true))
         useAjaxFetch({
@@ -92,12 +103,12 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
 
                 // setTimeout(() => {
 
-                    if( !editMode) {
-                        addUser({...state.values, id})
-                    } else {
-                        updateUser({...state.values}, userIndex)
-                    }
-                    dispatch(hideModal())
+                if (!editMode) {
+                    addUser({ ...state.values, id })
+                } else {
+                    updateUser({ ...state.values }, userIndex)
+                }
+                dispatch(hideModal())
 
                 // },3000)
 
@@ -107,9 +118,9 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                 dispatchForm(setSubmitting(false))
             }
 
-            
+
         })
-        
+
     }
 
 
@@ -117,13 +128,13 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
 
     const { submitting } = state
     return (
-        
+
         <Modal
             handleValidation={() => {
                 onSubmit(handleSubmit, editMode)
                 // dispatch(hideModal())
             }}
-            title={`${ editMode ? 'Editer':'Ajouter'} utilisateur`}
+            title={`${editMode ? 'Editer' : 'Ajouter'} utilisateur`}
             // vClass={`btn btn-primary`}
             // vValue={`Submit`}
             submitting={submitting}
@@ -131,41 +142,82 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
 
 
 
-            <div id="userForm" className={`form-content ${ submitting || editLoading ? 'form-submitting is-submitting':'' }`}>
-            {/* <div id="userForm" className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}> */}
-            
-                <Field name="login" validate={[required, number]}>
-                    { props => <TextInput placeholder= "Login" {...props} /> }
-                </Field>
-                <Field name="password" validate={[required]}>
-                    { props => <TextInput placeholder= "Mot de passe" {...props} /> }
-                </Field>
-                <Field name="nom" validate={[required]}>
-                    { props => <TextInput placeholder= "Nom de famille" {...props} /> }
-                </Field>
-                <Field name="prenom" validate={[required]}>
-                    { props => <TextInput placeholder= "Prénom" {...props} /> }
-                </Field>
+            <div id="userForm" className={`form-content ${submitting || editLoading ? 'form-submitting is-submitting' : ''}`}>
+                {/* <div id="userForm" className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}> */}
 
-                <Field name="profile" validate={[required]}>
-                    { props =>   
-                        <RadioList
-                            label="Choisir les profiles de l'utilisateur"
-                            options={profiles} 
-                            {...props} 
-                        /> 
-                    }
-                </Field>
+                <div className="form-line-grp">
+                    <Field name="login" >
+                        {props => <TextInput label="Login" {...props} />}
+                    </Field>
+                    <Field name="password" >
+                        {props => <TextInput label="Mot de passe" {...props} />}
+                    </Field>
+                    <Field name="nom" >
+                        {props => <TextInput label="Nom" {...props} />}
+                    </Field>
+                    <Field name="prenom" >
+                        {props => <TextInput label="Prénom" {...props} />}
+                    </Field>
+                    <Field name="phone" >
+                        {props => <TextInput label="Telephone" {...props} />}
+                    </Field>
+                    <Field name="email" >
+                        {props => <TextInput label="Email" {...props} />}
+                    </Field>
+                </div>
 
-                <Field name="division">
-                    { props =>   
-                        <RadioList
-                            label="Choisir une division"
-                            options={divisions} 
-                            {...props} 
-                        /> 
-                    }
-                </Field>
+                <div className="form-line-grp">
+                    <Field name="userType" >
+                        {
+                            ({ meta, ...props}) =>
+                            <SimpleFormLine label="Choisir le type" meta={meta}>
+                                <RadioList
+                                    options={userTypes}
+                                    {...props}
+                                />
+                            </SimpleFormLine>
+                        }
+                    </Field>
+                </div>
+
+                { state.values.userType === USER_TYPES.UTILISATEUR &&
+
+                    <>
+
+
+                        <div className="form-line-grp">
+                            <Field name="roles" >
+                                {
+                                    ({ meta, ...props}) =>
+                                    <CheckboxField 
+                                        label="Choisir les rôles de l'utilisateur"
+                                        options={roles}
+                                        {...props}
+                                    />
+                                }
+                            </Field>
+                        </div>
+
+                        <div className="form-line-grp">
+                            <Field name="isChargeSuivi">
+                                {props => <ToggleField label="Chargé de suivi" {...props} />}
+                            </Field>
+                        </div>
+
+                        <div className="form-line-grp">
+                            <Field name="division">
+                                {props =>
+                                    <SfSelect
+                                        label="Choisir une division"
+                                        options={divisions}
+                                        {...props}
+                                    />
+                                }
+                            </Field>
+                        </div>
+                    </>
+
+                }
                 {/* <Field name="roles" validate={[required]}>
                     { props =>   
                         <CheckboxField
@@ -176,13 +228,13 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                     }
                 </Field> */}
 
-                <Field name="active" validate={[required]}>
-                    { props => <ToggleField label="Actif (l'utilisateur peut se connecter)" {...props} /> }
+                <Field name="isDisable" >
+                    {props => <ToggleField label="Déverrouillé" {...props} />}
                 </Field>
-  
+
                 {/* <input type="button" value="RESET" onClick={ () => dispatchForm(reset(editMode ? initUser : intialValues)) } /> */}
-            
-            </div>         
+
+            </div>
 
 
         </Modal>
@@ -201,5 +253,5 @@ export default connect(
 )((props) => (
     <FormProvider intialValues={intialValues} rules={rules}>
         <UserForm {...props} />
-    </FormProvider> 
+    </FormProvider>
 ))
