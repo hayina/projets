@@ -5,9 +5,9 @@ const ForbiddenRoute = () => {
 
 
     return (
-        <div className="forbidden-route-wr">
+        <div className="forbidden-route-wr box-sh box-br error-banner">
 
-            <h1 className="forbidden-route-text">Désolé, vous n'avez pas l'autorisation d'accéder à cette page.</h1>
+            <span className="forbidden-route-text">Désolé, vous n'avez pas l'autorisation d'accéder à cette page.</span>
 
         </div>
     )

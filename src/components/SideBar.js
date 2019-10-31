@@ -2,12 +2,12 @@ import React from 'react'
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 
-import { getUserType } from '../reducers/login';
+import { getUserType, getRoles } from '../reducers/login';
 
 import './sideBar.css'
-import { USER_TYPES } from '../types';
+import { canUserSaisir, isAdmin } from '../security';
 
-let SideBar = ({ userType }) => {
+let SideBar = ({ userType, roles }) => {
 
 
     const SideItem = ({ url, label, children=(<i className="_fa_sb fas fa-bars"></i>) }) => (
@@ -34,15 +34,20 @@ let SideBar = ({ userType }) => {
                 <SideItem label="Tableau de bord" url="/projets/" >
                     <i className="_fa_sb fas fa-chart-bar"></i>
                 </SideItem>
-                <SideItem label="Ajouter Projet" url="/projets/new" >
-                    <i className="_fa_sb fas fa-industry"></i>
-                </SideItem>
+
                 <SideItem label="Liste des Projets" url="/projets/search" >
                     <i className="_fa_sb fas fa-poll-h"></i>
                 </SideItem>
 
+                {
+                    canUserSaisir(roles, userType) && 
+                    <SideItem label="Ajouter Projet" url="/projets/new" >
+                        <i className="_fa_sb fas fa-industry"></i>
+                    </SideItem>
+                }
+
                 { 
-                    userType === USER_TYPES.ADMIN && 
+                    isAdmin(userType) && 
                     <>
                     <SideItem label="Liste des Conventions" url="/conventions" />
                     <SideItem label="Gestion des localisations" url="/localisations" >
@@ -65,5 +70,6 @@ let SideBar = ({ userType }) => {
 
 
 export default connect((state) => ({ 
-    userType: getUserType(state)
+    userType: getUserType(state),
+    roles: getRoles(state),
 }))(SideBar);

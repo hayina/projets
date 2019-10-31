@@ -11,10 +11,11 @@ import { setBreadCrumb } from '../../actions';
 import { ApiError } from '../helpers';
 
 import './marcheForm.css'
+import { withForbbiden } from '../../security';
 
 export const marcheFormName = 'marcheForm'
 
-let MarcheForm = ({ dispatch, handleSubmit, match }) => {
+let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
 
     const [submitting, setSubmitting] = useState(false);
     const [errors, setErrors] = useState(false);
@@ -34,60 +35,39 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
 
     useEffect(() => {
 
-        // console.log("useEffect --------------> MARCHE FORM")
-
         dispatch(setBreadCrumb("Ajouter un marché"))
 
         initForm()
 
-
+        setEditLoading(true)
 
         useAjaxFetch({
-            url: '/marcheTypes',
-            success: (data) => setMarcheTypes(data),
-            error: () => setErrors(true)
-        })
-        useAjaxFetch({
-            url: '/marcheEtats',
-            success: (data) => setMarcheEtats(data),
-            error: () => setErrors(true)
-        })
+            url: `/marches/loading`,
+            params: idMarche ? { edit: idMarche } : {},
+            success: (result) => {
 
-        fetchOsTypes();
+                setMarcheTypes(result.marcheTypes)
+                setMarcheEtats(result.marcheEtats)
+                setOsTypes(result.osTypes)
 
-
-        if (idMarche) {
-            setEditLoading(true)
-            useAjaxFetch({
-                url: `/marches/edit/${idMarche}`,
-                success: (data) => {
+                if (idMarche) {
                     const editData = {
-                        ...data,
-                        marcheType: data.marcheType.value,
-                        marcheEtat: data.marcheEtat.value,
-                        // societes: data.societes ? data.societes.map(ste => ste.value) : [],
-                        // os: data.os ? data.os.map(os => ({ ...os, typeOs: os.typeOs.value })) : [],
+                        ...result.marcheData,
+                        marcheType: result.marcheData.marcheType.value,
+                        marcheEtat: result.marcheData.marcheEtat.value,
                     }
                     console.log(editData)
-                    setEditLoading(false)
                     dispatch(initialize(marcheFormName, editData))
-                    // dispatch(initFormValues(editData))
+                }
 
-                },
-                error: () => setErrors(true)
-            })
-        }
+                setEditLoading(false)
+
+            },
+            error: () => setErrors(true),
+            setForbbiden
+        })
 
     }, []);
-
-    const fetchOsTypes = () => {
-        useAjaxFetch({
-            url: '/osTypes',
-            success: (data) => setOsTypes(data),
-            error: () => setErrors(true)
-        })
-    }
-
 
     const onSubmit = (formValues) => {
 
@@ -96,12 +76,6 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
         setSubmitting(true)
         setErrors(false)
 
-        // console.log(formValues)
-        // return false
-
-        // ATTACHEMENTS
-
-        // OS
 
         const formData = new FormData();
 
@@ -125,19 +99,6 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
         constructAttach(formValues.decomptes, 'decAttachs')
 
 
-        // for (const [i, os] of formValues.os.entries()) {
-        //     if(os.attachments) {
-        //         for (const [j, file] of os.attachments.entries()) {
-        //             formData.append(`osAttachs[${i}][${j}]`, file );
-        //             os.index = i
-        //         }
-        //     }
-        // }
-
-
-
-
-
         let apiValues = {
             ...formValues,
             idMarche,
@@ -151,14 +112,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
         console.log(apiValues)
 
 
-
-
         formData.append('formJson', new Blob([JSON.stringify(apiValues)], { type: 'application/json' }));
-        // formData.append('formJson', JSON.stringify(apiValues));
-
-
-
-        // return
 
         useAjaxFetch({
             // url: 'postman/marches22',
@@ -261,9 +215,11 @@ let MarcheForm = ({ dispatch, handleSubmit, match }) => {
 
 MarcheForm = reduxForm({
     form: marcheFormName,
-    // enableReinitialize: true
 })(MarcheForm)
 
 
 
-export default connect()(MarcheForm);
+MarcheForm = connect()(MarcheForm);
+
+
+export default withForbbiden(MarcheForm)

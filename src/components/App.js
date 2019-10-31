@@ -71,7 +71,7 @@ ProtectedRoute = connect( state => ({
     roles: getRoles(state),
 }))(ProtectedRoute)
 
-const App = ({ breadCrumb , isAuth, userID, userType, roles }) => {
+const App = ({ breadCrumb , isAuth }) => {
 
 
 
@@ -99,7 +99,7 @@ const App = ({ breadCrumb , isAuth, userID, userType, roles }) => {
                         <BreadCrumb label={breadCrumb} />
 
                         <Route path="/login" exact component={Login} />
-                        <Route path="/forbidden" exact component={ForbiddenRoute} />
+                        {/* <Route path="/forbidden" exact component={ForbiddenRoute} /> */}
 
                         
 
@@ -118,15 +118,18 @@ const App = ({ breadCrumb , isAuth, userID, userType, roles }) => {
 
 
 
-                        <ProtectedRoute authRole={USER_ROLES.SAISIR_PROJET}  
+                        <ProtectedRoute 
+                            authRole={USER_ROLES.SAISIR_PROJET}  
                             path="/projets/edit/:idProjet" exact component={ProjetForm} 
                         />
 
-                        <ProtectedRoute authRole={USER_ROLES.SAISIR_PROJET} 
+                        <ProtectedRoute 
+                            authRole={USER_ROLES.SAISIR_PROJET} 
                             path="/marches/new/:idProjet" exact component={MarcheForm}
                         />
 
-                        <ProtectedRoute authRole={USER_ROLES.SAISIR_PROJET}  
+                        <ProtectedRoute 
+                            authRole={USER_ROLES.SAISIR_PROJET}  
                             path="/marches/edit/:idMarche" exact component={MarcheForm} 
                         />
                        
@@ -152,9 +155,6 @@ const App = ({ breadCrumb , isAuth, userID, userType, roles }) => {
 export default connect(
     (state) => ({
         isAuth: isAuthenticated(state),
-        userID: getUserID(state),
-        userType: getUserType(state),
-        roles: getRoles(state),
         breadCrumb: state.breadCrumb
     })
 )(App);

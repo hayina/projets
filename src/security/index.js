@@ -11,21 +11,19 @@ export const withForbbiden = (Cp) => (props) => {
     return forbbiden ? <ForbiddenRoute /> : <Cp { ...props } setForbbiden={setForbbiden}   />
 }
 
+const supervisorRoles = [ USER_ROLES.CONTROLER_PROJET, USER_ROLES.VALIDER_PROJET, USER_ROLES.AFFECTER_PROJET ]
 
-export const canHeEdit = (userID, chargeSuivID, roles, userType) => {
-    return userID === chargeSuivID 
-        || roles.some((role) => role === USER_ROLES.CONTROLER_PROJET || role === USER_ROLES.VALIDER_PROJET )
-        || userType === USER_TYPES.ADMIN
-}
+export const isSupervisor = (roles) => roles.some((role) => supervisorRoles.some(supRole => supRole === role))
+export const isAdmin = (userType) => userType === USER_TYPES.ADMIN
 
-export const canHeAffect = (roles, userType) => {
-    return roles.some((role) => role === USER_ROLES.AFFECTER_PROJET )
-    || userType === USER_TYPES.ADMIN
-        
-}
 
-export const canHeAccessRoute= (roles, authRole, userType) => {
-    return roles.some((role) => role === authRole )
-    || userType === USER_TYPES.ADMIN
-        
-}
+export const canUserEdit = (userID, chargeSuivID, roles, userType) => userID === chargeSuivID 
+        || isSupervisor(roles)
+        || isAdmin(userType)
+
+
+export const canUserAffect = (roles, userType) => isSupervisor(roles) || isAdmin(userType)
+export const canUserSaisir = (roles, userType) => canHeAccessRoute(roles, USER_ROLES.SAISIR_PROJET, userType)
+
+
+export const canHeAccessRoute= (roles, authRole, userType) => roles.some((role) => role === authRole ) || isAdmin(userType)

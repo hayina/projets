@@ -14,7 +14,7 @@ import ProgLine from './ProgLine';
 import './forms.css';
 import { getRoles, getUserType } from '../../reducers/login';
 import { USER_ROLES } from '../../types';
-import { canHeAffect, withForbbiden } from '../../security';
+import { canHeAffect, withForbbiden, canUserAffect } from '../../security';
 import ForbiddenRoute from '../../security/ForbiddenRoute';
 
 
@@ -42,6 +42,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
     const [financements, setFinancements] = useState([]);
+    const [indhProgrammes, setIndhProgrammes] = useState([]);
     const [chargesSuivi, setChargesSuivi] = useState([]);
 
     const [submitting, setSubmitting] = useState(false);
@@ -97,6 +98,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
                 setSecteurs(result.secteurs)
                 setLocalisationItems(result.localisations)
                 setFinancements(result.srcFinancements)
+                setIndhProgrammes(result.indhProgrammes)
                 if(result.chargesSuivi) setChargesSuivi(result.chargesSuivi)
 
                 if(idProjet) {
@@ -105,9 +107,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
                 }
             },
             error: (err) => setErrors(true),
-            redirect: true,
-            history,
-            setForbbiden: () => setForbbiden(true)
+            setForbbiden
         })
 
 
@@ -222,6 +222,8 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
             <Fields 
                 names={[ 'srcFinancement', 'indhProgramme' ]} component={ProgLine} 
                 financements= { financements }
+                indhProgrammes= { indhProgrammes }
+                setIndhProgrammes= { setIndhProgrammes }
                 setErrors={ setErrors }
                 validate={{ indhProgramme: vIndh, srcFinancement:[required] }}
             />
@@ -267,7 +269,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
 
 
             {
-                roles.some((role) => role === USER_ROLES.affecter_project) &&
+                canUserAffect(roles, userType) &&
             
                 <>
                 <div className="sep-line"></div>

@@ -11,7 +11,7 @@ import Percentage from './Percentage';
 import DropDown from './DropDown';
 import { USER_ROLES } from '../../types';
 import { getRoles, getUserID, getUserType } from '../../reducers/login';
-import { canHeEdit } from '../../security';
+import { canUserEdit } from '../../security';
 
 let ProjetList = ({dispatch, roles, userID, userType}) => {
 
@@ -19,7 +19,7 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
 
     const [projets, setProjets] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState(false);
+    const [errors, setErrors]   = useState(false);
     const [filters, setFilters] = useState({});
 
 
@@ -95,7 +95,7 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
                 <div className="projet-item box-sh box-br no_dc" key={projet.id}>
 
                     {
-                        canHeEdit(userID, projet.chargeSuivID, roles, userType) &&
+                        canUserEdit(userID, projet.chargeSuivID, roles, userType) &&
                         <DropDown { ...{ projet, deleteProjet, index } } />
                     }
 

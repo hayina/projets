@@ -4,9 +4,9 @@ import { SRC_FINANCEMENT } from '../../types';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 
 
-const ProgLine = ({ financements=[], srcFinancement, indhProgramme, setErrors }) => {
+const ProgLine = ({ financements=[], indhProgrammes=[], setIndhProgrammes, srcFinancement, indhProgramme, setErrors }) => {
 
-    const [indhProgrammes, setIndhProgrammes] = useState([]);
+    // const [indhProgrammes, setIndhProgrammes] = useState(indhProgrammesInit);
     // const [financements, setFinancements] = useState([]);
 
     const srcFinancementVal = srcFinancement.input.value
@@ -16,7 +16,7 @@ const ProgLine = ({ financements=[], srcFinancement, indhProgramme, setErrors })
 
     useEffect(() => {
 
-        if( indhProgrammes.length === 0 && showIndh ) {
+        if( showIndh && indhProgrammes.length === 0 ) {
             useAjaxFetch({
                 url: `/parent/programmes`,
                 // url: `/getProgrammesWithPhases`,

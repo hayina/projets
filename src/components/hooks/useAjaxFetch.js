@@ -7,7 +7,8 @@ import { store } from '../../store';
 const useAjaxFetch = ({ 
             always, url, method='GET', params, body, success, error, 
             contentType="application/json",
-            redirect=false, history, setForbbiden
+            // redirect=false, history, 
+            setForbbiden
 
          }) => {
 
@@ -40,7 +41,7 @@ const useAjaxFetch = ({
             } else if(errors.response.status === 403){
                 console.log("Forbidden");
 
-                if(setForbbiden) setForbbiden()
+                if(setForbbiden) setForbbiden(true)
                 // if(redirect) {
                 //     // console.log("history", history);
                 //     // console.log("history.location", history.location);
