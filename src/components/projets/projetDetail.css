@@ -1,7 +1,13 @@
 #pr-detail-wr::before {
-    border-top: 6px solid #007bff;
+    /* border-top: 6px solid #007bff; */
     content: '';
     display: block;
+}
+#pr-detail-wr .banner-line {
+    /* background-color: #007bff;
+    width: 100%;
+    height: 6px; */
+
 }
 
 #pr-detail-wr {
@@ -68,13 +74,11 @@
 } 
 
 #pr-detail-wr .l-item {
-    /* margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ced4da; */
+    margin-bottom: 8px;
 } 
 
 #pr-detail-wr .line-data .l-item:last-child {
-    
+    margin-bottom: 0px;
 } 
 
 #pr-detail-wr .prj-info-wr {
@@ -83,11 +87,12 @@
 } 
 
 #pr-detail-wr .l-item > span {
-    display: block;
+    display: flex;
+    align-items: center;
 } 
 
 #pr-detail-wr .l-date-w {
-
+    margin-right: 10px;
 } 
 
 #pr-detail-wr .l-name {
@@ -105,9 +110,11 @@
 } 
 
 #pr-detail-wr .l-date {
+    /* font-family: monospace; */
     color: #007bff;
     /* font-variant-numeric: tabular-nums; */
-    font-size: 14px;
+    /* font-size: 14px; */
+    font-weight: bold;
 } 
 #pr-detail-wr .l-date:after {
     /* content: ':';
@@ -147,14 +154,16 @@
 #pr-detail-wr .line-info {
     display: flex;
     margin-bottom: 14px;
+    align-items: center;
 }
 #pr-detail-wr .line-label {
-    width: 30%;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: underline;
+    width: 36%;
     margin-bottom: 0px;
     text-align: right;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #212529;
 }
 
 #pr-detail-wr .line-label:after {
@@ -172,6 +181,12 @@
     font-size: 15px;
     color: #2f3030;
     width: 68%;
+    text-transform: uppercase;
+
+    border: 1px solid #dadce0;
+    border-radius: 18px;
+    padding: 8px 14px;
+    background-color: white;
 }
 
 #pr-detail-wr .fa-map-marker-alt {
@@ -200,6 +215,10 @@
     display: block;
 }
 
+#pr-detail-wr .partner-item:last-child{
+    margin-bottom: 0px;
+}
+
 #pr-detail-wr .tree-wr {
     margin-bottom: 0px;
 }
@@ -219,7 +238,7 @@
 }
 
 #pr-detail-wr .tree-item-label {
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
     color: #07C;
 }
 
@@ -269,9 +288,27 @@
     font-weight: 600;
     width: 80%;
     text-align: center;
-    margin: 0px auto 10px;
+    margin: 20px auto;
 }
 
 #pr-detail-wr .m-h  {
 
+}
+
+#pr-detail-wr .nbr-font {
+    /* font-family: monospace; */
+}
+
+#pr-detail-wr .fa-percent {
+    font-size: 12px;
+}
+
+#pr-detail-wr .sep-line-tiny {
+    border-bottom: 1px solid #ccc;
+    width: 80%;
+    margin: 10px auto;
+}
+
+#pr-detail-wr .attach-line .fa-paperclip {
+    margin-left: 0px;
 }

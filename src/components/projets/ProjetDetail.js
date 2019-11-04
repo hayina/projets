@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 
 import useAjaxFetch from '../hooks/useAjaxFetch';
 import Percentage from './Percentage';
-import { NestedTree } from '../checkboxTree/CheckTree';
-import { nestedTree } from '../checkboxTree/helpers';
+
 
 import './projetDetail.css'
 import { setBreadCrumb, showModal } from '../../actions';
 import { formatDate } from '../../helpers';
 import DropDown from '../helpers/DropDown2';
 import { modalTypes } from '../modals/ModalRoot';
+import { ATTACH_TYPE } from '../../types';
+import { ResourcesLine } from '../attachments';
 
 const ProjetDetail = ({ match, history, dispatch }) => {
 
@@ -20,15 +21,17 @@ const ProjetDetail = ({ match, history, dispatch }) => {
     const [projet, setProjet] = useState({});
     const [defaultMarche, setDefaultMarche] = useState({});
     const [marchesTypes, setMarchesTypes] = useState([]);
+    const [activeMarcheTab, setActiveMarcheTab] = useState(null);
 
 
+    const { idProjet } = match.params
 
     useEffect(() => {
 
 
         dispatch(setBreadCrumb("Projet detail"))
 
-        const { idProjet } = match.params
+        
 
         setLoading(true)
         useAjaxFetch({
@@ -38,6 +41,7 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                 console.log(defaultMarche)
                 setProjet(projet)
                 setDefaultMarche(defaultMarche)
+                if(defaultMarche) setActiveMarcheTab(defaultMarche.idMarche)
                 setMarchesTypes(marchesTypes)
                 setLoading(false)
 
@@ -76,13 +80,23 @@ const ProjetDetail = ({ match, history, dispatch }) => {
         })
     }
 
+    const deleteProjet = () => {
+        useAjaxFetch({
+            url: `/projets/${idProjet}`,
+            method: 'DELETE',
+            success: () => {
+                history.push(`/projets/search`)
+            },
+            error: (err) => setErrors(true)
+        })
+    }
+
 
 
 
     const CalendarIcon = () => <i className="far fa-calendar-alt"></i>
 
-    const LineInfo = ({ label, children }) => 
-    children ?
+    const LineInfo = ({ label, children }) => children ?
         <div className="line-info">
             <label className="line-label">{label}</label>
             <span className="line-data">{children}</span>
@@ -109,6 +123,8 @@ const ProjetDetail = ({ match, history, dispatch }) => {
 
     return (
         <div id="pr-detail-wr" className={`box-sh box-br ${ loading ? 'waiting':'' }`}>
+
+            <div className="banner-line"></div>
         
             <div className="pr-header _c_header">
                 <div className="pr-title">{projet.intitule}</div>
@@ -118,6 +134,31 @@ const ProjetDetail = ({ match, history, dispatch }) => {
             </div>
 
             <div className="prj-info-wr">
+
+            <DropDown 
+                    
+                    links={[
+                        {
+                            label: 'Editer', 
+                            callback: () => history.push(`/projets/edit/${idProjet}`),
+                        },
+                        {
+                            label: 'Supprimer',
+                            callback: () => {
+                                dispatch(showModal(modalTypes.ADD_DELETE, {
+                                    onDanger: () => deleteProjet()  ,
+                                    dangerText: [
+                                        "Voulez vous vraiment supprimer le projet ", 
+                                        <strong>{projet.intitule}</strong>, 
+                                        " ?"
+                                    ]
+                                }))
+                            },
+                        }
+
+                    ]}
+                
+                />
 
             <LineInfo label="Localisation">
                 { projet.localisations && projet.localisations.length > 0 &&<TreeInfo nodes={projet.localisations} /> } 
@@ -170,16 +211,24 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                     {
                         marchesTypes.map((mt, i) => {
                             return (
-                                <div className="tab-item" key={i} onClick={ (e) => {
-                                    [ ...document.querySelectorAll(".tab-item") ].forEach((node) => {
-                                            node.classList.remove('active')
-                                    })
-
-                                    e.target.classList.add('active')
+                                <div 
+                                    className={`tab-item ${ activeMarcheTab === mt.value ? 'active' : '' }`} 
+                                    key={i} onClick={ (e) => {
+                                    setActiveMarcheTab(mt.value)
                                     loadMarche(mt.value)
                                 }}>
                                     { mt.label }
                                 </div>
+                                // <div className="tab-item" key={i} onClick={ (e) => {
+                                //     [ ...document.querySelectorAll(".tab-item") ].forEach((node) => {
+                                //             node.classList.remove('active')
+                                //     })
+
+                                //     e.target.classList.add('active')
+                                //     loadMarche(mt.value)
+                                // }}>
+                                //     { mt.label }
+                                // </div>
                             )
                         })
                     }
@@ -230,11 +279,7 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                         { defaultMarche.numMarche || '-' }
                     </LineInfo>
 
-                    <LineInfo label="Date commencement">
-                        <CalendarIcon />
-                        { defaultMarche.dateStart ? 
-                            <span className="l-date">{formatDate(new Date(defaultMarche.dateStart))}</span> : '-' }
-                    </LineInfo>
+                    
 
                     <LineInfo label="Société(s) titulaire(s)">
                     {
@@ -247,19 +292,76 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                     }
                     </LineInfo>
 
+                    
+
+                    <LineInfo label="Date commencement">
+                        
+                        { defaultMarche.dateStart ? 
+                            <>
+                                <CalendarIcon />
+                                <span className="l-date nbr-font">{formatDate(new Date(defaultMarche.dateStart))}</span> 
+                            </>    
+                            : '-' 
+                        }
+                            
+                    </LineInfo>
+
+
                     <LineInfo label="Ordres de service">
                     {
                         defaultMarche.os && defaultMarche.os.length > 0 &&
-                        defaultMarche.os.map( ({typeOs, dateOs, commentaire}, i) => (
+                        defaultMarche.os.map( ({typeOs, dateOs, resources=[], commentaire}, i) => (
                             <div className="l-item" key={i}>
                                 <span className="l-date-w">
+                                    {/* {i}. */}
                                     <i className="far fa-calendar-alt"></i>
-                                    <span className="l-date">
+                                    <span className="l-date nbr-font">
                                         { dateOs ? formatDate(new Date(dateOs)) : '-' }
                                     </span>
+                                </span>
+                                <span>
                                     <i className="fas fa-arrow-circle-right"></i>
                                     <span className="l-name">{typeOs.label}</span>
                                 </span>
+
+                                <ResourcesLine
+                                    resourcesProps= {{ attachments: resources, imageDisplay: true, url: true }}
+                                    attachType= { ATTACH_TYPE.OS }
+                                    idMarche= { defaultMarche.idMarche }
+                                    dateRes= { dateOs }
+                                />
+
+                                {/* <span className="l-com">{ commentaire }</span> */}
+                                
+                            </div>
+                        ))
+                    }
+                    </LineInfo>
+
+                    
+                    <LineInfo label="Décomptes">
+                    {
+                        defaultMarche.decomptes && defaultMarche.decomptes.length > 0 &&
+                        defaultMarche.decomptes.map( ({montant, dateDec, resources=[], commentaire}, i) => (
+                            <div className="l-item" key={i}>
+                                <span className="l-date-w">
+                                    <i className="far fa-calendar-alt"></i>
+                                    <span className="l-date nbr-font">
+                                        { dateDec ? formatDate(new Date(dateDec)) : '-' }
+                                    </span>
+                                </span>
+                                <span>
+                                    <i className="fas fa-arrow-circle-right"></i>
+                                    <span className="l-name">{`${Number(montant).toLocaleString()} dhs`}</span>
+                                </span>
+
+                                <ResourcesLine
+                                    resourcesProps= {{ attachments: resources, imageDisplay: true, url: true }}
+                                    attachType= { ATTACH_TYPE.DEC }
+                                    idMarche= { defaultMarche.idMarche }
+                                    dateRes= { dateDec }
+                                />
+
                                 {/* <span className="l-com">{ commentaire }</span> */}
                                 
                             </div>
@@ -274,13 +376,17 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                             <div className="l-item" key={i}>
                                 <span className="l-date-w">
                                     <i className="far fa-calendar-alt"></i>
-                                    <span className="l-date">
+                                    <span className="l-date nbr-font">
                                         { dateTaux ? formatDate(new Date(dateTaux)) : '-' }
                                     </span>
+                                </span>
+                                <span>
                                     <i className="fas fa-arrow-circle-right"></i>
-                                    <span className="l-name">{(`0${valueTaux}`).slice(-2)}</span>
+                                    <span className="l-name nbr-font">{(`0${valueTaux}`).slice(-2)}</span>
                                     <i className="fas fa-percent"></i>
                                 </span>
+
+
                                 {/* <span className="l-com">{ commentaire }</span> */}
                                 
                             </div>
@@ -288,35 +394,29 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                     }
                     </LineInfo>
 
-                    <LineInfo label="Décomptes">
-                    {
-                        defaultMarche.decomptes && defaultMarche.decomptes.length > 0 &&
-                        defaultMarche.decomptes.map( ({montant, dateDec, commentaire}, i) => (
-                            <div className="l-item" key={i}>
-                                <span className="l-date-w">
-                                    <i className="far fa-calendar-alt"></i>
-                                    <span className="l-date">
-                                        { dateDec ? formatDate(new Date(dateDec)) : '-' }
-                                    </span>
-                                    <i className="fas fa-arrow-circle-right"></i>
-                                    <span className="l-name">{`${Number(montant).toLocaleString()} dhs`}</span>
-                                </span>
-                                {/* <span className="l-com">{ commentaire }</span> */}
-                                
-                            </div>
-                        ))
-                    }
-                    </LineInfo>
+                    
+
+
+                    
 
                     <LineInfo label="Date réception provisoire" >
-                        <CalendarIcon />
+                        
                         { defaultMarche.dateReceptionProv ? 
-                            <span className="l-date">{formatDate(new Date(defaultMarche.dateReceptionProv))}</span> : null }
+                            <>
+                                <CalendarIcon />
+                                <span className="l-date">{formatDate(new Date(defaultMarche.dateReceptionProv))}</span> 
+                            </>
+                            : null 
+                        }
                     </LineInfo>
                     <LineInfo label="Date réception définitive">
-                        <CalendarIcon />
                         { defaultMarche.dateReceptionDef ? 
-                            <span className="l-date">{formatDate(new Date(defaultMarche.dateReceptionDef))}</span> : null }
+                            <>
+                                <CalendarIcon />
+                                <span className="l-date">{formatDate(new Date(defaultMarche.dateReceptionDef))}</span>
+                            </>
+                            : null 
+                        }
                     </LineInfo>
 
                 </div>

@@ -6,3 +6,5 @@ export const ApiError = ({cssClass}) => (
         <i className="fas fa-info-circle"></i>
     </div>
 )
+
+export const SepLine = () => <div className="sep-line-tiny"></div>

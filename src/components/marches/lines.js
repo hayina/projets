@@ -12,6 +12,7 @@ import { marcheFormName } from './MarcheForm'
 import { formatDate, getOsImgLink, getDecImgLink, getAttachLink } from '../../helpers';
 import DropDown from '../helpers/DropDown2';
 import { ATTACH_TYPE } from '../../types';
+import { AttachGroup } from '../attachments';
 
 
 ///////////////// SOCIETE
@@ -198,7 +199,8 @@ let OrdreServiceLine = ({ osTypes, idMarche, dispatch, input, meta: { touched, e
 
                                 <div className="taux-com sub-form-com">{commentaire}</div>
                             </SpecialLine>
-                        ))}
+                        ))
+                    }
                 </div>
             }
 
@@ -301,39 +303,7 @@ let UploadLine = ({ resources, attachments, dispatch, formName }) => {
 
 UploadLine = connect()(UploadLine)
 
-//////// ATTACHMENTS && RESOURCES
 
-
-
-let AttachGroup = ({ attachProps, resourcesProps, formName, attachType, idMarche, dateRes, dispatch }) => {
-
-
-    const { onDelete: onDeleteAttach, ...otherAttachProps } = attachProps
-
-    const { onDelete: onDeleteRes, imageDisplay, url, ...otherResProps } = resourcesProps
-
-    // console.log(attachProps)
-    // console.log(resourcesProps)
-    
-    return (otherAttachProps.attachments.length > 0 || otherResProps.attachments.length > 0) &&
-    (
-        <div className="attach-grp-wrp">
-            <AttachLineList 
-                { ...(onDeleteAttach && {onDelete: (i) => dispatch(arrayRemove(formName, 'attachments', i))}) }
-                { ...otherAttachProps } 
-            />
-
-            <AttachLineList 
-                { ...(onDeleteRes && {onDelete: (i) => dispatch(arrayRemove(formName, 'resources', i))}) }
-                { ...(url && {url: (label) => getAttachLink({ idMarche, date: new Date(dateRes), label, attachType })}) }
-                { ...(imageDisplay && {imageDisplay: (label, url) => 
-                                            dispatch(showModal(modalTypes.DISPLAY_PICTURE, { label, url }))}) }
-                { ...otherResProps } 
-            />
-        </div>
-    )
-}
-AttachGroup = connect()(AttachGroup)
 
 
 //////// EXPORT
