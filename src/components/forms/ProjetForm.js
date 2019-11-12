@@ -13,19 +13,17 @@ import ProgLine from './ProgLine';
 
 import './forms.css';
 import { getRoles, getUserType } from '../../reducers/login';
-import { USER_ROLES } from '../../types';
-import { canHeAffect, withForbbiden, canUserAffect } from '../../security';
-import ForbiddenRoute from '../../security/ForbiddenRoute';
-
+import { withForbbiden, canUserAffect } from '../../security';
 
 const vIndh = (value, formValues, props, name) => (
     (formValues.indh === true) && (!value) ? 
          'Ce champs est obligatoire' : undefined
 )
-const vPartners = (array=[], formValues, props, name) => (
+
+const vPartners = (array=[], formValues, props, name) => 
     ((formValues.isConvention === true) && array && array.length === 0) ? 
          'Veuillez ajouter des partenaires' : undefined
-)
+
 
 const vMod = (value, formValues, props, name) => (
     (formValues.isMaitreOuvrageDel === true) && (!value) ? 

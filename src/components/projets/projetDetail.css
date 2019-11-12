@@ -185,7 +185,7 @@
 
     border: 1px solid #dadce0;
     border-radius: 18px;
-    padding: 8px 14px;
+    padding: 6px 14px;
     background-color: white;
 }
 
@@ -310,5 +310,9 @@
 }
 
 #pr-detail-wr .attach-line .fa-paperclip {
+    margin-left: 0px;
+}
+
+#pr-detail-wr .fa-os {
     margin-left: 0px;
 }

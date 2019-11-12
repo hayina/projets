@@ -55,6 +55,12 @@ export const constants = {
 export const TYPE_OS = {
     ARRET: 1,
     REPRISE: 2,
+    COMMENCEMENT: 3,
+}
+
+export const NATURE_OS = {
+    ARRET_REPRISE: 1,
+    COMMENCEMENT: 2,
 }
 
 export const USER_TYPES = {

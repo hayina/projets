@@ -1,16 +1,16 @@
 import React from 'react'
 
-export const SimpleListItem = ({ item, onDelete, onEdit, icon }) => (
+export const SimpleListItem = ({ item, onDelete, onEdit, icon, index }) => (
 
-    <div className="_item_ls" >
+    <div className="_item_ls" item={index}>
 
         <span className="item-label">
             {icon}
             {item.label}
         </span>
         <span className="list-control">
-            {onEdit && <i className="fa fa-edit edit-item-list" onClick={onEdit} />}
-            {onDelete && <i className="fa fa-times delete-item-list" onClick={onDelete} />}
+            {   onEdit    && <i className="fa fa-edit edit-item-list"       onClick={onEdit}    />  }
+            {   onDelete  && <i className="fa fa-times delete-item-list"    onClick={onDelete}  />  }
         </span>
 
     </div>

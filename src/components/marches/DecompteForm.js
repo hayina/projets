@@ -41,14 +41,14 @@ let DecompteForm = ({ dispatch, handleSubmit, editMode, index, idMarche }) => {
             <form onSubmit={handleSubmit(onSubmit)} id={decompteFormName} >
                 <div className={`form-content`}>
                     <Field
-                        name="montant" component={TextField} validate={[required, number]}
+                        name="montant" component={TextField} label="Montant" validate={[required, number]}
                     />
                     <Field
                         name="dateDec" component={DateField} label="Date Décompte" validate={[required]}
                     />
-                    <Field
+                    {/* <Field
                         name="commentaire" component={TextField} label="Commentaire" fieldType="textarea"
-                    />
+                    /> */}
 
                     <Fields
                         names={["attachments", "resources"]} component={UploadLine} idMarche={idMarche}
@@ -67,7 +67,7 @@ let DecompteForm = ({ dispatch, handleSubmit, editMode, index, idMarche }) => {
 
 DecompteForm = reduxForm({
     form: decompteFormName,
-    enableReinitialize: true,
+    // enableReinitialize: true,
     // onSubmit
 })(DecompteForm)
 

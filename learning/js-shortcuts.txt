@@ -11,3 +11,10 @@ Object.entries(myObj).forEach(([key, val]) => ... )
 var size = Object.keys(myObj).length;
 
 delete element from array splice(index, 1) => attention it return the deleted element
+
+unshift/push - add an element to the beginning/end of an array
+shift/pop - remove and return the first/last element of an array
+
+concat 
+
+sort

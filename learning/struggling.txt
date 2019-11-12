@@ -1,0 +1,3 @@
+dates and timezones -> day off problem
+always check 01/09 and 01/11
+-> temporarily solution -> date.setHours(10)

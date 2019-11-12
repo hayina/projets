@@ -162,7 +162,21 @@ export const AutoCompleteField = ({ input, meta, label, onSelect, url, onDelete,
 
 ////////////// RADIO
 
-export const RadioField = ({ input, meta, label, options, callback }) => {
+export const RadioField = ({ input, meta, label, options=[], callback }) => {
+
+
+    let selectedValue = input.value
+
+    // if selectedValue is an object { value, label}
+    if (selectedValue && selectedValue.value ) {
+        selectedValue = selectedValue.value
+    }
+
+
+    // if( options.length === 1 ) {
+    //     selectedValue = options[0].value
+    //     // input.onChange(options[0].value)
+    // }
 
     return (
 
@@ -178,7 +192,7 @@ export const RadioField = ({ input, meta, label, options, callback }) => {
                             className=""
                             type="radio"
                             value={option.value}
-                            checked={option.value === input.value}
+                            checked={option.value === selectedValue}
                             onChange={(e) => {
                                 input.onChange(option.value)
                                 if (callback) callback(option.value);
@@ -493,7 +507,8 @@ export const DateField = ({ input, meta, label }) => {
         dateValue = new Date(dateValue)
     }
 
-    // console.log(dateValue)
+    // console.log(input.name, "--> touched", meta.touched, "dirty", meta.dirty)
+
 
 
     return (
@@ -502,9 +517,11 @@ export const DateField = ({ input, meta, label }) => {
                 className="datepicker form-control"
                 dateFormat="dd/MM/yyyy"
                 selected={dateValue}
-                onChange={(e) => {
-                    input.onChange(e.setHours(10))
-                    console.log(e)
+                onChange={(date) => {
+                    // input.onChange(date ? date.setHours(0,0,0,0) : date )
+                    input.onChange(date ? date.setHours(10) : date)
+                    console.log(date)
+                    // console.log(new Date(date))
                     // input.onChange(formatDate(e.target.value)) 
                 }}
             // onChange={ input.onChange }
@@ -521,3 +538,24 @@ export const SpecialLine = ({ children, className = '' }) => (
         {children}
     </div>
 )
+
+
+///////////// LINE WITH A BUTTON ADD SOMETHING
+
+export const LineAddButton = ({ label, callback, textButton='Ajouter', showBtn=true }) => {
+
+    return (
+        <div className="line-add-button">
+            <label className="field-label form-label">{label}</label>
+            {   
+                showBtn && 
+                <input 
+                    type="button" 
+                    className="btn btn-info show-modal"
+                    value={textButton}
+                    onClick={ callback }
+                />
+            }
+        </div>
+    )
+}

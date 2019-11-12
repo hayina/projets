@@ -30,6 +30,8 @@
 
 .path-link {
     font-weight: 600;
+    text-transform: uppercase;
+    font-size: 15px;
 }
 
 

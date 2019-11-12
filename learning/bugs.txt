@@ -61,3 +61,23 @@ prototype ??
 issue with many submitting !!!
 
 not reaload whole page hot reload after ctrl+s
+
+
+formValues.os.push(formValues.osStart[0]) -> updating UI ?? so why setState or using redux reducer !!!
+
+AM I USING THUNK !!!!!!!! :)
+
+dispatch(clearFields(marcheFormName, true, false, fieldName)) -> ask in stackoverflow
+
+--------------
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+const asyncValidate = (values /*, dispatch */) => {
+  return sleep(1000).then(() => {
+    // simulate server latency
+    if (['john', 'paul', 'george', 'ringo'].includes(values.username)) {
+      throw { username: 'That username is taken' }
+    }
+  })
+}
+--------------

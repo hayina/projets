@@ -10,11 +10,11 @@ import { NestedTree } from '../checkboxTree/CheckTree';
 
 import {formName as projetForm } from './ProjetForm'
 
-const LocationLine = ({ localisationItems, dispatch, input, meta : { touched, error } }) => {
+const LocationLine = ({ localisationItems, dispatch, input, meta }) => {
 
     let localisations = input.value ? input.value:[]
 
-    console.log('LocationLine', localisations)
+    console.log('meta', meta)
     
     
     return (
@@ -67,7 +67,7 @@ const LocationLine = ({ localisationItems, dispatch, input, meta : { touched, er
                 </div>
             }
 
-            { touched && error && <div className="error-feedback">{ error }</div> }
+            { meta && meta.touched && meta.error && <div className="error-feedback">{ meta.error }</div> }
 
         </React.Fragment>
     )

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, Fields, submit, reduxForm, change, arrayPush, arrayRemove } from 'redux-form'
+import { Field, Fields, submit, reduxForm, change, arrayPush, clearFields } from 'redux-form'
 import Modal from '../modals/Modal';
 import { TextField, DateField, RadioField } from '../forms/form-fields/fields';
 import { required } from '../forms/validator';
@@ -15,21 +15,32 @@ export const osFormName = 'osForm'
 
 
 
-let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes, initialValues, idMarche }) => {
+let OsForm = ({ osTypes, dispatch, handleSubmit, initialValues, fieldName, editMode, index, idMarche }) => {
 
-    console.log('osTypes', initialValues)
+    // console.log('Init -> Ordres de service', initialValues)
+
+    // if( editMode ) {
+        // 
+    // }
 
     const onSubmit = (formValues) => {
 
-        console.log(formValues)
+        // console.log('onSubmit -> Ordres de service', formValues.typeOs)
+        
 
-        formValues.typeOs = osTypes.find(ot => ot.value === formValues.typeOs)
+        // on cherche le label du typeOs pour l'afficher apres le submit()
+        formValues.typeOs = osTypes.find(osType => osType.value === formValues.typeOs)
+
+        // console.log('onSubmit -> Ordres de service', formValues.typeOs)
 
         if ( !editMode ) {
-            dispatch(arrayPush(marcheFormName, 'os', formValues))
+            dispatch(arrayPush(marcheFormName, fieldName, formValues))
         } else {
-            dispatch(change(marcheFormName, `os[${index}]`, formValues));
+            dispatch(change(marcheFormName, `${fieldName}[${index}]`, formValues));
         }
+
+        // clearFields(form:String, keepTouched: boolean, persistentSubmitErrors: boolean, ...fields:String)
+        dispatch(clearFields(marcheFormName, true, false, fieldName))
 
         dispatch(hideModal())
 
@@ -45,18 +56,16 @@ let OsForm = ({ dispatch, handleSubmit, editMode, index, osTypes, initialValues,
             <form onSubmit={ handleSubmit(onSubmit) } id={osFormName} >
                 <div className={`form-content`}>
                     <Field
-                        name="typeOs" component={RadioField} validate={[required]}
-                        options={ osTypes }
+                        name="typeOs" component={RadioField} options={ osTypes } validate={[ required ]}  
                     />
                     <Field
                         name="dateOs" component={DateField} label="Date de l'Ordre de Service" validate={[required]}
                     />
-                    <Field
+                    {/* <Field
                         name="commentaire" component={TextField} label="Commentaire" fieldType="textarea" 
-                    />
+                    /> */}
                     <Fields
-                        names={["attachments", "resources"]} component={UploadLine} idMarche={idMarche}
-                        formName={osFormName}
+                        names={["attachments", "resources"]} component={UploadLine} idMarche={idMarche} formName={osFormName}
                     />
                 </div>
 

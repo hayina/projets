@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm, initialize } from 'redux-form'
+import { Field, reduxForm, initialize, SubmissionError, touch } from 'redux-form'
 import { required, number, integer } from '../forms/validator';
 import { TextField, DateField, SelectField } from '../forms/form-fields/fields';
 
@@ -12,8 +12,117 @@ import { ApiError } from '../helpers';
 
 import './marcheForm.css'
 import { withForbbiden } from '../../security';
+import { TYPE_OS } from '../../types';
+import { isFuture } from '../../helpers';
+
 
 export const marcheFormName = 'marcheForm'
+
+
+// const vOsStart = (value=[], { os=[] } ) => (
+//     value.length === 0 && os.length > 0  ? 
+//          'veuillez renseigner aussi cet ordre de service' : undefined
+// )
+
+const validate = ({ osStart=[], os=[], decomptes=[], taux=[], societes=[], dateReceptionProv, dateReceptionDef }, { dispatch }) => {
+
+    const errors = {}
+
+    if( osStart.length > 1 ) {
+        return { osStart: `un seul ordre de service est autorisé ici` }
+    }
+
+    if( osStart.length === 1 && osStart[0].typeOs.value !== TYPE_OS.COMMENCEMENT ) {
+        return { osStart: `l'ordre de service (${osStart[0].typeOs.label}) n'est pas autorisé ici` }
+    }
+
+    if( osStart.length === 0 && (os.length > 0 || decomptes.length > 0 || taux.length > 0 || dateReceptionProv) ) {
+        return { osStart: `veuillez renseigner cet ordre de service` }
+    }
+
+
+    const beforeOsStart = (date) => new Date(date) <= new Date(osStart[0].dateOs)
+    const afterReceptProv = (date) => dateReceptionProv && (new Date(date) > new Date(dateReceptionProv))
+    const beforeReceptProv = (date) => dateReceptionProv && (new Date(date) < new Date(dateReceptionProv))
+    const expiredDate = (date) => isFuture(date) || afterReceptProv(date)
+    const checkWrongDate = (date) => beforeOsStart(date) || expiredDate(date)
+
+
+    const incorrectDate = "date incorrecte"
+
+    if(osStart[0] && isFuture(osStart[0].dateOs)) {
+        return { osStart: incorrectDate }
+    }
+
+    ///////// a ce stade tout est OKEY avec os start ///////// 
+
+    if( dateReceptionProv && (beforeOsStart(dateReceptionProv) || isFuture(dateReceptionProv)) ) {
+        return { dateReceptionProv: incorrectDate }
+    }
+
+    ///////// on a checker osStart et dateReceptionProv car tt les autres dates dependent d'eux ///////// 
+
+    if( osStart[0] && societes.length === 0 ) {
+        errors.societes=`veuillez renseigner ce champs`
+    }
+
+    const osLength = os.length
+    // here we are sure that osStart exist
+    if( osLength > 0 ) {
+
+        os.sort((a, b) => new Date(a.dateOs) - new Date(b.dateOs))
+
+        // since we already sort OS we check just with the min and max
+        if( beforeOsStart(os[0].dateOs) ) {
+            return { os: incorrectDate }
+        }
+        if( expiredDate(os[osLength-1].dateOs) ) {
+            return { os: incorrectDate }
+        }
+
+
+        let prevOsType = TYPE_OS.REPRISE
+ 
+        for ( let i=0; i<os.length; i++ ) {
+
+            if( prevOsType === os[i].typeOs.value ) {
+                errors.os='ordres de services incorrectes'
+                break
+            }
+
+            if( os[i].typeOs.value === TYPE_OS.COMMENCEMENT ) {
+                errors.os=`l'ordre de service (${os.typeOs.label}) n'est pas autorisé ici`
+                break
+            }
+
+            prevOsType = os[i].typeOs.value 
+        }
+
+        // checking decomptes and taux
+
+        if( decomptes.length > 0 && decomptes.some(dec => checkWrongDate(dec.dateDec)) ) {
+            errors.decomptes=incorrectDate
+        }
+        if( taux.length > 0 && taux.some(t => checkWrongDate(t.dateTaux)) ) {
+            errors.taux=incorrectDate
+        }
+
+        if( dateReceptionDef && (beforeReceptProv(dateReceptionProv) || isFuture(dateReceptionDef)) ) {
+            errors.dateReceptionDef=incorrectDate 
+        }
+
+
+        if( dateReceptionDef && !dateReceptionProv ) {
+            dispatch(touch(marcheFormName, "dateReceptionProv"))
+            errors.dateReceptionProv=`veuillez renseigner cette date`
+        }
+    }
+
+    return errors
+}
+
+
+
 
 let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
 
@@ -73,10 +182,6 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
 
         // console.log(formValues)
 
-        setSubmitting(true)
-        setErrors(false)
-
-
         const formData = new FormData();
 
         const constructAttach = (fieldWithAttachs, nameField) => {
@@ -95,9 +200,12 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
             }
         }
 
-        constructAttach(formValues.os, 'osAttachs')
+        const os = formValues.osStart[0] ? [ ...formValues.os, formValues.osStart[0] ] : [ ...formValues.os ]
+        // constructAttach(formValues.osStart, 'osAttachs')
+        constructAttach(os, 'osAttachs')
         constructAttach(formValues.decomptes, 'decAttachs')
 
+        // formValues.os.push(formValues.osStart[0])
 
         let apiValues = {
             ...formValues,
@@ -105,14 +213,21 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
             idProjet,
             marcheType: { value: formValues.marcheType },
             marcheEtat: { value: formValues.marcheEtat },
+            os
+            // osStart: formValues.osStart ? formValues.osStart[0] : null
             // societes: formValues.societes ? formValues.societes.map(ste => ({ value: ste })) : [],
             // os: formValues.os ? formValues.os.map(os => ({ ...os, typeOs: { value: os.typeOs } })) : [],
         }
 
         console.log(apiValues)
 
+        // return
 
         formData.append('formJson', new Blob([JSON.stringify(apiValues)], { type: 'application/json' }));
+
+
+        setSubmitting(true)
+        setErrors(false)
 
         useAjaxFetch({
             // url: 'postman/marches22',
@@ -178,10 +293,23 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
 
                 <Field name="societes" component={SocieteLine} />
 
+                {/* <div className="sep-line"></div>
+
+                <Field name="dateStart" component={DateField} label="Date Commencement" /> */}
+
                 <div className="sep-line"></div>
 
-                <Field name="dateStart" component={DateField} label="Date Commencement" />
-                <Field name="os" component={OrdreServiceLine} osTypes={osTypes} idMarche={idMarche} />
+                <Field name="osStart" component={OrdreServiceLine}
+                    label="Ordre de service (Commencement)"
+                    osTypes={ [osTypes.find(ot => ot.value === TYPE_OS.COMMENCEMENT)] } idMarche={idMarche} 
+                />
+
+                <div className="sep-line"></div>
+
+                <Field name="os" component={OrdreServiceLine} 
+                    label="Ordres de service (ARRÊT/REPRISE)"
+                    osTypes={ osTypes.filter(ot => ot.value !== TYPE_OS.COMMENCEMENT) } idMarche={idMarche} 
+                />
 
                 <div className="sep-line"></div>
 
@@ -215,6 +343,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
 
 MarcheForm = reduxForm({
     form: marcheFormName,
+    validate
 })(MarcheForm)
 
 

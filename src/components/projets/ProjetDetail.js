@@ -10,7 +10,7 @@ import { setBreadCrumb, showModal } from '../../actions';
 import { formatDate } from '../../helpers';
 import DropDown from '../helpers/DropDown2';
 import { modalTypes } from '../modals/ModalRoot';
-import { ATTACH_TYPE } from '../../types';
+import { ATTACH_TYPE, TYPE_OS } from '../../types';
 import { ResourcesLine } from '../attachments';
 
 const ProjetDetail = ({ match, history, dispatch }) => {
@@ -60,6 +60,9 @@ const ProjetDetail = ({ match, history, dispatch }) => {
             url: `/marches/detail/${idMarche}`,
             success: (data) => {
                 console.log(data)
+                if(data.osStart.length > 0) {
+                    data.os.unshift(data.osStart[0])
+                }
                 setDefaultMarche(data)
                 setMarcheLoading(false)
 
@@ -294,18 +297,6 @@ const ProjetDetail = ({ match, history, dispatch }) => {
 
                     
 
-                    <LineInfo label="Date commencement">
-                        
-                        { defaultMarche.dateStart ? 
-                            <>
-                                <CalendarIcon />
-                                <span className="l-date nbr-font">{formatDate(new Date(defaultMarche.dateStart))}</span> 
-                            </>    
-                            : '-' 
-                        }
-                            
-                    </LineInfo>
-
 
                     <LineInfo label="Ordres de service">
                     {
@@ -320,7 +311,8 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                                     </span>
                                 </span>
                                 <span>
-                                    <i className="fas fa-arrow-circle-right"></i>
+                                    {/* <i className="fas fa-arrow-circle-right"></i> */}
+                                    <i className={`far fa-os fa-${ typeOs.value === TYPE_OS.ARRET ? 'pause' : 'play' }-circle`}></i>
                                     <span className="l-name">{typeOs.label}</span>
                                 </span>
 
