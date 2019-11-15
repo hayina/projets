@@ -206,7 +206,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
             />
 
             <Field
-                name="anneeProjet" component={SelectField} label="Année projet" options={genYears()}
+                name="anneeProjet" component={SelectField} label="Année projet" options={genYears()} validate={[required]}
             />
 
             <Field

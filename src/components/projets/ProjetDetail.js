@@ -39,6 +39,9 @@ const ProjetDetail = ({ match, history, dispatch }) => {
             success: ({projet, defaultMarche, marchesTypes}) => {
                 console.log(projet)
                 console.log(defaultMarche)
+                if(defaultMarche.osStart.length > 0){
+                    defaultMarche.os.unshift(defaultMarche.osStart[0])
+                }
                 setProjet(projet)
                 setDefaultMarche(defaultMarche)
                 if(defaultMarche) setActiveMarcheTab(defaultMarche.idMarche)

@@ -330,7 +330,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
 
             <div className={`form-validation ${editLoading ? 'is-submitting form-submitting' : ''}`}>
                 <button type="submit"
-                    className={`btn btn-primary ${submitting ? 'btn-submitting is-submitting ' : ''}`}>
+                    className={`btn btn-primary is-loading ${submitting ? 'btn-submitting is-submitting' : ''}`}>
                     Submit {submitting ? '...' : ''}
                 </button>
             </div>

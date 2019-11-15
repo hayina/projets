@@ -27,6 +27,10 @@
     fill: none;
     stroke-width: 4px;
     /* stroke-linecap: round; */
+    /* animation: progress .5s ease-out forwards; */
+  }
+
+  .circle-progress-animation {
     animation: progress .5s ease-out forwards;
   }
   

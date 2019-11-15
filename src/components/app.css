@@ -74,9 +74,10 @@
     text-decoration: none;
 }
 
-.no_sel {
+.no_sel, .disabled {
     pointer-events:none;
 }
+
 
 
 .db_2::after {
@@ -344,4 +345,103 @@
     background-color: red;
     color: white;
     font-size: 18px;
+}
+
+
+/* whatsapp loading svg */
+
+
+.svg-spinner {
+    animation: rotate 2s linear infinite;
+}
+
+.svg-spinner .path {
+    stroke-dasharray: 1,150; /* 1%, 101% circumference */
+    stroke-dashoffset: 0;
+    stroke: rgba(27, 154, 89, 0.7);
+    stroke-linecap: round;
+    -webkit-animation: dash 1.5s ease-in-out infinite;
+    animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+@-webkit-keyframes rotate{
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes dash {
+    0% {
+    stroke-dasharray: 1,150;  /* 1%, 101% circumference */
+    stroke-dashoffset: 0;
+    }
+    50% {
+    stroke-dasharray: 90,150; /* 70%, 101% circumference */
+    stroke-dashoffset: -35;   /* 25% circumference */
+    }
+    100% {
+    stroke-dasharray: 90,150; /* 70%, 101% circumference */
+    stroke-dashoffset: -124;  /* -99% circumference */
+    }
+}
+@-webkit-keyframes dash {
+    0% {
+    stroke-dasharray: 1,150;  /* 1%, 101% circumference */
+    stroke-dashoffset: 0;
+    }
+    50% {
+    stroke-dasharray: 90,150; /* 70%, 101% circumference */
+    stroke-dashoffset: -35;   /* 25% circumference */
+    }
+    100% {
+    stroke-dasharray: 90,150; /* 70%, 101% circumference */
+    stroke-dashoffset: -124;  /* -99% circumference */
+    }
+}
+
+/* LOADING */
+
+
+
+/* .btn.is-loading:after {
+    content: "";
+    position: absolute;
+    top: calc(50% - 8px);
+    width: 16px;
+    height: 16px;
+    margin-left: -1.65em;
+    margin-left: -22px;
+    border: 2px solid rgba(57,115,157,0.4);
+    border-color: rgba(255,255,255,0.25);
+    border-left-color: #FFF;
+    border-left-color: #33658a;
+    border-radius: 50%;
+    animation: s-spinner-rotate .9s infinite cubic-bezier(.5, .1, .5, .9);
+    filter: invert(0);
+    transform-origin: 50% 50% 1px;
+} */
+
+/* ///////////////////////////////////////// */
+
+.center-flex {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+
+.input-with-init {
+    position: relative;
+}
+
+
+
+.input-with-init .clear-input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    padding: 0px 8px;
 }

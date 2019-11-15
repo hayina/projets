@@ -43,7 +43,7 @@ export const Select = ({options, defaultOption="...", input}) => {
     )
 }
 
-export const Radio = ({options, input, all=false}) => {
+export const Radio = ({options, input, all=false, callback}) => {
 
     const RadioItem = ({option}) => {
         const inputID = uniqueHtmlID();
@@ -51,7 +51,10 @@ export const Radio = ({options, input, all=false}) => {
             <div className="radio-item">
                 <input id={inputID} type="radio"
                     value={ option.value }
-                    onChange= { (e) => input.onChange(option.value) }
+                    onChange= { (e) => {
+                        callback && callback()
+                        input.onChange(option.value) 
+                    }}
                     checked={option.value === input.value}
                 />
                 <label htmlFor={inputID}>{option.label}</label>
@@ -71,5 +74,17 @@ export const Input = ({input, placeholder, type="text"}) => {
 
     return (
         <input className="cr-input" type={type} placeholder={placeholder} { ...input } />  
+    )
+}
+
+export const InputWithInit = ({ initCallback, ...props }) => {
+
+    return (
+        <div className="input-with-init">
+            <Input { ...props } />
+            <div className="clear-input center-flex">
+                { props.input.value.length !== 0 && <i className="fas fa-times" onClick={initCallback}></i> }
+            </div>
+        </div>
     )
 }

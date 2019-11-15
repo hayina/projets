@@ -18,3 +18,6 @@ shift/pop - remove and return the first/last element of an array
 concat 
 
 sort
+
+Math.ceil(1.1) // returns 2
+Math.floor(1.8) // returns 1

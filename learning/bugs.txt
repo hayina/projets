@@ -81,3 +81,7 @@ const asyncValidate = (values /*, dispatch */) => {
   })
 }
 --------------
+
+suspens api reactjs
+
+Which variable to put in the state and Which ones not !!!!!!!!!!!! state vs ref vs normal variable

@@ -2,8 +2,9 @@ import React from 'react';
 
 import './percentage.css'
 
-const Percentage = ({percentage}) => {
+const Percentage = ({percentage, animation=true}) => {
 
+    // console.log("Percentage -> animation", animation)
     return (
 
         <div className="flex-wrapper">
@@ -14,8 +15,10 @@ const Percentage = ({percentage}) => {
                 a 15.9155 15.9155 0 0 1 0 31.831
                 a 15.9155 15.9155 0 0 1 0 -31.831"
             />
-            <path className="circle"
-               strokeDasharray={`${percentage}, 100`}
+            {/* <path className={`circle`} */}
+            <path 
+                className={`circle ${ animation ? 'circle-progress-animation' : '' }`}
+                strokeDasharray={`${percentage}, 100`}
                 d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
                 a 15.9155 15.9155 0 0 1 0 -31.831"

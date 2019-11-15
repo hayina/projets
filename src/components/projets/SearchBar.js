@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Select, Input, Radio } from './components';
+import { Select, Input, InputWithInit, Radio } from './components';
 import useAjaxFetch from '../hooks/useAjaxFetch';
-import { FormProvider, FormContext, Field, reset } from '../yous-form/useForm';
+import { FormProvider, FormContext, Field, reset, setValues } from '../yous-form/useForm';
 import { SimpleListItem } from '../forms/SimpleList';
 
 
@@ -12,7 +12,7 @@ const intialValues = {
     secteur: '',
     acheteurType: 1,
     acheteur: '',
-    prSouffrance: 0,
+    projectStatus: 0,
 }
 
 
@@ -22,6 +22,7 @@ const SearchBar = ({ setFilters }) => {
     const [maitreOuvrages, setMaitreOuvrages] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
     const [srcFinancements, setSrcFinancements] = useState([]);
+    const [shouldUpdate, setShouldUpdate] = useState(true);
 
 
     const { state, dispatchForm } = useContext(FormContext);
@@ -37,9 +38,17 @@ const SearchBar = ({ setFilters }) => {
 
     useEffect(() => {
 
-        console.log('changing .....')
+        
 
-        setFilters(state.values)
+        console.log('SearchBar -> useEffect .....', state.values)
+
+        if(shouldUpdate) {
+            console.log('-> filters are changing .....', state.values)
+            setFilters(state.values)
+        }
+        else {
+            setShouldUpdate(true)
+        }
         
     } ,[state.values])
 
@@ -64,7 +73,8 @@ const SearchBar = ({ setFilters }) => {
 
                 <div className="cr-line one-cr-line">   
                     <Field name="intitule">
-                    { props => <Input placeholder="Intitulé"  {...props} /> } 
+                    { props => <InputWithInit placeholder="Intitulé" {...props} 
+                                    initCallback={ () => dispatchForm(setValues("intitule", "")) } /> } 
                     </Field>    
                 </div>
                 
@@ -93,7 +103,7 @@ const SearchBar = ({ setFilters }) => {
                         props => renderSelectInfo({ 
                             renderProps: props,
                             items: secteurs,
-                            defaultOption: "Choisir une secteur ..."
+                            defaultOption: "Choisir un secteur ..."
                         })
                         
                     }
@@ -107,7 +117,13 @@ const SearchBar = ({ setFilters }) => {
                         { 
                             props => 
                             <Radio 
-                                options={[ { value: 1, label: 'Maitre ouvrage' }, { value: 2, label: 'Partenaire' } ]} 
+                                options={[{value: 1, label: 'Maitre ouvrage'}, {value: 2, label: 'Partenaire'}]} 
+                                callback={ () => { 
+                                    console.log("acheteurType => acheteur =>", state.values.acheteur, state.values.acheteur.length)
+                                    if(state.values.acheteur.length === 0) {
+                                        setShouldUpdate(false)
+                                    }
+                                }}
                                 {...props} 
                             /> 
                         } 
@@ -119,7 +135,7 @@ const SearchBar = ({ setFilters }) => {
                         props => renderSelectInfo({ 
                             renderProps: props,
                             items: maitreOuvrages,
-                            defaultOption: "Choisir une secteur ..."
+                            defaultOption: "Choisir ..."
                         })
                     } 
                     </Field>   
@@ -128,18 +144,22 @@ const SearchBar = ({ setFilters }) => {
                 <div className="sep-line"></div>
                 
                 <div className="cr-line">   
-                    <Field name="prSouffrance">
+                    <Field name="projectStatus">
                         { props => <Radio options={[
                             { value: 0, label: 'N/A'},
                             { value: 1, label: 'En arrêt'},
-                            { value: 2, label: 'En retard'},
+                            // { value: 2, label: 'En retard'},
                             { value: 3, label: 'Délai exécution depassé'},
+                            { value: 4, label: 'En cours'},
+                            { value: 5, label: 'Achevé'},
+                            { value: 6, label: 'Résilié'},
                         ]} {...props} /> } 
                     </Field>               
                 </div>
 
-        
-                <span className="reset-from l_ho" onClick={ () => dispatchForm(reset(intialValues)) }>Initialiser</span>
+                <div className="footer-form">
+                    <span className="reset-from l_ho" onClick={ () => dispatchForm(reset(intialValues)) }>Initialiser</span>
+                </div>
                               
             </div>
         

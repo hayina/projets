@@ -41,7 +41,7 @@ const initialState = {
     // valid: false
 }
 
-export const setProp = (prop, field, value) => ({ type: 'SET_PROP', prop, field, value }) 
+// export const setProp = (prop, field, value) => ({ type: 'SET_PROP', prop, field, value }) 
 export const setValues = (field, value) => ({ type: 'SET_VALUES', field, value }) 
 export const setErrors = (field, error) => ({ type: 'SET_ERRORS', field, error }) 
 export const setTouched = (field, touched) => ({ type: 'SET_TOUCHED', field, touched }) 
