@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import { Link } from "react-router-dom"
 import { connect } from 'react-redux';
 
 import useAjaxFetch from '../hooks/useAjaxFetch';
@@ -39,7 +40,7 @@ const ProjetDetail = ({ match, history, dispatch }) => {
             success: ({projet, defaultMarche, marchesTypes}) => {
                 console.log(projet)
                 console.log(defaultMarche)
-                if(defaultMarche.osStart.length > 0){
+                if(defaultMarche && defaultMarche.osStart.length > 0){
                     defaultMarche.os.unshift(defaultMarche.osStart[0])
                 }
                 setProjet(projet)
@@ -76,14 +77,22 @@ const ProjetDetail = ({ match, history, dispatch }) => {
     }
 
     const deleteMarche = (idMarche) => {
-        useAjaxFetch({
-            url: `/marches/${idMarche}`,
-            method: 'DELETE',
-            success: () => {
-                setDefaultMarche({})
-            },
-            error: (err) => setErrors(true)
-        })
+
+        const newMarches = marchesTypes.filter(m => m.value !== idMarche)
+        console.log(newMarches.length, newMarches, newMarches.length > 0 ? newMarches[0].value : null)
+        setActiveMarcheTab( newMarches.length > 0 ? newMarches[0].value : null)
+        setDefaultMarche(newMarches.length > 0 ? loadMarche(newMarches[0].value) : null )
+        setMarchesTypes(newMarches)
+
+        // useAjaxFetch({
+        //     url: `/marches/${idMarche}`,
+        //     method: 'DELETE',
+        //     success: () => {
+
+
+        //     },
+        //     error: (err) => setErrors(true)
+        // })
     }
 
     const deleteProjet = () => {
@@ -152,12 +161,8 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                             label: 'Supprimer',
                             callback: () => {
                                 dispatch(showModal(modalTypes.ADD_DELETE, {
-                                    onDanger: () => deleteProjet()  ,
-                                    dangerText: [
-                                        "Voulez vous vraiment supprimer le projet ", 
-                                        <strong>{projet.intitule}</strong>, 
-                                        " ?"
-                                    ]
+                                    onDanger: () => deleteProjet(),
+                                    dangerText: (<span>Voulez vous vraiment supprimer le projet <strong>{projet.intitule}</strong> ?</span>)
                                 }))
                             },
                         }
@@ -210,9 +215,9 @@ const ProjetDetail = ({ match, history, dispatch }) => {
             </div>
 
             {
-                marchesTypes && marchesTypes.length > 1 &&
+                marchesTypes && marchesTypes.length > 0 &&
                 <div className="mh-wr">
-                    <div className="_mh_2">Infos sur les marchés</div>
+                    <div className="_mh_2">Infos sur les marchés ({activeMarcheTab})</div>
                     <div className="marches-tabs tabs-wr">
                     {
                         marchesTypes.map((mt, i) => {
@@ -241,7 +246,6 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                     
                     </div>
                 </div>
-
             }
 
             {
@@ -260,9 +264,11 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                                 callback: () => {
                                     dispatch(showModal(modalTypes.ADD_DELETE, {
                                         onDanger: () => deleteMarche(defaultMarche.idMarche)  ,
-                                        dangerText: ["Voulez vous vraiment supprimer le marche ", <strong>{defaultMarche.intitule}</strong>, " ?"]
+                                        // dangerText: ["Voulez vous vraiment supprimer le marche ", <strong>{defaultMarche.intitule}</strong>, " ?"]
+                                        dangerText: (<span>Voulez vous vraiment supprimer le marche <strong>{defaultMarche.intitule}</strong> ?</span>)
+                                        
                                     }))
-                                },
+                                }
                             }
 
                         ]}
@@ -415,9 +421,15 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                     </LineInfo>
 
                 </div>
+                
+
             }
 
-
+            <div className="new-marche">
+                <Link to={`/marches/new/${projet.id}`} className="_dr-item">Nouveau marché</Link>
+                <i className="fas fa-plus"></i>
+                {/* <i class="fa fa-arrow-right"></i> */}
+            </div>
         
         
         </div>

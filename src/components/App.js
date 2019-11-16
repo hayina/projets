@@ -56,7 +56,8 @@ let ProtectedRoute = ({ component:Cp, authRole, isAuth, userID, userType, roles,
                 } else {
                     console.log("Redirect to login", restProps.path)
                     // return <Redirect to="/login" />
-                    return <Login {...props} />
+                    const { pathname, search }  = props.history.location
+                    return <Login {...props} from={ `${pathname}${search}` } />
                 }
             }
         }

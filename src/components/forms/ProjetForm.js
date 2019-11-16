@@ -14,6 +14,7 @@ import ProgLine from './ProgLine';
 import './forms.css';
 import { getRoles, getUserType } from '../../reducers/login';
 import { withForbbiden, canUserAffect } from '../../security';
+import { ButtonSpinner, FooterForm } from '../divers';
 
 const vIndh = (value, formValues, props, name) => (
     (formValues.indh === true) && (!value) ? 
@@ -44,11 +45,16 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
     const [chargesSuivi, setChargesSuivi] = useState([]);
 
     const [submitting, setSubmitting] = useState(false);
-    const [editLoading, setEditLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState(false);
 
     // get id projet from params to determine if we are in edit mode
     const { idProjet } = match.params
+
+    const editMode = idProjet ? true : false
+
+
+
 
     const initForm = () => {
         dispatch(initialize(formName, {}))
@@ -62,44 +68,21 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
         // BOTH MODES
         initForm()
 
-        // useAjaxFetch({
-        //     url: 'secteurs',
-        //     success: (data) => setSecteurs(data),
-        //     error: (err) => setErrors(true)
-        // })
-        // useAjaxFetch({
-        //     url: 'localisations',
-        //     success: (data) => setLocalisationItems(data),
-        //     error: (err) => setErrors(true)
-        // })
-
-        // if( canHeAffect(roles, userType) ) {
-        //     useAjaxFetch({
-        //         url: 'chargesSuivi',
-        //         success: (data) => setChargesSuivi(data),
-        //         error: (err) => setErrors(true)
-        //     })
-        // }
-
-
         // PROJET LOADING !!!
-
-        setEditLoading(true)
+        setLoading(true)
         useAjaxFetch({
             url: `/projets/loading`,
             params: idProjet ? { edit: idProjet } : {},
             success: (result) => {
 
-
-                setEditLoading(false)
-
+                setLoading(false)
                 setSecteurs(result.secteurs)
                 setLocalisationItems(result.localisations)
                 setFinancements(result.srcFinancements)
                 setIndhProgrammes(result.indhProgrammes)
                 if(result.chargesSuivi) setChargesSuivi(result.chargesSuivi)
 
-                if(idProjet) {
+                if(editMode) {
                     console.log(`/projets/edit/${idProjet} ->`, result.projetData)
                     dispatch(initialize(formName, result.projetData))
                 }
@@ -108,30 +91,11 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
             setForbbiden
         })
 
-
-        // EDIT MODE
-        // if(idProjet) {
-        //     setEditLoading(true)
-        //     useAjaxFetch({
-        //         url: `/projets/edit/${idProjet}`,
-        //         success: (data) => {
-        //             console.log(`/projets/edit/${idProjet} ->`, data)
-
-        //             setEditLoading(false)
-        //             dispatch(initialize(formName, data))
-        //         },
-        //         error: (err) => setErrors(true)
-        //     })
-        // } 
-        // // NEW MODE
-        // else {
-        //     // initForm()
-        // }
-
     }, [])
     
 
     
+
 
     
     const onSubmit = (formValues) => {
@@ -148,17 +112,10 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
             idProjet,
             maitreOuvrage: formValues.maitreOuvrage ? formValues.maitreOuvrage.value : null,
             maitreOuvrageDel: formValues.maitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
-            // partners: formValues.isConvention ? 
-            //     formValues.partners.map(cp => `${cp.partner.value}:${cp.montant}`):[]
         }
 
         
         console.log(apiValues)
-
-        // dispatch(arrayPushing('projets', apiValues));
-        // setTimeout(() => {
-        //     setSubmitting(false)
-        // },300)
 
         // return
 
@@ -166,10 +123,18 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
             url: 'projets',
             method: 'POST',
             body: JSON.stringify(apiValues),
-            success: () => {
+            success: (savedProj) => {
                 initForm()
                 setSubmitting(false)
-                history.push("/projets/search")
+
+                // redirection ...
+                if(editMode) {
+                    history.goBack()
+                } 
+                else {
+                    history.push(`/projets/detail/${savedProj}`)
+                }
+                // history.push("/projets/search")
             },
             error: (err) => {
                 setErrors(true)
@@ -179,6 +144,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
         })
 
     }
+
 
 
     console.log('PROJET FORM -> RENDERING -->')
@@ -195,11 +161,14 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
     }
 
     return (
-        <form id={formName} className="form-wr" onSubmit={ handleSubmit(onSubmit) }>
+        <div className="form-container">
+        <form id={formName} className={`form-wr ${ submitting || loading ? 'is-submitting' : '' }`}
+            // onSubmit={ handleSubmit(onSubmit) }>
+        >
 
             <div className="form-title hide">PROJET FORMULAIRE</div>
 
-            <div className={`form-content ${ submitting || editLoading ? 'form-submitting is-submitting':'' }`}>
+            <div className={`form-content`}>
 
             <Field
                 name="intitule" component={TextField} label="Intitulé" fieldType="textarea" validate={[required]}
@@ -277,6 +246,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
                     label="Chargé de suivi"
                     optgroups={chargesSuivi}
                     gOptsLabel="Choisir ..."
+                    validate={[required]}
                 />
                 </>
 
@@ -292,17 +262,17 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
             </div>
 
             
+            <FooterForm label={"Enregistrer"} callback={handleSubmit(onSubmit)} isLoading={submitting} errors={errors} />
 
-            <div className={`form-validation ${ editLoading ? 'is-submitting form-submitting':'' }`}>
-                <button type="submit" 
-                    className={`btn btn-primary ${ submitting ? 'btn-submitting is-submitting ':'' }`}>
-                    Submit { submitting ? '...':'' }
-                </button>
+
+            {/* <div className={`form-validation`}>
+                <ButtonSpinner label={"Submit"} callback={handleSubmit(onSubmit)} isLoading={submitting}/>
             </div>
             
-            { errors && <ApiError cssClass="va-errors"/> }
+            { errors && <ApiError cssClass="va-errors"/> } */}
 
         </form>
+        </div>
     )
 
 }

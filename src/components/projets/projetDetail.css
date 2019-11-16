@@ -82,8 +82,8 @@
 } 
 
 #pr-detail-wr .prj-info-wr {
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 20px;
+    /* border-bottom: 1px solid #ccc; */
+    /* margin-bottom: 20px; */
 } 
 
 #pr-detail-wr .l-item > span {
@@ -315,4 +315,15 @@
 
 #pr-detail-wr .fa-os {
     margin-left: 0px;
+}
+
+#pr-detail-wr .new-marche {
+    margin-top: 10px;
+    text-transform: uppercase;
+    font-size: 14px;
+    text-align: right;
+}
+
+#pr-detail-wr .new-marche a {
+    margin-right: 6px;
 }

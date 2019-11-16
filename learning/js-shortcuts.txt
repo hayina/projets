@@ -21,3 +21,9 @@ sort
 
 Math.ceil(1.1) // returns 2
 Math.floor(1.8) // returns 1
+
+
+dont use 
+myProp={["This is html", <span>Some other</span>, "and again some other"]}
+wrap it in span and use 
+myProp={<span>...</span>}

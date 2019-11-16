@@ -5,10 +5,13 @@ import './login.css';
 import { setBreadCrumb, loginUser } from '../actions';
 import useAjaxFetch from './hooks/useAjaxFetch';
 import { ApiError } from './helpers';
+import { FooterForm } from './divers';
+import { isAuthenticated } from '../reducers/login';
 
-const Login = ({ dispatch, history }) => {
+const Login = ({ dispatch, history, from, isAuth }) => {
 
-    // console.log("History -------------------------------->", history)
+    console.log("History -------------------------------->", history)
+    console.log("from -------------------------------->", from)
 
     const loginForm = 'loginForm';
 
@@ -38,6 +41,9 @@ const Login = ({ dispatch, history }) => {
 
         setSubmitting(true)
         setApiError(false)
+
+        // return
+
         useAjaxFetch({
             url: '/login',
             method: 'POST',
@@ -60,7 +66,7 @@ const Login = ({ dispatch, history }) => {
                         console.log('Success ->', data)
                         dispatch(loginUser(data))
                         localStorage.setItem('userInfo', JSON.stringify(data));
-                        history.push('/projets/search')
+                        history.push(from ? from : '/projets/search')
 
                 }
                 
@@ -74,15 +80,15 @@ const Login = ({ dispatch, history }) => {
     }
 
     const inpSubmitCss = submitting ? 'inp-submitting':''
-    const waiting = submitting ? 'waiting':''
+    // const waiting = submitting ? 'waiting':''
     // ${ submitting ? 'form-submitting is-submitting':'' }
 
     // console.log("LOGIN")
 
     return (
-
+        !isAuth ?
         <form onSubmit={ onSubmit } id={loginForm} 
-            className={`form-content box-sh box-br`}>
+            className={`form-content box-sh box-br ${ submitting ? 'no-touch' : '' }`}>
 
                 <input 
                     className={`log-i form-control ${inpSubmitCss}`} 
@@ -96,19 +102,23 @@ const Login = ({ dispatch, history }) => {
                 />
             
 
-                <div className={`form-validation`}>
+                <FooterForm label={"login"} callback={ onSubmit } isLoading={submitting} errors={apiError} />
+
+                {/* <div className={`form-validation`}>
                     <button type="submit" className={`btn btn-primary submit-btn ${waiting}`}>
                         login { submitting ? '...':'' }
                     </button>
-                </div>
+                </div> */}
 
                 { errMsg && <div className="err-login">{errMsg}</div> }
-                { apiError && <ApiError cssClass="va-errors"/> }
+                {/* { apiError && <ApiError cssClass="va-errors"/> } */}
 
 
         </form>
+        :
+        <div className="notif-warnig">Vous êtes déjà connecté :=)</div>
     )
 }
 
-export default connect()(Login);
+export default connect(state => ({isAuth: isAuthenticated(state)}))(Login);
 

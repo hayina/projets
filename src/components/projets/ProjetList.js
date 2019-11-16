@@ -138,6 +138,15 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
         )
     }
 
+    const highlightText = (text, higlight) => {
+        // Split text on higlight term, include term itself into parts, ignore case
+        var parts = text.split(new RegExp(`(${higlight})`, 'gi'));
+        return (
+            <span>{parts.map(part => part.toLowerCase() === higlight.toLowerCase() ? 
+                <span className="highlight-text">{part}</span> : part)}
+            </span>)
+    }
+
     const Line = ({ projet, index }) => {
         
         // const animate = index >= itemIndexRef.current
@@ -151,7 +160,8 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
 
                 <div className="projet-label">
                     <Link to={`/projets/detail/${projet.id}`} >
-                        <strong>{index+1}.</strong>({projet.daysFromLastRepriseTilNow}) - {projet.intitule} 
+                        <strong>{index+1}.</strong>({projet.daysFromLastRepriseTilNow}) - 
+                        { filters.intitule.length > 0 ? highlightText(projet.intitule, filters.intitule) : projet.intitule } 
                     </Link>
                 </div>
                 {/* <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div> */}

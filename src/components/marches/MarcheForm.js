@@ -14,6 +14,7 @@ import './marcheForm.css'
 import { withForbbiden } from '../../security';
 import { TYPE_OS } from '../../types';
 import { isFuture } from '../../helpers';
+import { ButtonSpinner, FooterForm } from '../divers';
 
 
 export const marcheFormName = 'marcheForm'
@@ -124,11 +125,11 @@ const validate = ({ osStart=[], os=[], decomptes=[], taux=[], societes=[], dateR
 
 
 
-let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
+let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden, history }) => {
 
     const [submitting, setSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState(false);
-    const [editLoading, setEditLoading] = useState(false)
 
     const [marcheTypes, setMarcheTypes] = useState([]);
     const [marcheEtats, setMarcheEtats] = useState([]);
@@ -137,6 +138,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
     // get id projet from params to determine if we are in edit mode
     const { idMarche } = match.params
     const { idProjet } = match.params
+    const editMode = idMarche ? true : false
 
     const initForm = () => {
         dispatch(initialize(marcheFormName, {}))
@@ -148,7 +150,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
 
         initForm()
 
-        setEditLoading(true)
+        setLoading(true)
 
         useAjaxFetch({
             url: `/marches/loading`,
@@ -169,8 +171,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
                     dispatch(initialize(marcheFormName, editData))
                 }
 
-                setEditLoading(false)
-
+                setLoading(false)
             },
             error: () => setErrors(true),
             setForbbiden
@@ -200,7 +201,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
             }
         }
 
-        const os = formValues.osStart[0] ? [ ...formValues.os, formValues.osStart[0] ] : [ ...formValues.os ]
+        const os = formValues.osStart && formValues.osStart[0] ? [ ...formValues.os, formValues.osStart[0] ] : formValues.os
         // constructAttach(formValues.osStart, 'osAttachs')
         constructAttach(os, 'osAttachs')
         constructAttach(formValues.decomptes, 'decAttachs')
@@ -214,9 +215,6 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
             marcheType: { value: formValues.marcheType },
             marcheEtat: { value: formValues.marcheEtat },
             os
-            // osStart: formValues.osStart ? formValues.osStart[0] : null
-            // societes: formValues.societes ? formValues.societes.map(ste => ({ value: ste })) : [],
-            // os: formValues.os ? formValues.os.map(os => ({ ...os, typeOs: { value: os.typeOs } })) : [],
         }
 
         console.log(apiValues)
@@ -237,9 +235,16 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
             body: formData,
             // body: JSON.stringify(apiValues),
             success: () => {
-                // initForm()
+
+
                 setSubmitting(false)
-                // history.push("/projets")
+                if(editMode) {
+                    history.goBack()
+                } 
+                else {
+                    history.push(`/projets/detail/${idProjet}`)
+                }
+
             },
             error: () => {
                 setErrors(true)
@@ -250,15 +255,16 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
     }
 
     return (
+        <div className="form-container">
         <form
             id={marcheFormName}
-            className={`form-wr ${submitting ? 'form-submitting is-submitting' : ''}`}
-            onSubmit={handleSubmit(onSubmit)}
+            className={`form-wr ${ submitting || loading ? 'is-submitting' : '' }`}
+            // onSubmit={handleSubmit(onSubmit)}
         >
 
 
 
-            <div className={`form-content ${submitting || editLoading ? 'form-submitting is-submitting' : ''}`}>
+            <div className={`form-content`}>
 
                 <Field
                     name="marcheType" component={SelectField} label="Type de marché" options={marcheTypes} flex={true}
@@ -328,16 +334,17 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden }) => {
 
             </div>
 
-            <div className={`form-validation ${editLoading ? 'is-submitting form-submitting' : ''}`}>
-                <button type="submit"
-                    className={`btn btn-primary is-loading ${submitting ? 'btn-submitting is-submitting' : ''}`}>
-                    Submit {submitting ? '...' : ''}
-                </button>
+            <FooterForm label={"Enregistrer"} callback={handleSubmit(onSubmit)} isLoading={submitting} errors={errors} />
+
+
+            {/* <div className={`form-validation`}>
+                <ButtonSpinner label={"Submit"} callback={handleSubmit(onSubmit)} isLoading={submitting}/>
             </div>
 
-            {errors && <ApiError cssClass="va-errors" />}
+            {errors && <ApiError cssClass="va-errors" />} */}
 
         </form>
+        </div>
     )
 }
 

@@ -137,6 +137,10 @@
     display: inline-block;
 }
 
+.projet-label a:hover {
+    color: inherit;
+}
+
 .projet-loc {
 
 }
