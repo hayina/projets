@@ -264,9 +264,15 @@
     grid-column-start: 2;
 }
 
+#pr-detail-wr .circular-chart {
+    width: 75%;
+    display: inline-block;
+}
+
 
 #pr-detail-wr .per-wr {
-    width: 80%;
+    text-align: right;
+    /* width: 80%; */
     /* width: 61px; */
     /* margin-left: auto; */
 }

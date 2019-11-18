@@ -8,7 +8,7 @@ export const reducer = (state, action) => {
     switch (action.type) {
 
         case 'RESET':
-            return { ...initialState, values: action.intialValues }; // attention de copier initialState
+            return { ...initialState, values: action.initValues }; // attention de copier initialState
 
         case 'FIRST_TIME_VALIDATION':
             return { ...state, firstTimeValidation: action.value };
@@ -47,14 +47,14 @@ export const setErrors = (field, error) => ({ type: 'SET_ERRORS', field, error }
 export const setTouched = (field, touched) => ({ type: 'SET_TOUCHED', field, touched }) 
 export const setDirty = (field, dirty) => ({ type: 'SET_DIRTY', field, dirty }) 
 export const setSubmitting = (submitting) => ({ type: 'SET_SUBMITTING', submitting }) 
-export const reset = (intialValues) => ({ type: 'RESET', intialValues }) 
+export const reset = (initValues) => ({ type: 'RESET', initValues }) 
 export const setFirstTimeValidation = (value) => ({ type: 'FIRST_TIME_VALIDATION', value }) 
 // export const setValid = (valid) => ({ type: 'SET_VALID', valid }) 
 
 export const FormContext = createContext({});
 
 
-export const FormProvider = ({ intialValues, rules, children }) => {
+export const FormProvider = ({ intialValues, rules={}, children }) => {
 
     const [state, dispatchForm] = useReducer(reducer, { ...initialState, values: intialValues })
 

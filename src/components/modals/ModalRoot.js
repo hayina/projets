@@ -11,7 +11,7 @@ import TauxForm from '../marches/TauxForm';
 import OsForm from '../marches/OsForm';
 import DecompteForm from '../marches/DecompteForm';
 import RolesModal from '../users/RolesModal';
-import PictureModal from './PictureModal';
+import ModalImg from './ModalImg';
 
 
 export const modalTypes = {
@@ -39,7 +39,7 @@ const MODAL_COMPONENTS = {
     [modalTypes.ADD_OS]: OsForm,
     [modalTypes.ADD_DECOMPTE]: DecompteForm,
     [modalTypes.MANAGE_ROLE]: RolesModal,
-    [modalTypes.DISPLAY_PICTURE]: PictureModal,
+    [modalTypes.DISPLAY_PICTURE]: ModalImg,
 }
 
 const ModalRoot = ({ modalType, modalProps }) => {

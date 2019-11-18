@@ -62,12 +62,12 @@
 }
 
 .img-popup-wr {
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
     
 }
  
 
 .img-popup {
-    max-width: 100%;
+    /* max-width: 100%; */
 }

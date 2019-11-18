@@ -6,12 +6,13 @@ import { TextInput, SimpleFormLine, SfSelect } from '../forms/form-fields/fields
 import { hideModal } from '../../actions';
 import Modal from '../modals/Modal';
 import { required, number, emptyArray } from '../forms/validator';
-import { FormProvider, reset, FormContext, Field, setSubmitting } from '../yous-form/useForm';
+import { FormProvider, reset, FormContext, Field } from '../yous-form/useForm';
 import useAjaxFetch from '../hooks/useAjaxFetch'
 
 import './userForm.css'
 import './../../components/gform.css'
 import { USER_TYPES } from '../../types';
+import { ApiError } from '../helpers';
 
 
 const intialValues = {
@@ -23,8 +24,6 @@ const intialValues = {
     roles: [],
 }
 
-
-
 const rules = {
     login: [required],
     password: [required],
@@ -35,56 +34,38 @@ const rules = {
 }
 
 
-
-
 let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser }) => {
 
     const { state, dispatchForm, onSubmit } = useContext(FormContext);
+
     const [roles, setRoles] = useState([])
     const [divisions, setDivisions] = useState([])
     const [userTypes, setUserTypes] = useState([])
-    const [editLoading, setEditLoading] = useState(false)
 
-
+    const [errors, setErrors] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [submitting, setSubmitting] = useState(false)
 
     useEffect(() => {
-
-
-
+        
+        setLoading(true)
+        setErrors(false)
         useAjaxFetch({
-            url: 'roles',
+            url: `/users/loading`,
+            params: editMode ? { user: userToEdit} : {},
             method: 'GET',
-            success: (data) => setRoles(data),
-            // error: () => setEditLoading(false)
+            success: (data) => {
+                if (editMode) {
+                    dispatchForm(reset(data.userInfos))
+                }
+                setRoles(data.roles)
+                setUserTypes(data.userTypes)
+                setDivisions(data.divisions)
+            },
+            error: () => setErrors(true),
+            always: () => setLoading(false)
         })
-
-        useAjaxFetch({
-            url: 'userTypes',
-            method: 'GET',
-            success: (data) => setUserTypes(data),
-            // error: () => setEditLoading(false)
-        })
-
-        useAjaxFetch({
-            url: 'divisions',
-            method: 'GET',
-            success: (data) => setDivisions(data),
-            // error: () => setEditLoading(false)
-        })
-
-        if (editMode) {
-            setEditLoading(true)
-            useAjaxFetch({
-                url: `users/edit/${userToEdit}`,
-                method: 'GET',
-                success: (data) => {
-                    dispatchForm(reset(data))
-                    setEditLoading(false)
-                },
-                error: () => setEditLoading(false)
-            })
-        }
-
+        
     }, [])
 
 
@@ -94,7 +75,8 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
 
         console.log('onSubmit State ->', state.values)
 
-        dispatchForm(setSubmitting(true))
+        setSubmitting(true)
+        setErrors(false)
         useAjaxFetch({
             url: 'users',
             method: 'POST',
@@ -111,38 +93,27 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                 dispatch(hideModal())
 
                 // },3000)
-
-
             },
-            error: () => {
-                dispatchForm(setSubmitting(false))
-            }
-
-
+            error: () => setErrors(true),
+            always: () => setSubmitting(false)
         })
-
     }
 
 
     // console.log('UserForm RENDERING  ----------------------------------------->', state)
 
-    const { submitting } = state
+    // const { submitting } = state
     return (
 
         <Modal
-            handleValidation={() => {
-                onSubmit(handleSubmit, editMode)
-                // dispatch(hideModal())
-            }}
+            handleValidation={() => onSubmit(handleSubmit, editMode)}
             title={`${editMode ? 'Editer' : 'Ajouter'} utilisateur`}
-            // vClass={`btn btn-primary`}
-            // vValue={`Submit`}
             submitting={submitting}
+            loading={loading}
+            apiCall={true}
         >
 
-
-
-            <div id="userForm" className={`form-content ${submitting || editLoading ? 'form-submitting is-submitting' : ''}`}>
+            <div id="userForm" className={`form-content ${submitting || loading ? 'form-submitting is-submitting' : ''}`}>
                 {/* <div id="userForm" className={`form-content ${ submitting ? 'form-submitting is-submitting':'' }`}> */}
 
                 <div className="form-line-grp">
@@ -188,7 +159,7 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                         <div className="form-line-grp">
                             <Field name="roles" >
                                 {
-                                    ({ meta, ...props}) =>
+                                    ({ meta, ...props }) =>
                                     <CheckboxField 
                                         label="Choisir les rôles de l'utilisateur"
                                         options={roles}
@@ -235,6 +206,9 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                 {/* <input type="button" value="RESET" onClick={ () => dispatchForm(reset(editMode ? initUser : intialValues)) } /> */}
 
             </div>
+
+            { errors && <ApiError /> }
+
 
 
         </Modal>

@@ -10,17 +10,12 @@ export const uniqueID = () => counter++;
 
 export const uniqueHtmlID = () => `uniq-${uniqueID()}`
 
-export const formatDate = (m) => {
-    return ("0" + m.getDate()).slice(-2)  + "/" + ("0" + (m.getMonth()+1)).slice(-2) + "/" + m.getFullYear()
-}
+// export const formatDate = (m) => {
+//     return ("0" + m.getDate()).slice(-2)  + "/" + ("0" + (m.getMonth()+1)).slice(-2) + "/" + m.getFullYear()
+// }
 
-    // + " " +
-    // ("0" + m.getUTCHours()).slice(-2) + ":" +
-    // ("0" + m.getUTCMinutes()).slice(-2) + ":" +
-    // ("0" + m.getUTCSeconds()).slice(-2);
-
-
-export const formatDateWithSep = (date, sep) => {
+export const formatDate = (date, sep="/") => {
+    date = new Date(date)
     return ("0" + date.getDate()).slice(-2)  + `${sep}` + ("0" + (date.getMonth()+1)).slice(-2) + `${sep}` + date.getFullYear()
 }
 
@@ -34,11 +29,19 @@ export const isPast = (date) => new Date(date).setHours(0,0,0,0) < new Date().se
 
 
 export const getAttachLink = ({ attachType, idMarche, date, label }) => 
-    `http://localhost:8080/PROJET-API/attachments/${idMarche}/${attachType}/download?n=${label}&d=${formatDateWithSep(date, '-')}`
+    `http://localhost:8080/PROJET-API/attachments/${idMarche}/${attachType}/download?n=${label}&d=${formatDate(date, '-')}`
 
 
 export const getOsImgLink = (props) => getAttachLink({ ...props, attachType: ATTACH_TYPE.OS })
 export const getDecImgLink = (props) => getAttachLink({ ...props, attachType: ATTACH_TYPE.DEC })
+
+
+
+export const toUrlParams = obj => Object.keys(obj)
+                                                .filter(key =>  obj[key] && obj[key].length !==0)
+                                                .map(key => `${key}=${encodeURIComponent(obj[key])}`).join('&')
+
+export const urlParamsTo = (urlParams) => Object.fromEntries(new URLSearchParams(urlParams))
 
 
 

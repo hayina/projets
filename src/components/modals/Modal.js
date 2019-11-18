@@ -1,29 +1,21 @@
-import React, { useRef, useLayoutEffect  } from 'react';
+import React, { useRef  } from 'react';
 import { connect } from 'react-redux';
 
 import { hideModal } from '../../actions';
-import useClickOutside from '../hooks/useClickOutside';
 
 import './modal.css'
+import { ButtonSpinner } from '../divers';
+import { ApiError } from '../helpers';
+import { useModalSetting } from '../hooks';
 
 
 
-const Modal = ({ title, children, handleValidation, dispatch, submitting, styles={ width: '50%' }, vBar=true }) => {
+const Modal = ({ title, children, handleValidation, dispatch, styles={ width: '50%' }, 
+                    vBar=true, apiCall=false, loading=false, submitting=false, fading=true, errors=false }) => {
 
     const modalRef = useRef(null);
 
-    useLayoutEffect(() => {
-        // console.log('useLayoutEffect')
-        document.body.classList.add('modal-on')
-        return () => {
-            // console.log('return useLayoutEffect')
-            document.body.classList.remove('modal-on')
-        }
-    }, [])
-
-    useClickOutside(modalRef, () => {
-        dispatch(hideModal());
-    });
+    useModalSetting(modalRef, dispatch)
 
 
     // i need this promise cauz when the modal component toggles to false 
@@ -34,7 +26,7 @@ const Modal = ({ title, children, handleValidation, dispatch, submitting, styles
     // })
 
     return (
-        <div className="modals-container">
+        <div className={`modals-container ${ fading && (submitting || loading) ? 'is-submitting' : '' }`}>
 
             <div className="modals-dialog" ref={modalRef} style={styles}>
 
@@ -44,29 +36,23 @@ const Modal = ({ title, children, handleValidation, dispatch, submitting, styles
                     </div>
                 }
 
-                <div className="modals-content">{children}</div>
+                <div className="modals-content">
+                    {children}
+                    { apiCall && errors && <ApiError /> }
+                </div>
 
+                
 
                 { 
                     vBar &&
                     <div className="modals-validation">
-
-                        <button className="btn btn-secondary"
-                            onClick={ () => dispatch(hideModal()) }>Annuler</button>
-
-                        {/* <button type="submit" className="btn btn-primary"
-                            onClick={ handleValidation }>Valider</button> */}
-
-                        <button type="submit" className={`btn btn-primary ${submitting ? 'btn-submitting is-submitting ':''}`}
-                            onClick={
-                                () => {
-                                    handleValidation()
-                                    // dispatch(hideModal())
-                                }} 
-                            >Valider{ submitting ? '...':'' }</button>
-
+                        <button className="btn btn-secondary" onClick={() => dispatch(hideModal())}>Annuler</button>
+                        <ButtonSpinner label="Valider" isLoading={ apiCall ? submitting : false } callback={handleValidation} />
                     </div>
                 }
+
+                
+
             </div>
 
         </div>

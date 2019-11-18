@@ -2,12 +2,12 @@ import { useEffect } from 'react';
 
 
 
-const useClickOutside = (nodeElement, f) => {
+const useClickOutside = (nodeElement, func) => {
 
     
     function handleClickOutside(event) {
         if ( event.which === 1 && !nodeElement.current.contains(event.target)) {
-            f();
+            func();
         }
     }
 

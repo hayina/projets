@@ -3,6 +3,8 @@ import { Select, Input, InputWithInit, Radio } from './components';
 import useAjaxFetch from '../hooks/useAjaxFetch';
 import { FormProvider, FormContext, Field, reset, setValues } from '../yous-form/useForm';
 import { SimpleListItem } from '../forms/SimpleList';
+import { urlParamsTo } from '../../helpers';
+import { usePrevious } from '../hooks';
 
 
 const intialValues = {
@@ -16,7 +18,8 @@ const intialValues = {
 }
 
 
-const SearchBar = ({ setFilters }) => {
+
+const SearchBar = ({ setFilters, urlParams }) => {
 
     const [communes, setCommunes] = useState([]);
     const [maitreOuvrages, setMaitreOuvrages] = useState([]);
@@ -27,30 +30,69 @@ const SearchBar = ({ setFilters }) => {
 
     const { state, dispatchForm } = useContext(FormContext);
 
+    console.log(">>>> SearchBar -> ", state.values)
+
+
     useEffect(() => {
 
-        useAjaxFetch({ url: 'communes', success: (data) => setCommunes(data), })
-        useAjaxFetch({ url: 'secteurs', success: (data) => setSecteurs(data), })
-        useAjaxFetch({ url: 'acheteurs', success: (data) => setMaitreOuvrages(data), })
-        useAjaxFetch({ url: 'srcFinancements', success: (data) => setSrcFinancements(data), })
+        useAjaxFetch({ 
+            url: 'projets/search/loading', 
+            success: (data) => {
+                setCommunes(data.communes) 
+                setSecteurs(data.secteurs)
+                setMaitreOuvrages(data.acheteurs)
+                setSrcFinancements(data.srcFinancements)
+            }
+        })
+
+        // useAjaxFetch({ url: 'communes', success: (data) => setCommunes(data), })
+        // useAjaxFetch({ url: 'secteurs', success: (data) => setSecteurs(data), })
+        // useAjaxFetch({ url: 'acheteurs', success: (data) => setMaitreOuvrages(data), })
+        // useAjaxFetch({ url: 'srcFinancements', success: (data) => setSrcFinancements(data), })
         
     } ,[])
 
-    useEffect(() => {
 
-        
+    const prev = usePrevious({ filters: state.values, urlParams});
+    
+    useEffect(() => {
 
         console.log('SearchBar -> useEffect .....', state.values)
 
-        if(shouldUpdate) {
-            console.log('-> filters are changing .....', state.values)
-            setFilters(state.values)
+        // les filtres ne sont pas changés
+        if( prev && prev.filters !== state.values) {
+            console.log("===========> filters CHANGED")
+            // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
         }
-        else {
-            setShouldUpdate(true)
+        if( prev && prev.urlParams !== urlParams) {
+            console.log("===========> urlParams CHANGED")
+            console.log(prev.urlParams )
+            console.log(urlParams)
+            // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
         }
+        if( prev && prev.filters === state.values && prev.urlParams !== urlParams) {
+            console.log("===========> JUST !!!! urlParams HAS CHANGED")
+            // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
+        }
+        // else {
+            // console.log('SearchBar -> useEffect .....', state.values)
+            if(shouldUpdate) {
+                // console.log('-> filters are changing .....', state.values)
+                setFilters(state.values)
+            }
+            else {
+                setShouldUpdate(true)
+            }
+        // }
+
         
-    } ,[state.values])
+    }, [state.values])
+
+    // useEffect(() => {
+    //     console.log(">>>> useEffect -> params ...", urlParams)
+    //     // state.values = { ...intialValues, ...urlParamsTo(urlParams) }
+    //     // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
+    // }, [urlParams])
 
     const renderSelectInfo = ({renderProps , defaultOption, items }) => (
 
@@ -170,7 +212,7 @@ const SearchBar = ({ setFilters }) => {
 }
 
 export default ((props) => (
-    <FormProvider intialValues={intialValues} rules={{}}>
+    <FormProvider intialValues={intialValues} >
         <SearchBar {...props} />
     </FormProvider> 
 ))

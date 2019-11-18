@@ -59,3 +59,7 @@ can't .... undefinedalways check function if params are okey
 bouble with setState() !!! attention stale state use instead useReducer hook
 
 faire attention value select is string not number
+
+useLayoutEffect ??
+
+equivalent enums => const ERRORS = Object.freeze({ LOAD_PROJECT: 1, LOAD_MARCHE: 2 })

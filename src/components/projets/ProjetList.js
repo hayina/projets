@@ -12,8 +12,10 @@ import DropDown from './DropDown';
 import { getRoles, getUserID, getUserType } from '../../reducers/login';
 import { canUserEdit } from '../../security';
 import { SpinnerWh } from '../helpers';
+import { APP_LINKS } from '../../types';
+import { toUrlParams } from '../../helpers';
 
-let ProjetList = ({dispatch, roles, userID, userType}) => {
+let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
 
     const INITIAL_PAGE = 1
@@ -31,34 +33,39 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors]   = useState(false);
 
-  
 
-    function deleteProjet(idProjet, index) {
-
-        useAjaxFetch({
-            url: `/projets/${idProjet}`,
-            method: 'DELETE',
-            success: () => {
-                projets.splice(index, 1);
-                setProjets([...projets])
-            },
-        })
-    }
+    
 
     useEffect(() => {
-        console.log(">>>> useEffect -> Bread Crum -> runing ...")
+        console.log(">>>> useEffect -> Bread Crum ...")
 
         dispatch(setBreadCrumb("Rechercher les projets"))
     }, [])
 
-    const itemIndexRef = useRef();
-    // let itemIndexVar = 0;
+
+
+    const paramsRef = useRef(null)
+    paramsRef.current = history.location.search
+    // console.log("paramsRef =============>")
+    // console.log(paramsRef.current)
+    // // console.log(history.location.search)
+    // console.log("history =============>", history)
+
+
+
+    // useEffect(() => {
+    //     console.log(">>>> useEffect -> params ...", paramsRef.current)
+    //     // deserialise url to obj
+    //     console.log(paramsToObj(paramsRef.current.substring(1)))
+        
+    //     setFilters(paramsToObj(paramsRef.current.substring(1))) 
+    // }, [paramsRef.current])
 
 
 
     useEffect(() => {
 
-        console.log(">>>> useEffect -> ajax -> runing ...", filters, currentPage)
+        console.log(">>>> useEffect -> ajax -> runing ...", filters, "page -> ", currentPage)
 
         // console.log('filters', filters)
 
@@ -67,12 +74,19 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
         // if( ! filters.acheteur )
 
         let cancel = false
-
         setLoading(true)
         setErrors(false)
-
         const page = fromPaging ? currentPage : INITIAL_PAGE
         setCurrentPage(page)
+
+        history.push({
+            pathname: APP_LINKS.SEARCH_PROJECT,
+            search: `?${ toUrlParams(filters) }`
+            // search: `?${ params(filters) }`
+        })
+
+
+        // return
 
         useAjaxFetch({
             url: 'projets',
@@ -82,19 +96,9 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
                 count: !fromPaging 
             },
             success: (data) => {
-                // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-                // sleep(3000).then(() => {})
-                if(cancel) {
-                    console.log("---------------------> cancel")
-                    return
-                }
 
-                itemIndexRef.current = projets.length
-
-
-                console.log("---> itemIndexRef", itemIndexRef.current)
-                // console.log("---> itemIndexVar ->", itemIndexVar)
-
+                if(cancel) return
+  
                 setProjets(fromPaging ? [ ...projets, ...data.content ] : data.content)
                 if(!fromPaging) {
                     setTotalElements(data.totalElements)
@@ -110,13 +114,11 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
                 if(cancel) return
                 setLoading(false)
                 setFromPaging(false)
-
-
-
             }
         })
         return () => cancel = true
     }, [filters, currentPage])
+    // }, [paramsRef.current, currentPage])
 
     const loadNextPage = () => {
 
@@ -127,9 +129,22 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
 
     }
 
+
+    const deleteProjet = (idProjet, index) => {
+
+        useAjaxFetch({
+            url: `/projets/${idProjet}`,
+            method: 'DELETE',
+            success: () => {
+                projets.splice(index, 1);
+                setProjets([...projets])
+            },
+        })
+    }
+
     const ResultsList = () => {
 
-        console.log("ResultsList ->", itemIndexRef.current, projets.length)
+        console.log("ResultsList ->", projets.length)
 
         return (
             <div className="projets-results">
@@ -161,7 +176,7 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
                 <div className="projet-label">
                     <Link to={`/projets/detail/${projet.id}`} >
                         <strong>{index+1}.</strong>({projet.daysFromLastRepriseTilNow}) - 
-                        { filters.intitule.length > 0 ? highlightText(projet.intitule, filters.intitule) : projet.intitule } 
+                        { filters.intitule && filters.intitule.length > 0 ? highlightText(projet.intitule, filters.intitule) : projet.intitule } 
                     </Link>
                 </div>
                 {/* <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div> */}
@@ -185,7 +200,7 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
                         </div>
                     </div>
                     <div className="projet-per">
-                        <Percentage percentage={projet.taux} animation={false} />
+                        <Percentage percentage={ projet.taux || 0 } animation={false} />
                     </div>
                 </div>
 
@@ -249,17 +264,18 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
     )
 
 
-    console.log("> page projets search is rendering ...", {
-        projets: projets.length,
-        totalElements,
-        totalPages,
-        currentPage,
-        pageSize,
-        fromPaging,
-        filters,
-        loading,
-        errors,
-    })
+    console.log("=> page projets search is rendering ...")
+    // console.log("> page projets search is rendering ...", {
+    //     projets: projets.length,
+    //     totalElements,
+    //     totalPages,
+    //     currentPage,
+    //     pageSize,
+    //     fromPaging,
+    //     filters,
+    //     loading,
+    //     errors,
+    // })
     // console.log("projets", projets.length)
     // console.log("loading", loading)
     // console.log("fromPaging", fromPaging)
@@ -267,7 +283,7 @@ let ProjetList = ({dispatch, roles, userID, userType}) => {
 
     return (
         <div className="projets-wr" id="search-projet-page">
-            <SearchBar setFilters={setFilters}/>
+            <SearchBar setFilters={setFilters} urlParams={paramsRef.current} />
             { (!fromPaging && loading) ? <Loading /> : ( !errors ? <ResultsWrapper /> : <Errors /> ) }
         </div>
     )

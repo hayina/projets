@@ -13,6 +13,7 @@ const types = {
     TOGGLE_MODAL: 'TOGGLE_MODAL',
     SHOW_MODAL: 'SHOW_MODAL',
     HIDE_MODAL: 'HIDE_MODAL',
+    SET_MODAL_PROPS: 'SET_MODAL_PROPS',
 
 
     ADD_ITEM_LOCALISATION: `${externalForms} ADD_ITEM_LOCALISATION`,
@@ -91,3 +92,6 @@ export const fieldType = {
     CHECKBOX: 'checkbox',
 }
 
+export const APP_LINKS = {
+    SEARCH_PROJECT : "/projets/search"
+}

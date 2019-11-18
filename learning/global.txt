@@ -1,0 +1,3 @@
+1. finir le developpent total de page en cours avant de passer à l'autre
+2. pour les bugs bête => répéter à haute voix chaque partie de la ligne contenant l'erreur
+3. repartir les bugs des pages et separer les amelioration V1 , V2

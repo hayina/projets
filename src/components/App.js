@@ -20,7 +20,7 @@ import { isAuthenticated, getUserID, getUserType, getRoles } from '../reducers/l
 
 
 import { createBrowserHistory } from 'history';
-import { USER_ROLES } from '../types';
+import { USER_ROLES, APP_LINKS } from '../types';
 import { canHeAccessRoute } from '../security';
 export const history = createBrowserHistory();
 
@@ -108,8 +108,8 @@ const App = ({ breadCrumb , isAuth }) => {
                         <ProtectedRoute path="/projets/" exact component={Dashboard} />
                         <ProtectedRoute path="/projets/dashboard" exact component={Dashboard} />
 
+                        <ProtectedRoute path={APP_LINKS.SEARCH_PROJECT} exact component={ProjetList} />
                         <ProtectedRoute path="/projets/detail/:idProjet" exact component={ProjetDetail} />
-                        <ProtectedRoute path="/projets/search" exact component={ProjetList} />
                        
 
                         <ProtectedRoute 

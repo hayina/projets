@@ -13,10 +13,9 @@ export const modals = (state = initialState, action) => {
 
     switch (action.type) {
         case types.SHOW_MODAL:
-            return {
-                modalType: action.modalType,
-                modalProps: action.modalProps
-            }
+            return { modalType: action.modalType, modalProps: action.modalProps }
+        case types.SET_MODAL_PROPS:
+            return { ...state, modalProps: { ...state.modalProps, ...action.props } }
         case types.HIDE_MODAL:
             return initialState
         default:

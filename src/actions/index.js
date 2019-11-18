@@ -15,6 +15,7 @@ export const setBreadCrumb = (payload) => {
 
 export const showModal = (modalType, modalProps) => ({ type: types.SHOW_MODAL, modalType, modalProps })
 export const hideModal = () => ({ type: types.HIDE_MODAL })
+export const setModalProps = (props) => ({ type: types.SET_MODAL_PROPS, props })
 
 
 export const addLocalisation = (path) => ({ type: types.ADD_ITEM_LOCALISATION, path })
