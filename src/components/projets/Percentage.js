@@ -17,7 +17,8 @@ const Percentage = ({percentage, animation=true}) => {
             />
             {/* <path className={`circle`} */}
             <path 
-                className={`circle ${ animation ? 'circle-progress-animation' : '' }`}
+                className={`circle circle-progress-animation`}
+                // className={`circle ${ animation ? 'circle-progress-animation' : '' }`}
                 strokeDasharray={`${percentage}, 100`}
                 d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831

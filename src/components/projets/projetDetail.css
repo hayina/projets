@@ -13,8 +13,16 @@
 #pr-detail-wr {
 
     
-    padding: 0px 10px;
+    padding: 4px 10px 0px;
     padding-bottom: 20px;
+} 
+
+#pr-detail-wr .setting-projet {
+    text-align: right;
+} 
+
+#pr-detail-wr .setting-projet .ripple {
+    float: none;
 } 
 
 #pr-detail-wr .tabs-wr {
@@ -255,6 +263,8 @@
     /* justify-items: center; */
     /* width: 69%; */
     margin: 20px 0px;
+    margin-top: 0px;
+    align-items: center;
 }
 
 #pr-detail-wr .pr-title {
@@ -271,7 +281,7 @@
 
 
 #pr-detail-wr .per-wr {
-    text-align: right;
+    text-align: left;
     /* width: 80%; */
     /* width: 61px; */
     /* margin-left: auto; */
@@ -332,4 +342,18 @@
 
 #pr-detail-wr .new-marche a {
     margin-right: 6px;
+}
+
+#pr-detail-wr .work-days-wr {
+    padding: 6px 20px;
+    /* background-color: #0f9c0f; */
+    margin-bottom: 10px;
+    /* color: white; */
+    border-radius: 6px;
+}
+
+#pr-detail-wr .delai-exp {
+    margin-left: 10px;
+    font-size: 14px;
+    color: red;
 }

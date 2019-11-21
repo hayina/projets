@@ -6,3 +6,5 @@ always check 01/09 and 01/11
 localisations tree !!
 
 trigger animation just for appending new one not existing
+
+renderItems() VS <Items/>

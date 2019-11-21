@@ -188,6 +188,7 @@
 ._drop-down {
     display: none;
     position: absolute;
+    text-align: left;
     /* width: 159px; */
     top: 100%;
     right: 0;
@@ -281,6 +282,11 @@
 
 
 #search-projet-page .paging-loader {
+
+
+}
+
+#search-projet-page .nav-with-loader {
     border: 1px solid #dadce0;
     border-radius: 30px;
     padding: 6px 18px;
@@ -306,7 +312,11 @@
     height: 36px;
 }
 
-#search-projet-page .svg-spinner {
+#search-projet-page .projets-nav .svg-spinner {
+   
+}
+
+#search-projet-page .paging-loader .svg-spinner {
    
 }
 
@@ -317,3 +327,31 @@
 #search-projet-page .input-with-init{
     height: 38px;
 }
+
+
+
+
+@keyframes move {
+    0% {
+      transform: translateX(0);
+    }
+  
+    40% {
+      transform: translateX(10px);
+    }
+  
+    80% {
+      transform: translateX(-10px);
+    }
+  
+    100% {
+      transform: translateX(0);
+    }
+  }
+  .item {
+    border: 1px solid black;
+    margin: 8px;
+    padding: 8px;
+    animation: move 0.1s ease-out forwards;
+  }
+  

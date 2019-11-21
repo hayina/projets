@@ -11,7 +11,7 @@ import Percentage from './Percentage';
 import DropDown from './DropDown';
 import { getRoles, getUserID, getUserType } from '../../reducers/login';
 import { canUserEdit } from '../../security';
-import { SpinnerWh } from '../helpers';
+import { SpinnerWh, ApiError } from '../helpers';
 import { APP_LINKS } from '../../types';
 import { toUrlParams } from '../../helpers';
 
@@ -20,6 +20,16 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
     const INITIAL_PAGE = 1
     const DEFAULT_SIZE = 10
+    
+
+    // const initialState = {
+    //     results: {
+    //         projets: [],
+    //         totalElements: null,
+    //         totalPages: null
+    //     }
+
+    // }
 
     const [projets, setProjets] = useState([]);
     const [totalElements, setTotalElements] = useState(null);
@@ -33,8 +43,9 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
     const [loading, setLoading] = useState(false);
     const [errors, setErrors]   = useState(false);
 
+    const loadingFromPaging = loading && fromPaging  
+    const loadingFromCriteria = loading && !fromPaging  
 
-    
 
     useEffect(() => {
         console.log(">>>> useEffect -> Bread Crum ...")
@@ -61,77 +72,8 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
     //     setFilters(paramsToObj(paramsRef.current.substring(1))) 
     // }, [paramsRef.current])
 
-
-
-    useEffect(() => {
-
-        console.log(">>>> useEffect -> ajax -> runing ...", filters, "page -> ", currentPage)
-
-        // console.log('filters', filters)
-
-        if( Object.keys(filters).length === 0 ) return
-
-        // if( ! filters.acheteur )
-
-        let cancel = false
-        setLoading(true)
-        setErrors(false)
-        const page = fromPaging ? currentPage : INITIAL_PAGE
-        setCurrentPage(page)
-
-        history.push({
-            pathname: APP_LINKS.SEARCH_PROJECT,
-            search: `?${ toUrlParams(filters) }`
-            // search: `?${ params(filters) }`
-        })
-
-
-        // return
-
-        useAjaxFetch({
-            url: 'projets',
-            params: { 
-                ...filters, 
-                page: page, 
-                count: !fromPaging 
-            },
-            success: (data) => {
-
-                if(cancel) return
-  
-                setProjets(fromPaging ? [ ...projets, ...data.content ] : data.content)
-                if(!fromPaging) {
-                    setTotalElements(data.totalElements)
-                    setTotalPages(Math.ceil(data.totalElements/pageSize))
-                }
-                
-            },
-            error: () => {
-                if(cancel) return
-                setErrors(true)
-            },
-            always: () => {
-                if(cancel) return
-                setLoading(false)
-                setFromPaging(false)
-            }
-        })
-        return () => cancel = true
-    }, [filters, currentPage])
-    // }, [paramsRef.current, currentPage])
-
-    const loadNextPage = () => {
-
-        setLoading(true) // just to increase race condition
-        setCurrentPage(currentPage+1)
-        setFromPaging(true)
-
-
-    }
-
-
     const deleteProjet = (idProjet, index) => {
-
+        
         useAjaxFetch({
             url: `/projets/${idProjet}`,
             method: 'DELETE',
@@ -142,13 +84,89 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
         })
     }
 
+    useEffect(() => {
+
+        console.log(">>>> useEffect -> ajax -> runing ...", filters, "page -> ", currentPage)
+
+        if( Object.keys(filters).length === 0 ) return
+
+        let cancel = false
+
+        setLoading(true)
+        setErrors(false)
+        const page = fromPaging ? currentPage+1 : INITIAL_PAGE
+        setCurrentPage(page)
+     
+
+        // history.push({
+        //     pathname: APP_LINKS.SEARCH_PROJECT,
+        //     search: `?${ toUrlParams(filters) }`
+        //     // search: `?${ params(filters) }`
+        // })
+
+
+        // return
+
+        useAjaxFetch({
+            url: 'projets',
+            params: { 
+                ...filters, 
+                page, 
+                size: pageSize,
+                count: !fromPaging 
+            },
+            success: (data) => {
+
+                if(cancel) return
+
+                if(!fromPaging) {
+                    setTotalElements(data.totalElements)
+                    setTotalPages(Math.ceil(data.totalElements/pageSize))
+                } else {
+                    setFromPaging(false)
+                }
+
+                setLoading(false)
+                setProjets(prev => fromPaging ? [ ...prev, ...data.content ] : data.content)
+                
+            },
+            error: () => {
+                if(cancel) return
+                setErrors(true)
+                setLoading(false)
+                setFromPaging(false)
+            },
+            // always: () => {
+            //     if(cancel) return
+                
+            // }
+        })
+
+
+
+        return () => cancel = true
+    }, [filters])
+    // }, [paramsRef.current, currentPage])
+
+    
+    
+
+
+    const loadNextPage = () => {
+
+        // setLoading(true) // just to increase race condition
+        setFromPaging(true)
+        setFilters({ ...filters })
+
+    }
+
     const ResultsList = () => {
 
-        console.log("ResultsList ->", projets.length)
+        // console.log("ResultsList ->", projets.length)
 
         return (
             <div className="projets-results">
-                { projets.map((projet, index) => <Line {...{ projet, index }} key={projet.id}/>) }
+                { projets.map((projet, index) => <Line projet={projet} index={index} key={projet.id}/>) }
             </div>
         )
     }
@@ -175,7 +193,9 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
                 <div className="projet-label">
                     <Link to={`/projets/detail/${projet.id}`} >
-                        <strong>{index+1}.</strong>({projet.daysFromLastRepriseTilNow}) - 
+                        <strong>{index+1}. </strong>
+                        {/* <strong>{projet.id}.({projet.daysFromLastRepriseTilNow})</strong> */}
+                        
                         { filters.intitule && filters.intitule.length > 0 ? highlightText(projet.intitule, filters.intitule) : projet.intitule } 
                     </Link>
                 </div>
@@ -210,40 +230,39 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
     }
 
     const ResultsInfo = () => (
-        <div className="projets-nav box-sh box-br">
-            {/* { loading ? <Loading /> :  */}
-                <div className="result-info">{ totalElements } Projets retrouvés</div> 
-         {/* } */}
+        <div className="projets-nav nav-with-loader">
+            <div className="result-info">
+                { loadingFromCriteria ? `Chargement ....` : `${totalElements} resultats`}
+            </div> 
+            {
+                loadingFromCriteria && (
+                    <div className={`spinner-container`}>
+                        <SpinnerWh />
+                    </div>
+                )
+            }
         </div>
     )
 
 
 
-
-
-    const EmptyList = () => <div className="empty-list">0 projets retrouvés</div>
-
-    const Loading = () => (
-        <div className="loading-list box-sh">Loading ....</div>
-    )
-
-    const Errors = () => (
-        <div className="api-error">Une erreur s'est produit<i className="fas fa-info-circle"></i></div>
-    )
+    // const Errors = () => (
+    //     <div className="api-error">Une erreur s'est produit<i className="fas fa-info-circle"></i></div>
+    // )
 
     const PagingLoader = () => {
         
-        const pagingLoader = fromPaging && loading
+        
         return currentPage !== totalPages &&
         (
-            <div className={`paging-loader ${ pagingLoader ? 'disabled' : '' }`} >
+            <div className={`paging-loader nav-with-loader ${ loadingFromPaging ? 'disabled' : '' }`} >
                 <i className="fas fa-chevron-down" onClick={loadNextPage}></i>
                 <div className="text-pager" onClick={loadNextPage}>
-                    { !pagingLoader ? `Plus de resultats (${currentPage}/${totalPages})` : "" }
+                    { !loadingFromPaging ? `Plus de resultats (${currentPage}/${totalPages})` : "" }
                 </div>
-                <div className={`spinner-container ${ pagingLoader ? "" : "center-flex" }`}>
+                <div className={`spinner-container ${ loadingFromPaging ? "" : "center-flex" }`}>
                     {/* <SpinnerWh /> */}
-                    { pagingLoader ? <SpinnerWh /> : 
+                    { loadingFromPaging ? <SpinnerWh /> : 
                         <i className="fas fa-angle-double-up go-up" onClick={() => window.scrollTo(0, 0)}></i> 
                     }
                 </div>
@@ -251,41 +270,45 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
         )
     }
 
-    const ResultsWrapper = () => (
 
-        projets.length > 0 ?
-        <>       
-            <ResultsInfo />
-            <ResultsList />
-            <PagingLoader />
-        </>   
-        : 
-        <EmptyList />
-    )
 
 
     console.log("=> page projets search is rendering ...")
-    // console.log("> page projets search is rendering ...", {
-    //     projets: projets.length,
-    //     totalElements,
-    //     totalPages,
-    //     currentPage,
-    //     pageSize,
-    //     fromPaging,
-    //     filters,
-    //     loading,
-    //     errors,
-    // })
-    // console.log("projets", projets.length)
-    // console.log("loading", loading)
-    // console.log("fromPaging", fromPaging)
-    // console.log("currentPage", currentPage)
+
+
+
+
+
+
+
 
     return (
         <div className="projets-wr" id="search-projet-page">
-            <SearchBar setFilters={setFilters} urlParams={paramsRef.current} />
-            { (!fromPaging && loading) ? <Loading /> : ( !errors ? <ResultsWrapper /> : <Errors /> ) }
-        </div>
+            <SearchBar setFilters={setFilters} />
+
+            <ResultsInfo />
+            { 
+                !loadingFromCriteria && (
+                    ! errors ? 
+                    (
+                        projets.length > 0 && (
+                            <>       
+                                <ResultsList />
+                                <PagingLoader />
+                            </>   
+                        )
+                        // : 
+                        // <EmptyList />
+                    )
+                    : 
+                    <ApiError />
+                )
+
+            }
+
+
+      </div>
+
     )
 
 

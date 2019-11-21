@@ -19,7 +19,7 @@ const intialValues = {
 
 
 
-const SearchBar = ({ setFilters, urlParams }) => {
+const SearchBar = ({ setFilters }) => {
 
     const [communes, setCommunes] = useState([]);
     const [maitreOuvrages, setMaitreOuvrages] = useState([]);
@@ -30,7 +30,7 @@ const SearchBar = ({ setFilters, urlParams }) => {
 
     const { state, dispatchForm } = useContext(FormContext);
 
-    console.log(">>>> SearchBar -> ", state.values)
+    // console.log(">>>> SearchBar -> ", state.values)
 
 
     useEffect(() => {
@@ -53,27 +53,27 @@ const SearchBar = ({ setFilters, urlParams }) => {
     } ,[])
 
 
-    const prev = usePrevious({ filters: state.values, urlParams});
+    // const prev = usePrevious({ filters: state.values, urlParams});
     
     useEffect(() => {
 
-        console.log('SearchBar -> useEffect .....', state.values)
+        // console.log('SearchBar -> useEffect .....', state.values)
 
         // les filtres ne sont pas changés
-        if( prev && prev.filters !== state.values) {
-            console.log("===========> filters CHANGED")
-            // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
-        }
-        if( prev && prev.urlParams !== urlParams) {
-            console.log("===========> urlParams CHANGED")
-            console.log(prev.urlParams )
-            console.log(urlParams)
-            // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
-        }
-        if( prev && prev.filters === state.values && prev.urlParams !== urlParams) {
-            console.log("===========> JUST !!!! urlParams HAS CHANGED")
-            // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
-        }
+        // if( prev && prev.filters !== state.values) {
+        //     console.log("===========> filters CHANGED")
+        //     // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
+        // }
+        // if( prev && prev.urlParams !== urlParams) {
+        //     console.log("===========> urlParams CHANGED")
+        //     console.log(prev.urlParams )
+        //     console.log(urlParams)
+        //     // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
+        // }
+        // if( prev && prev.filters === state.values && prev.urlParams !== urlParams) {
+        //     console.log("===========> JUST !!!! urlParams HAS CHANGED")
+        //     // dispatchForm(reset({ ...intialValues, ...urlParamsTo(urlParams) }))
+        // }
         // else {
             // console.log('SearchBar -> useEffect .....', state.values)
             if(shouldUpdate) {

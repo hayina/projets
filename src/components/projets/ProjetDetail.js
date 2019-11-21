@@ -11,7 +11,7 @@ import { setBreadCrumb, showModal, setModalProps, hideModal } from '../../action
 import { formatDate } from '../../helpers';
 import DropDown from '../helpers/DropDown2';
 import { modalTypes } from '../modals/ModalRoot';
-import { ATTACH_TYPE, TYPE_OS } from '../../types';
+import { ATTACH_TYPE, TYPE_OS, MONTH_DAYS } from '../../types';
 import { ResourcesLine } from '../attachments';
 import { ApiError } from '../helpers';
 
@@ -164,11 +164,14 @@ const ProjetDetail = ({ match, history, dispatch }) => {
 
     const ProjectInfo = () => (
         <>
+        <div className="setting-projet">
+            <DropDown links={projectLinks} />
+        </div>
         <div className="pr-header _c_header">
             <div className="pr-title">{projet.intitule}</div>
             <div className="per-wr">
                 <Percentage percentage={ projet.taux || 0 } />
-                <DropDown links={projectLinks} />
+                
             </div>
         </div>
 
@@ -265,6 +268,14 @@ const ProjetDetail = ({ match, history, dispatch }) => {
         </div>
     )
 
+    const isOs = defaultMarche && defaultMarche.os && defaultMarche.os.length > 0
+    const isOsArret = isOs && defaultMarche.os.length > 1
+    const workMonths = isOs && Math.floor(defaultMarche.workDays/MONTH_DAYS)
+    const isDelaiExp = isOs && defaultMarche.workDays > defaultMarche.delai * MONTH_DAYS
+
+    const isSte = defaultMarche.societes && defaultMarche.societes.length > 0
+    const manySte = isSte && defaultMarche.societes.length > 1 ? "s" : ""
+
     const MarchesInfo = () => (
 
         <div className={`def-marche-wr ${marcheLoading ? 'waiting' : ''}`}>
@@ -294,8 +305,29 @@ const ProjetDetail = ({ match, history, dispatch }) => {
             <LineInfo label="Etat du marché">
                 {defaultMarche.marcheEtat ? defaultMarche.marcheEtat.label : '-'}
             </LineInfo>
-            <LineInfo label="Délai d'execution">
+            {/* <LineInfo label="Délai d'execution">
                 {defaultMarche.delai ? `${defaultMarche.delai} mois` : '-'}
+            </LineInfo> */}
+            <LineInfo label="Délai d'execution">
+            {
+                defaultMarche.delai ? (
+                    <>
+                    <span>{defaultMarche.delai} mois</span>
+                    {
+                        isDelaiExp ? (
+                            <span className="delai-exp">
+                                <i className="fas fa-exclamation"></i>
+                                délai dépassé
+                            </span>
+                            )
+                            : null
+                    }
+                    </>
+                )
+                : '-'
+
+
+            }
             </LineInfo>
             <LineInfo label="Montant">
                 {defaultMarche.montant ? `${Number(defaultMarche.montant).toLocaleString()} dhs` : '-'}
@@ -304,9 +336,9 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                 {defaultMarche.numMarche || '-'}
             </LineInfo>
 
-            <LineInfo label="Société(s) titulaire(s)">
+            <LineInfo label={`Société${manySte} titulaire${manySte}`}>
                 {
-                    defaultMarche.societes && defaultMarche.societes.length > 0 &&
+                    isSte &&
                     defaultMarche.societes.map(({ value, label }, i) => (
                         <div className="l-item" key={value}>
                             <span className="l-data-lbl">{label}</span>
@@ -315,34 +347,53 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                 }
             </LineInfo>
 
+            {isOs > 0 && (
+                <div className="work-days-wr">
+                    <span>
+                        La durée d'exécution du marché jusqu'à ce jour{ isOsArret ? ', en comptant les arrêts, ' : ' ' }est de <strong>{defaultMarche.workDays}</strong> jours
+                    </span>
+                    {/* {defaultMarche.workDays > MONTH_DAYS && ( */}
+                        <span>, on est dans le <strong>{workMonths+1}{ workMonths<1 ? 'er':'ème'} mois</strong>.</span>
+                    {/* )} */}
+                    {/* { 
+                        isDelaiExp && (
+                        <span>
+                            <i className="fas fa-exclamation-triangle"></i>
+                            délai dépassé
+                        </span>
+                        )
+                    } */}
+                </div>
+            )}
+
             <LineInfo label="Ordres de service">
                 {
-                    defaultMarche.os && defaultMarche.os.length > 0 &&
+                    isOs > 0 && 
                     defaultMarche.os.map(({ typeOs, dateOs, resources = [], commentaire }, i) => (
-                        <div className="l-item" key={i}>
-                            <span className="l-date-w">
-                                {/* {i}. */}
-                                <i className="far fa-calendar-alt"></i>
-                                <span className="l-date nbr-font">
-                                    {dateOs ? formatDate(new Date(dateOs)) : '-'}
-                                </span>
+                    <div className="l-item" key={i}>
+                        <span className="l-date-w">
+                            {/* {i}. */}
+                            <i className="far fa-calendar-alt"></i>
+                            <span className="l-date nbr-font">
+                                {dateOs ? formatDate(new Date(dateOs)) : '-'}
                             </span>
-                            <span>
-                                {/* <i className="fas fa-arrow-circle-right"></i> */}
-                                <i className={`far fa-os fa-${typeOs.value === TYPE_OS.ARRET ? 'pause' : 'play'}-circle`}></i>
-                                <span className="l-name">{typeOs.label}</span>
-                            </span>
+                        </span>
+                        <span>
+                            {/* <i className="fas fa-arrow-circle-right"></i> */}
+                            <i className={`far fa-os fa-${typeOs.value === TYPE_OS.ARRET ? 'pause' : 'play'}-circle`}></i>
+                            <span className="l-name">{typeOs.label}</span>
+                        </span>
 
-                            <ResourcesLine
-                                resourcesProps={{ attachments: resources, imageDisplay: true, url: true }}
-                                attachType={ATTACH_TYPE.OS}
-                                idMarche={defaultMarche.idMarche}
-                                dateRes={dateOs}
-                            />
+                        <ResourcesLine
+                            resourcesProps={{ attachments: resources, imageDisplay: true, url: true }}
+                            attachType={ATTACH_TYPE.OS}
+                            idMarche={defaultMarche.idMarche}
+                            dateRes={dateOs}
+                        />
 
-                            {/* <span className="l-com">{ commentaire }</span> */}
+                        {/* <span className="l-com">{ commentaire }</span> */}
 
-                        </div>
+                    </div>
                     ))
                 }
             </LineInfo>

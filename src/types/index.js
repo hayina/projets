@@ -95,3 +95,5 @@ export const fieldType = {
 export const APP_LINKS = {
     SEARCH_PROJECT : "/projets/search"
 }
+
+export const MONTH_DAYS = 30
