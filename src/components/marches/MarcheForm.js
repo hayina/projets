@@ -84,10 +84,11 @@ const validate = ({ osStart=[], os=[], decomptes=[], taux=[], societes=[], dateR
 
         let prevOsType = TYPE_OS.REPRISE
  
-        for ( let i=0; i<os.length; i++ ) {
+        let i=0
+        while (i<osLength) {
 
             if( prevOsType === os[i].typeOs.value ) {
-                errors.os='ordres de services incorrectes'
+                errors.os='ordres de services incorrectes (os successifs de même type)'
                 break
             }
 
@@ -97,27 +98,33 @@ const validate = ({ osStart=[], os=[], decomptes=[], taux=[], societes=[], dateR
             }
 
             prevOsType = os[i].typeOs.value 
+            i++
         }
 
-        // checking decomptes and taux
-
-        if( decomptes.length > 0 && decomptes.some(dec => checkWrongDate(dec.dateDec)) ) {
-            errors.decomptes=incorrectDate
-        }
-        if( taux.length > 0 && taux.some(t => checkWrongDate(t.dateTaux)) ) {
-            errors.taux=incorrectDate
-        }
-
-        if( dateReceptionDef && (beforeReceptProv(dateReceptionProv) || isFuture(dateReceptionDef)) ) {
-            errors.dateReceptionDef=incorrectDate 
-        }
-
-
-        if( dateReceptionDef && !dateReceptionProv ) {
-            dispatch(touch(marcheFormName, "dateReceptionProv"))
-            errors.dateReceptionProv=`veuillez renseigner cette date`
+        if( !dateReceptionDef && prevOsType === TYPE_OS.ARRET ) {
+            errors.os=`ordres de services incorrectes (on peut pas finir avec un os arrêt)`
         }
     }
+
+    // checking decomptes and taux
+
+    if( decomptes.length > 0 && decomptes.some(dec => checkWrongDate(dec.dateDec)) ) {
+        errors.decomptes=incorrectDate
+    }
+    if( taux.length > 0 && taux.some(t => checkWrongDate(t.dateTaux)) ) {
+        errors.taux=incorrectDate
+    }
+
+    if( dateReceptionDef && (beforeReceptProv(dateReceptionProv) || isFuture(dateReceptionDef)) ) {
+        errors.dateReceptionDef=incorrectDate 
+    }
+
+
+    if( dateReceptionDef && !dateReceptionProv ) {
+        dispatch(touch(marcheFormName, "dateReceptionProv"))
+        errors.dateReceptionProv=`veuillez renseigner cette date`
+    }
+    
 
     return errors
 }

@@ -13,7 +13,34 @@ import DropDown from '../helpers/DropDown2';
 import { modalTypes } from '../modals/ModalRoot';
 import { ATTACH_TYPE, TYPE_OS, MONTH_DAYS } from '../../types';
 import { ResourcesLine } from '../attachments';
-import { ApiError } from '../helpers';
+import { ApiError, SpinnerWh } from '../helpers';
+
+
+
+const CalendarIcon = () => <i className="far fa-calendar-alt"></i>
+
+const LineInfo = ({ label, children }) => (
+    children ?
+    <div className="line-info">
+        <label className="line-label">{label}</label>
+        <span className="line-data">{children}</span>
+    </div>
+    :
+    null
+)
+
+const TreeInfo = ({ nodes }) => (
+    nodes.map((node, i) => (
+        <div className="tree-item" key={i}>
+            <div className="item-data">
+                {/* <i className="fas fa-angle fa-angle-right"></i> */}
+                <i className="fas fa-map-marker-alt"></i>
+                <div className="tree-item-label">{node.label.toLowerCase()}</div>
+            </div>
+            {node.children && node.children.length > 0 && <TreeInfo nodes={node.children} />}
+        </div>
+    ))
+)
 
 const ProjetDetail = ({ match, history, dispatch }) => {
 
@@ -42,8 +69,11 @@ const ProjetDetail = ({ match, history, dispatch }) => {
         useAjaxFetch({
             url: `/projets/detail/${idProjet}`,
             success: ({ projet, defaultMarche, marchesTypes }) => {
-                console.log(projet)
-                console.log(defaultMarche)
+
+                // setTimeout(() => {
+                    
+                // console.log(projet)
+                // console.log(defaultMarche)
                 if (defaultMarche && defaultMarche.osStart.length > 0) {
                     defaultMarche.os.unshift(defaultMarche.osStart[0])
                 }
@@ -52,6 +82,8 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                 if (defaultMarche) setActiveMarcheTab(defaultMarche.idMarche)
                 setMarchesTypes(marchesTypes)
                 setLoading(false)
+
+                // }, 1000);
 
             },
             error: (err) => setErrors(ERRORS.LOAD_PROJECT)
@@ -86,15 +118,21 @@ const ProjetDetail = ({ match, history, dispatch }) => {
         useAjaxFetch({
             url: `/marches/detail/${idMarche}`,
             success: (data) => {
-                console.log(data)
+                // setTimeout(() => {
+                // console.log(data)
                 if (data.osStart.length > 0) {
                     data.os.unshift(data.osStart[0])
                 }
                 setDefaultMarche(data)
+                setMarcheLoading(false)
+                // }, 10000000);
                 
             },
-            error: (err) => setErrors(ERRORS.LOAD_MARCHE),
-            always: () => setMarcheLoading(false)
+            error: (err) => {
+                
+                setErrors(ERRORS.LOAD_MARCHE)
+            },
+            // always: () => 
         })
 
     }
@@ -132,37 +170,7 @@ const ProjetDetail = ({ match, history, dispatch }) => {
     }
 
 
-
-
-    const CalendarIcon = () => <i className="far fa-calendar-alt"></i>
-
-    const LineInfo = ({ label, children }) => children ?
-        <div className="line-info">
-            <label className="line-label">{label}</label>
-            <span className="line-data">{children}</span>
-        </div>
-        :
-        null
-
-
-
-
-    const TreeInfo = ({ nodes }) => (
-        nodes.map((node, i) => (
-            <div className="tree-item" key={i}>
-                <div className="item-data">
-                    {/* <i className="fas fa-angle fa-angle-right"></i> */}
-                    <i className="fas fa-map-marker-alt"></i>
-                    <div className="tree-item-label">{node.label.toLowerCase()}</div>
-                </div>
-                {node.children && node.children.length > 0 && <TreeInfo nodes={node.children} />}
-            </div>
-        ))
-    )
-
-    
-
-    const ProjectInfo = () => (
+    const renderProjectInfo = () => (
         <>
         <div className="setting-projet">
             <DropDown links={projectLinks} />
@@ -170,7 +178,7 @@ const ProjetDetail = ({ match, history, dispatch }) => {
         <div className="pr-header _c_header">
             <div className="pr-title">{projet.intitule}</div>
             <div className="per-wr">
-                <Percentage percentage={ projet.taux || 0 } />
+                <Percentage percentage={ projet.taux } />
                 
             </div>
         </div>
@@ -234,7 +242,7 @@ const ProjetDetail = ({ match, history, dispatch }) => {
         </>
     )
 
-    const MarchesTabs = () => (
+    const renderMarchesTabs = () => (
 
         <div className="mh-wr">
             <div className="_mh_2">Infos sur les marchés ({activeMarcheTab})</div>
@@ -249,6 +257,9 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                                     loadMarche(mt.value)
                                 }}>
                                 {mt.label}
+
+
+                                {/* { activeMarcheTab === mt.value && marcheLoading ? <div className="btn-loader"></div> : null } */}
                             </div>
                             // <div className="tab-item" key={i} onClick={ (e) => {
                             //     [ ...document.querySelectorAll(".tab-item") ].forEach((node) => {
@@ -269,16 +280,18 @@ const ProjetDetail = ({ match, history, dispatch }) => {
     )
 
     const isOs = defaultMarche && defaultMarche.os && defaultMarche.os.length > 0
+    const isOsText = isOs && !defaultMarche.dateReceptionProv 
     const isOsArret = isOs && defaultMarche.os.length > 1
     const workMonths = isOs && Math.floor(defaultMarche.workDays/MONTH_DAYS)
+    const moduloWorkDays = isOs && defaultMarche.workDays%MONTH_DAYS
     const isDelaiExp = isOs && defaultMarche.workDays > defaultMarche.delai * MONTH_DAYS
 
-    const isSte = defaultMarche.societes && defaultMarche.societes.length > 0
+    const isSte = defaultMarche && defaultMarche.societes && defaultMarche.societes.length > 0
     const manySte = isSte && defaultMarche.societes.length > 1 ? "s" : ""
 
-    const MarchesInfo = () => (
+    const renderMarchesInfo = () => (
 
-        <div className={`def-marche-wr ${marcheLoading ? 'waiting' : ''}`}>
+        <div className={`def-marche-wr ${ marcheLoading && 'is-loading'  }`}>
 
             <DropDown
 
@@ -347,28 +360,17 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                 }
             </LineInfo>
 
-            {isOs > 0 && (
+            { isOsText && (
                 <div className="work-days-wr">
                     <span>
-                        La durée d'exécution du marché jusqu'à ce jour{ isOsArret ? ', en comptant les arrêts, ' : ' ' }est de <strong>{defaultMarche.workDays}</strong> jours
-                    </span>
-                    {/* {defaultMarche.workDays > MONTH_DAYS && ( */}
-                        <span>, on est dans le <strong>{workMonths+1}{ workMonths<1 ? 'er':'ème'} mois</strong>.</span>
-                    {/* )} */}
-                    {/* { 
-                        isDelaiExp && (
-                        <span>
-                            <i className="fas fa-exclamation-triangle"></i>
-                            délai dépassé
-                        </span>
-                        )
-                    } */}
+                        La durée d'exécution du marché jusqu'à ce jour{ isOsArret ? ', en comptant les arrêts, ' : ' ' }est de 
+                        <strong> {defaultMarche.workDays}</strong> jours, on est dans le <strong>{workMonths+1}{ workMonths<1 ? 'er':'ème'} mois</strong>.</span>
                 </div>
             )}
 
             <LineInfo label="Ordres de service">
                 {
-                    isOs > 0 && 
+                    isOs && 
                     defaultMarche.os.map(({ typeOs, dateOs, resources = [], commentaire }, i) => (
                     <div className="l-item" key={i}>
                         <span className="l-date-w">
@@ -454,6 +456,15 @@ const ProjetDetail = ({ match, history, dispatch }) => {
                 }
             </LineInfo>
 
+            { defaultMarche.dateReceptionProv && (
+                <div className="work-days-wr">
+                    <span>
+                        La durée d'exécution du marché{ isOsArret ? ', en comptant les arrêts, ' : ' ' }est de  
+                        <strong> {workMonths} mois et {moduloWorkDays} jours</strong>.
+                    </span>
+                </div>
+            )}
+
             <LineInfo label="Date réception provisoire" >
 
                 {defaultMarche.dateReceptionProv ?
@@ -477,32 +488,46 @@ const ProjetDetail = ({ match, history, dispatch }) => {
         </div>
     )
 
-    return (
-        
-        errors !== ERRORS.LOAD_PROJECT ?
-        (
-        <div id="pr-detail-wr" className={`box-sh box-br ${loading ? 'waiting' : ''}`}>
-
-            <div className="banner-line"></div>
-
-            <ProjectInfo />
-
-            { marchesTypes && marchesTypes.length > 0 && <MarchesTabs /> }
-
-            { 
-                errors !== ERRORS.LOAD_MARCHE ?
-                defaultMarche && <MarchesInfo /> : <ApiError/>
-            }
-
-            <div className="new-marche">
-                <Link to={`/marches/new/${projet.id}`} className="_dr-item">Nouveau marché</Link>
-                <i className="fas fa-plus"></i>
-                {/* <i class="fa fa-arrow-right"></i> */}
+    const renderLoading = () => (
+        <div className="pr-detail-loading">
+            Chargement des informations du projet ...
+            <div className={`spinner-container`}>
+                <SpinnerWh />
             </div>
         </div>
-        )
-        :
-        <ApiError/>
+    )
+
+    return (
+
+
+        <div id="pr-detail-wr" className={`box-sh box-br`}>
+
+            {
+                loading ?
+                renderLoading()
+                :
+                errors !== ERRORS.LOAD_PROJECT ? (
+          
+                    <>
+                        { renderProjectInfo() }
+
+                        { marchesTypes && marchesTypes.length > 0 && renderMarchesTabs() }
+
+                        { errors !== ERRORS.LOAD_MARCHE ? defaultMarche && renderMarchesInfo() : <ApiError/> }
+
+                        <div className="new-marche">
+                            <Link to={`/marches/new/${projet.id}`} className="_dr-item">Nouveau marché</Link>
+                            <i className="fas fa-plus"></i>
+                            {/* <i class="fa fa-arrow-right"></i> */}
+                        </div>
+                    </>
+                )
+                :
+                <ApiError/>
+                }
+        </div>
+        
+
     )
 
 }

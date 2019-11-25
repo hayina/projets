@@ -13,8 +13,8 @@
 #pr-detail-wr {
 
     
-    padding: 4px 10px 0px;
-    padding-bottom: 20px;
+    padding: 10px 10px;
+    /* padding-bottom: 20px; */
 } 
 
 #pr-detail-wr .setting-projet {
@@ -356,4 +356,15 @@
     margin-left: 10px;
     font-size: 14px;
     color: red;
+}
+
+#pr-detail-wr .pr-detail-loading {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0px;
+}
+
+#pr-detail-wr .spinner-container {
+    width: 52%;
+    margin: 4em auto;
 }

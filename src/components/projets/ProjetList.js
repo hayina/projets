@@ -12,37 +12,47 @@ import DropDown from './DropDown';
 import { getRoles, getUserID, getUserType } from '../../reducers/login';
 import { canUserEdit } from '../../security';
 import { SpinnerWh, ApiError } from '../helpers';
-import { APP_LINKS } from '../../types';
 import { toUrlParams } from '../../helpers';
+
+
+
+const INITIAL_PAGE = 1
+const DEFAULT_SIZE = 10
+
+const initialState = {
+    projets: [],
+    totalElements: null,
+    totalPages: null,
+    currentPage: INITIAL_PAGE,
+    pageSize: DEFAULT_SIZE,
+    fromPaging: false,
+    loading: false,
+    errors: false,
+}
 
 let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
 
-    const INITIAL_PAGE = 1
-    const DEFAULT_SIZE = 10
+
+    
     
 
-    // const initialState = {
-    //     results: {
-    //         projets: [],
-    //         totalElements: null,
-    //         totalPages: null
-    //     }
 
-    // }
+    // const [projets, setProjets] = useState([]);
+    // const [totalElements, setTotalElements] = useState(null);
+    // const [totalPages, setTotalPages] = useState(null);
 
-    const [projets, setProjets] = useState([]);
-    const [totalElements, setTotalElements] = useState(null);
-    const [totalPages, setTotalPages] = useState(null);
+    // const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
+    // const [pageSize, setPageSize] = useState(DEFAULT_SIZE);
+    // const [fromPaging, setFromPaging] = useState(false);
 
-    const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
-    const [pageSize, setPageSize] = useState(DEFAULT_SIZE);
-    const [fromPaging, setFromPaging] = useState(false);
+    const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState({});
 
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors]   = useState(false);
+    // const [loading, setLoading] = useState(false);
+    // const [errors, setErrors]   = useState(false);
 
+    const { projets, totalElements, totalPages, currentPage, pageSize, fromPaging, loading, errors } = state
     const loadingFromPaging = loading && fromPaging  
     const loadingFromCriteria = loading && !fromPaging  
 
@@ -79,33 +89,36 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
             method: 'DELETE',
             success: () => {
                 projets.splice(index, 1);
-                setProjets([...projets])
+                setState({ ...state, projets: [ ...state.projets ] })
             },
         })
     }
 
+
+
     useEffect(() => {
 
-        console.log(">>>> useEffect -> ajax -> runing ...", filters, "page -> ", currentPage)
+        console.log(">>>> useEffect -> filters ...", filters)
+        // console.log("page -> ", page, "currentPage -> ", currentPage, "fromPaging -> ", fromPaging)
+
 
         if( Object.keys(filters).length === 0 ) return
 
         let cancel = false
-
-        setLoading(true)
-        setErrors(false)
         const page = fromPaging ? currentPage+1 : INITIAL_PAGE
-        setCurrentPage(page)
-     
-
+        const preCallState = { ...state, loading: true, errors: false, currentPage: page }
+        setState(preCallState)
+        
         // history.push({
-        //     pathname: APP_LINKS.SEARCH_PROJECT,
-        //     search: `?${ toUrlParams(filters) }`
-        //     // search: `?${ params(filters) }`
+        //     // pathname: APP_LINKS.SEARCH_PROJECT,
+        //     pathname: history.location.pathname,
+        //     search: `${ toUrlParams(filters) }`
         // })
 
 
         // return
+
+        // console.log("AJAX CALL ...")
 
         useAjaxFetch({
             url: 'projets',
@@ -119,27 +132,23 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
                 if(cancel) return
 
-                if(!fromPaging) {
-                    setTotalElements(data.totalElements)
-                    setTotalPages(Math.ceil(data.totalElements/pageSize))
-                } else {
-                    setFromPaging(false)
-                }
+                const newState = {}
+ 
+                newState.loading = false
+                newState.projets = fromPaging ? [ ...state.projets, ...data.content ] : data.content
+                newState.fromPaging = false
 
-                setLoading(false)
-                setProjets(prev => fromPaging ? [ ...prev, ...data.content ] : data.content)
+                if(!fromPaging) {
+                    newState.totalElements = data.totalElements
+                    newState.totalPages = Math.ceil(data.totalElements/pageSize)
+                } 
                 
+                setState({ ...preCallState, ...newState })
             },
             error: () => {
                 if(cancel) return
-                setErrors(true)
-                setLoading(false)
-                setFromPaging(false)
-            },
-            // always: () => {
-            //     if(cancel) return
-                
-            // }
+                setState({ ...preCallState, loading: false, errors: true, fromPaging: false })
+            }
         })
 
 
@@ -153,23 +162,13 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
 
     const loadNextPage = () => {
-
         // setLoading(true) // just to increase race condition
-        setFromPaging(true)
+        // state.fromPaging = true
+        setState({ ...state, fromPaging: true })
         setFilters({ ...filters })
-
     }
 
-    const ResultsList = () => {
 
-        // console.log("ResultsList ->", projets.length)
-
-        return (
-            <div className="projets-results">
-                { projets.map((projet, index) => <Line projet={projet} index={index} key={projet.id}/>) }
-            </div>
-        )
-    }
 
     const highlightText = (text, higlight) => {
         // Split text on higlight term, include term itself into parts, ignore case
@@ -180,11 +179,13 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
             </span>)
     }
 
-    const Line = ({ projet, index }) => {
+    const renderResultsList = () => {
         
         // const animate = index >= itemIndexRef.current
         return (
-            <div className="projet-item box-sh box-br no_dc">
+            <div className="projets-results">
+                { projets.map((projet, index) => (
+                <div className="projet-item box-sh box-br no_dc" key={projet.id}>
 
                 {
                     canUserEdit(userID, projet.chargeSuivID, roles, userType) &&
@@ -196,7 +197,8 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
                         <strong>{index+1}. </strong>
                         {/* <strong>{projet.id}.({projet.daysFromLastRepriseTilNow})</strong> */}
                         
-                        { filters.intitule && filters.intitule.length > 0 ? highlightText(projet.intitule, filters.intitule) : projet.intitule } 
+                        { filters.intitule && filters.intitule.length > 0 ? 
+                            highlightText(projet.intitule, filters.intitule) : projet.intitule } 
                     </Link>
                 </div>
                 {/* <div className="projet-label"><strong>{projet.id}.</strong> {projet.intitule}</div> */}
@@ -207,9 +209,9 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
                         <div className="projet-loc">
                             <i className="_fa_lpr fas fa-map-marker-alt"></i>
                             { 
-                                Object.keys(projet.localisations).map((key) => {
-                                    return <span className="loc-label" key={key}>{projet.localisations[key]}</span>
-                                })
+                                Object.keys(projet.localisations).map((key) => (
+                                    <span className="loc-label" key={key}>{projet.localisations[key]}</span>
+                                ))
                             }
                             
                         </div>
@@ -226,10 +228,12 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
 
             </div>
+            ))}
+            </div>
         )
     }
 
-    const ResultsInfo = () => (
+    const renderResultsInfo = () => (
         <div className="projets-nav nav-with-loader">
             <div className="result-info">
                 { loadingFromCriteria ? `Chargement ....` : `${totalElements} resultats`}
@@ -250,10 +254,10 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
     //     <div className="api-error">Une erreur s'est produit<i className="fas fa-info-circle"></i></div>
     // )
 
-    const PagingLoader = () => {
+    const renderPagingLoader = () => {
         
         
-        return currentPage !== totalPages &&
+        return (loading || currentPage !== totalPages) &&
         (
             <div className={`paging-loader nav-with-loader ${ loadingFromPaging ? 'disabled' : '' }`} >
                 <i className="fas fa-chevron-down" onClick={loadNextPage}></i>
@@ -270,42 +274,28 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
         )
     }
 
-
-
-
     console.log("=> page projets search is rendering ...")
-
-
-
-
-
-
-
 
     return (
         <div className="projets-wr" id="search-projet-page">
             <SearchBar setFilters={setFilters} />
 
-            <ResultsInfo />
+            { renderResultsInfo() }
             { 
-                !loadingFromCriteria && (
+                ! loadingFromCriteria && (
                     ! errors ? 
                     (
                         projets.length > 0 && (
-                            <>       
-                                <ResultsList />
-                                <PagingLoader />
-                            </>   
+                            <>
+                                { renderResultsList() }
+                                { renderPagingLoader() }
+                            </>                             
                         )
-                        // : 
-                        // <EmptyList />
                     )
                     : 
                     <ApiError />
                 )
-
             }
-
 
       </div>
 

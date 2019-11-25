@@ -63,3 +63,32 @@ faire attention value select is string not number
 useLayoutEffect ??
 
 equivalent enums => const ERRORS = Object.freeze({ LOAD_PROJECT: 1, LOAD_MARCHE: 2 })
+
+///
+
+2 function successives dans render :=>
+    renderResultsList()
+    renderPagingLoader()
+    =>
+    <>
+        {renderResultsList()}
+        {renderPagingLoader()}
+    </>   
+
+/// 
+complicated state => useReducer not useState !!
+sinn faut faire tres attention à l'ordre des setX() et les loading ...
+la page peut completement changer en un clein d'oeil sans s'apercevoir
+=>
+alors useReducer to update state just once !!!!!!!!!!!!
+
+
+///
+faire tres attention quand on utilise state dans une foncition success du ajax call for example
+it will hold the stale state not the updated state before ajax call (setState({ loading: true, page: ...}))
+
+
+///
+always consider using "userRef" our friend
+
+// attention always f axios because we have promise and always is excecuted 

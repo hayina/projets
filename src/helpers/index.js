@@ -38,8 +38,9 @@ export const getDecImgLink = (props) => getAttachLink({ ...props, attachType: AT
 
 
 export const toUrlParams = obj => Object.keys(obj)
-                                                .filter(key =>  obj[key] && obj[key].length !==0)
-                                                .map(key => `${key}=${encodeURIComponent(obj[key])}`).join('&')
+                                                // .filter(key =>  obj[key] && obj[key].length !==0)
+                                                .map(key => `${key}=${encodeURIComponent(obj[key])}`)
+                                                .join('&')
 
 export const urlParamsTo = (urlParams) => Object.fromEntries(new URLSearchParams(urlParams))
 

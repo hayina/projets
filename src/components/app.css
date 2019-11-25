@@ -316,7 +316,7 @@
     background-color: #f8f8f8;
 }
 
-.is-submitting {
+.is-submitting, .is-loading {
     pointer-events:none;
     opacity: 0.6;
 }
