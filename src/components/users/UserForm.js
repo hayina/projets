@@ -11,7 +11,7 @@ import useAjaxFetch from '../hooks/useAjaxFetch'
 
 import './userForm.css'
 import './../../components/gform.css'
-import { USER_TYPES } from '../../types';
+import {  } from '../../types';
 import { ApiError } from '../helpers';
 
 
@@ -20,7 +20,7 @@ const intialValues = {
     password: '',
     nom: '',
     prenom: '',
-    active: false,
+    enabled: false,
     roles: [],
 }
 
@@ -40,7 +40,7 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
 
     const [roles, setRoles] = useState([])
     const [divisions, setDivisions] = useState([])
-    const [userTypes, setUserTypes] = useState([])
+
 
     const [errors, setErrors] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -59,11 +59,11 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                     dispatchForm(reset(data.userInfos))
                 }
                 setRoles(data.roles)
-                setUserTypes(data.userTypes)
                 setDivisions(data.divisions)
+                setLoading(false)
             },
             error: () => setErrors(true),
-            always: () => setLoading(false)
+            // always: () => setLoading(false)
         })
         
     }, [])
@@ -120,9 +120,13 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                     <Field name="login" >
                         {props => <TextInput label="Login" {...props} />}
                     </Field>
-                    <Field name="password" >
-                        {props => <TextInput label="Mot de passe" {...props} />}
-                    </Field>
+
+                    {
+                        !editMode &&
+                        <Field name="password" >
+                            {props => <TextInput label="Mot de passe" {...props} />}
+                        </Field>
+                    }
                     <Field name="nom" >
                         {props => <TextInput label="Nom" {...props} />}
                     </Field>
@@ -137,21 +141,8 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                     </Field>
                 </div>
 
-                <div className="form-line-grp">
-                    <Field name="userType" >
-                        {
-                            ({ meta, ...props}) =>
-                            <SimpleFormLine label="Choisir le type" meta={meta}>
-                                <RadioList
-                                    options={userTypes}
-                                    {...props}
-                                />
-                            </SimpleFormLine>
-                        }
-                    </Field>
-                </div>
 
-                { state.values.userType === USER_TYPES.UTILISATEUR &&
+                {/* { state.values.userType === USER_TYPES.UTILISATEUR && */}
 
                     <>
 
@@ -169,11 +160,6 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                             </Field>
                         </div>
 
-                        <div className="form-line-grp">
-                            <Field name="isChargeSuivi">
-                                {props => <ToggleField label="Chargé de suivi" {...props} />}
-                            </Field>
-                        </div>
 
                         <div className="form-line-grp">
                             <Field name="division">
@@ -188,19 +174,9 @@ let UserForm = ({ dispatch, editMode, userToEdit, userIndex, addUser, updateUser
                         </div>
                     </>
 
-                }
-                {/* <Field name="roles" validate={[required]}>
-                    { props =>   
-                        <CheckboxField
-                            label="Choisir les profiles de l'utilisateur"
-                            options={roles} 
-                            {...props} 
-                        /> 
-                    }
-                </Field> */}
 
-                <Field name="isDisable" >
-                    {props => <ToggleField label="Déverrouillé" {...props} />}
+                <Field name="enabled" >
+                    {props => <ToggleField label="Active" {...props} />}
                 </Field>
 
                 {/* <input type="button" value="RESET" onClick={ () => dispatchForm(reset(editMode ? initUser : intialValues)) } /> */}

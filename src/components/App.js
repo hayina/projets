@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter , Route, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 
@@ -16,12 +16,18 @@ import MarcheForm from './marches/MarcheForm';
 import ProjetDetail from './projets/ProjetDetail';
 import Dashboard from './Dashboard';
 import Login from './Login';
-import { isAuthenticated, getUserID, getUserType, getRoles } from '../reducers/login';
+import { isAuthenticated, getUserID, getRoles, getPermissions } from '../reducers/login';
 
 
 import { createBrowserHistory } from 'history';
-import { USER_ROLES, APP_LINKS } from '../types';
-import { canHeAccessRoute } from '../security';
+import { USER_PERMISSIONS, APP_LINKS } from '../types';
+import { accessPermissions } from '../security';
+import useAjaxFetch from './hooks/useAjaxFetch';
+import { loginUser } from '../actions';
+import { getItemFromStorage } from '../helpers';
+import { accessRoute } from '../security';
+import LocationPage from './locations/LocationsPage';
+import ConventionPage from './conventions/ConventionPage';
 export const history = createBrowserHistory();
 
 
@@ -34,10 +40,12 @@ const BreadCrumb = ({ label }) => (
 )
 
 
-let ProtectedRoute = ({ component:Cp, authRole, isAuth, userID, userType, roles, ...restProps }) => {
+let ProtectedRoute = ({ component:Cp,
+    authPermissions, isAuth, userID, roles, permissions, 
+    dispatch, ...restProps }) => {
 
         
-    
+    console.log("ProtectedRoute ------>" + restProps.path)
 
     return (
         <Route {...restProps} render={ 
@@ -47,7 +55,9 @@ let ProtectedRoute = ({ component:Cp, authRole, isAuth, userID, userType, roles,
                     // console.log("authRole", authRole)
                     // console.log("path", restProps.path)
 
-                    if( authRole && ! canHeAccessRoute(roles, authRole, userType) ) {
+                    if( authPermissions 
+                        && ! accessPermissions(permissions, authPermissions) 
+                        ) {
                         return <ForbiddenRoute {...props} />  
                     }
                     
@@ -68,16 +78,14 @@ let ProtectedRoute = ({ component:Cp, authRole, isAuth, userID, userType, roles,
 ProtectedRoute = connect( state => ({
     isAuth: isAuthenticated(state),
     userID: getUserID(state),
-    userType: getUserType(state),
     roles: getRoles(state),
+    permissions: getPermissions(state),
 }))(ProtectedRoute)
 
-const App = ({ breadCrumb , isAuth }) => {
+const App = ({ breadCrumb , isAuth, dispatch }) => {
 
 
-
-
-    // console.log("MAIN APP ------>")
+    console.log("MAIN APP ------>")
 
     return (
 
@@ -111,31 +119,33 @@ const App = ({ breadCrumb , isAuth }) => {
                         <ProtectedRoute path={APP_LINKS.SEARCH_PROJECT} exact component={ProjetList} />
                         <ProtectedRoute path="/projets/detail/:idProjet" exact component={ProjetDetail} />
                        
+                        <ProtectedRoute path="/conventions" exact component={ConventionPage} />
+                        <ProtectedRoute path="/locations" exact component={LocationPage} />
 
                         <ProtectedRoute 
-                            authRole={USER_ROLES.SAISIR_PROJET} 
+                            authPermissions={[USER_PERMISSIONS.ADD_PROJECT]} 
                             path="/projets/new" exact component={ProjetForm} 
                         />
 
 
 
                         <ProtectedRoute 
-                            authRole={USER_ROLES.SAISIR_PROJET}  
+                            authPermissions={[USER_PERMISSIONS.EDIT_PROJECT]}  
                             path="/projets/edit/:idProjet" exact component={ProjetForm} 
                         />
 
                         <ProtectedRoute 
-                            authRole={USER_ROLES.SAISIR_PROJET} 
+                            authPermissions={[USER_PERMISSIONS.ADD_PROJECT]} 
                             path="/marches/new/:idProjet" exact component={MarcheForm}
                         />
 
                         <ProtectedRoute 
-                            authRole={USER_ROLES.SAISIR_PROJET}  
+                            authPermissions={[USER_PERMISSIONS.EDIT_PROJECT]}  
                             path="/marches/edit/:idMarche" exact component={MarcheForm} 
                         />
                        
                         <ProtectedRoute 
-                            authRole={USER_ROLES.GESTION_UTILISATEURS} 
+                            authPermissions={[USER_PERMISSIONS.VIEW_USERS]} 
                             path="/users" exact component={UserList} 
                         />
 

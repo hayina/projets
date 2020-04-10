@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { USER_ROLES, USER_TYPES } from "../types"
+import { USER_PERMISSIONS, USER_ROLES } from "../types"
 import ForbiddenRoute from "./ForbiddenRoute";
 
 
@@ -11,19 +11,39 @@ export const withForbbiden = (Cp) => (props) => {
     return forbbiden ? <ForbiddenRoute /> : <Cp { ...props } setForbbiden={setForbbiden}   />
 }
 
-const supervisorRoles = [ USER_ROLES.CONTROLER_PROJET, USER_ROLES.VALIDER_PROJET, USER_ROLES.AFFECTER_PROJET ]
-
-export const isSupervisor = (roles) => roles.some((role) => supervisorRoles.some(supRole => supRole === role))
-export const isAdmin = (userType) => userType === USER_TYPES.ADMIN
 
 
-export const canUserEdit = (userID, chargeSuivID, roles, userType) => userID === chargeSuivID 
-        || isSupervisor(roles)
-        || isAdmin(userType)
+export const accessEditProject = (userID, chargeSuivID, roles) => {
+    console.log("accessEditProject", userID, chargeSuivID, roles)
+    return userID === chargeSuivID || accessRoles(roles, [USER_ROLES.SUPERVISOR_DIV, USER_ROLES.ADMIN])
+}
+ 
 
 
-export const canUserAffect = (roles, userType) => isSupervisor(roles) || isAdmin(userType)
-export const canUserSaisir = (roles, userType) => canHeAccessRoute(roles, USER_ROLES.SAISIR_PROJET, userType)
+// export const canUserAffect = (roles, userType) => isSupervisor(roles) || isAdmin(userType)
+// export const canUserSaisir = (roles, userType) => canHeAccessRoute(roles, USER_ROLES.SAISIR_PROJET, userType)
 
 
-export const canHeAccessRoute= (roles, authRole, userType) => roles.some((role) => role === authRole ) || isAdmin(userType)
+export const accessRoles= (roles, authRole) => {
+
+    if(authRole instanceof Array) {
+        return roles.some( role => authRole.some( ar => ar === role) )
+    } 
+    else if(typeof authRole === 'string' || authRole instanceof String) {
+        return roles.some( role => authRole === role )
+    }
+
+    return false
+}
+
+export const accessPermissions= (permissions, authPermissions) => {
+
+    if(authPermissions instanceof Array) {
+        return permissions.some( perm => authPermissions.some( authPerm => authPerm === perm) )
+    } 
+    else if(typeof authPermissions === 'string' || authPermissions instanceof String) {
+        return permissions.some( perm => authPermissions === perm )
+    }
+
+    return false
+}

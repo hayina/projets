@@ -11,10 +11,19 @@ const Dashboard = ({ dispatch }) => {
         dispatch(setBreadCrumb("Tableau de bord"))
     }, [])
 
+    // setTimeout(function(){
+    //     console.log("First function call...");
+    //  }, 2000);
+
+    //  setTimeout(function(){
+    //     console.log("No time function call...");
+    //  });
+
     return (
         <div id="dashboard-page">
         
             <h1>Dashboard</h1>
+            <h2>{ sessionStorage.getItem("token") }</h2>
         </div>
     )
 }

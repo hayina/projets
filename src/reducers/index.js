@@ -11,5 +11,13 @@ export default combineReducers({
     form: formReducer,
     modals,
     login,
-    breadCrumb: (state="Bienvenue", action) => action.type === types.SET_BREAD_CRUMB ? action.payload : state,
+    breadCrumb: (state="Bienvenue", action) => {
+        
+        if(action.type === types.SET_BREAD_CRUMB) {
+            console.log("breadCrumb", action.payload)
+            return  action.payload
+        }
+        else return state
+    //    return  action.type === types.SET_BREAD_CRUMB ? action.payload : state
+    },
 })

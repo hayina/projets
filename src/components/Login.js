@@ -7,6 +7,7 @@ import useAjaxFetch from './hooks/useAjaxFetch';
 import { ApiError } from './helpers';
 import { FooterForm } from './divers';
 import { isAuthenticated } from '../reducers/login';
+import { setSigninTokens, getItemFromStorage } from '../helpers';
 
 const Login = ({ dispatch, history, from, isAuth }) => {
 
@@ -48,10 +49,10 @@ const Login = ({ dispatch, history, from, isAuth }) => {
             url: '/login',
             method: 'POST',
             body: { login, password },
-            success: (data) => {
+            success: (data, headers) => {
 
                 setSubmitting(false)
-                localStorage.removeItem("userInfo");
+                sessionStorage.removeItem("token");
 
                 switch(data) {
 
@@ -64,9 +65,11 @@ const Login = ({ dispatch, history, from, isAuth }) => {
                         break;
                     default :
                         console.log('Success ->', data)
+                        console.log('Authorization ->', headers.authorization)
+                        setSigninTokens({ token: headers.authorization, userInfo: JSON.stringify(data) })
                         dispatch(loginUser(data))
-                        localStorage.setItem('userInfo', JSON.stringify(data));
-                        history.push(from ? from : '/projets/search')
+                        console.log('Authorization From Storage ->', getItemFromStorage("token"))
+                        // history.push(from ? from : '/projets/search')
 
                 }
                 

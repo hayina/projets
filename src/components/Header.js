@@ -5,25 +5,18 @@ import { Link, withRouter } from "react-router-dom";
 
 import './header.css'
 import { isAuthenticated, getFullName } from '../reducers/login';
-import useAjaxFetch from './hooks/useAjaxFetch';
-import { logoutUser } from '../actions';
-import { STATIC_PATH } from '../conf';
+import { logoutAndClean } from '../helpers';
 // import { history } from './App';
 
 
 
-let Header = ({ isAuth, fullName, history, dispatch }) => {
+let Header = ({ isAuth, fullName, history }) => {
 
     const logout = () => {
-        
-        useAjaxFetch({
-            url: '/logout',
-            success: () => { 
-                localStorage.removeItem("userInfo");
-                dispatch(logoutUser())
-                history.push('/login') 
-            },
-        })
+
+        logoutAndClean()
+        history.push('/') 
+
     }
 
     // console.log('public url : ', process.env.PUBLIC_URL)

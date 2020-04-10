@@ -5,7 +5,9 @@ import reducers from './reducers';
 // import { autoCompleteMiddleware } from './middlewares/autocomplete';
 import { apiMiddleware } from './middlewares/api';
 import { loggerMiddleware } from './middlewares/logger';
+import { getItemFromStorage } from './helpers';
 import { loginUser } from './actions';
+
 
 // import * as actionCreators from './actions/autocomplete'
 
@@ -26,9 +28,9 @@ export const store = createStore(
     enhancer
 );
 
-let userInfo = localStorage.getItem('userInfo');
+
+// when the user refresh the page we need to fetch user info from the session storage and push them to the store to signin him again
+let userInfo = getItemFromStorage('userInfo');
 if( userInfo ) {
-    userInfo = JSON.parse(userInfo)
-    console.log('localStorage', userInfo);
-    store.dispatch(loginUser(userInfo))
+    store.dispatch(loginUser(JSON.parse(userInfo)))
 }

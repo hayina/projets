@@ -11,9 +11,11 @@ import { setBreadCrumb, showModal, setModalProps, hideModal } from '../../action
 import { formatDate } from '../../helpers';
 import DropDown from '../helpers/DropDown2';
 import { modalTypes } from '../modals/ModalRoot';
-import { ATTACH_TYPE, TYPE_OS, MONTH_DAYS } from '../../types';
+import { ATTACH_TYPE, TYPE_OS, MONTH_DAYS, USER_PERMISSIONS } from '../../types';
 import { ResourcesLine } from '../attachments';
 import { ApiError, SpinnerWh } from '../helpers';
+import { accessPermissions, accessEditProject } from '../../security';
+import { getPermissions, getUserID, getRoles } from '../../reducers/login';
 
 
 
@@ -42,7 +44,7 @@ const TreeInfo = ({ nodes }) => (
     ))
 )
 
-const ProjetDetail = ({ match, history, dispatch }) => {
+const ProjetDetail = ({ match, history, dispatch, permissions, userID, roles }) => {
 
     const [loading, setLoading] = useState(false)
     const [marcheLoading, setMarcheLoading] = useState(false)
@@ -93,23 +95,37 @@ const ProjetDetail = ({ match, history, dispatch }) => {
     }, [])
 
 
-    const projectLinks = [
-        {
+    const projectLinks = []
+
+    /**
+     * Check if user have permissions & roles to edit the project
+     */
+    const editProjectPermission = projet.chargeSuivi && accessEditProject(userID, projet.chargeSuivi.value, roles)
+    if( editProjectPermission ) {
+
+        projectLinks.push({
             label: 'Editer',
             callback: () => history.push(`/projets/edit/${idProjet}`),
-        },
-        {
-            label: 'Supprimer',
-            callback: () => {
-                dispatch(showModal(modalTypes.ADD_DELETE, {
-                    handleValidation: () => deleteProjet(),
-                    dangerText: <span>Voulez vous vraiment supprimer le projet <strong>{projet.intitule}</strong> ?</span>,
-                    apiCall: true, fading: false
-                }))
-            },
-        }
+        })
 
-    ]
+        /**
+         * Check if the user have the permission to delete a project
+         */
+        if(accessPermissions(permissions, USER_PERMISSIONS.DELETE_PROJECT)) {
+    
+            projectLinks.push({
+                label: 'Supprimer',
+                callback: () => {
+                    dispatch(showModal(modalTypes.ADD_DELETE, {
+                        handleValidation: () => deleteProjet(),
+                        dangerText: <span>Voulez vous vraiment supprimer le projet <strong>{projet.intitule}</strong> ?</span>,
+                        apiCall: true, fading: false
+                    }))
+                },
+            })
+        }
+    }
+
 
     const loadMarche = (idMarche) => {
 
@@ -172,9 +188,11 @@ const ProjetDetail = ({ match, history, dispatch }) => {
 
     const renderProjectInfo = () => (
         <>
-        <div className="setting-projet">
-            <DropDown links={projectLinks} />
-        </div>
+        { projectLinks.length !== 0 && 
+            <div className="setting-projet">
+                <DropDown links={projectLinks} />
+            </div>
+        }
         <div className="pr-header _c_header">
             <div className="pr-title">{projet.intitule}</div>
             <div className="per-wr">
@@ -515,11 +533,13 @@ const ProjetDetail = ({ match, history, dispatch }) => {
 
                         { errors !== ERRORS.LOAD_MARCHE ? defaultMarche && renderMarchesInfo() : <ApiError/> }
 
-                        <div className="new-marche">
-                            <Link to={`/marches/new/${projet.id}`} className="_dr-item">Nouveau marché</Link>
-                            <i className="fas fa-plus"></i>
-                            {/* <i class="fa fa-arrow-right"></i> */}
-                        </div>
+                        {   editProjectPermission &&
+                            <div className="new-marche">
+                                <Link to={`/marches/new/${projet.id}`} className="_dr-item">Nouveau marché</Link>
+                                <i className="fas fa-plus"></i>
+                                {/* <i class="fa fa-arrow-right"></i> */}
+                            </div>
+                        }
                     </>
                 )
                 :
@@ -533,4 +553,10 @@ const ProjetDetail = ({ match, history, dispatch }) => {
 }
 
 
-export default connect()(ProjetDetail)
+export default connect(
+    (state) => ({
+        permissions: getPermissions(state),
+        userID: getUserID(state),
+        roles: getRoles(state),
+    })
+)(ProjetDetail)

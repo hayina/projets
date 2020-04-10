@@ -5,8 +5,11 @@ import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { showModal } from '../../actions';
 import { modalTypes } from '../modals/ModalRoot';
+import { accessPermissions } from '../../security';
+import { getPermissions } from '../../reducers/login';
+import { USER_PERMISSIONS } from '../../types';
 
-const DropDown = ({ projet, index, deleteProjet, dispatch }) => {
+const DropDown = ({ projet, index, deleteProjet, dispatch, permissions }) => {
 
     useEffect(() => {
         document.addEventListener('mousedown', clickOutSide);
@@ -30,12 +33,19 @@ const DropDown = ({ projet, index, deleteProjet, dispatch }) => {
         }}>
             <div className="_drop-down">
                 <Link to={`/projets/edit/${projet.id}`} className="_dr-item">Editer projet</Link>
-                <a href="javascript:void(0)" className="_dr-item" onClick={ 
-                    () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
-                        onDanger: () => deleteProjet(projet.id, index)  ,
-                        dangerText: ["Voulez vous vraiment supprimer le projet ", <strong>{projet.intitule}</strong>, " ?"]
-                    }))
-                }>Supprimer projet</a>
+
+                {accessPermissions(permissions, USER_PERMISSIONS.DELETE_PROJECT) &&
+                    <a 
+                    href="javascript:void(0)" className="_dr-item" 
+                    onClick={ 
+                        () =>  dispatch(showModal(modalTypes.ADD_DELETE, {
+                            onDanger: () => deleteProjet(projet.id, index)  ,
+                            dangerText: ["Voulez vous vraiment supprimer le projet ", <strong>{projet.intitule}</strong>, " ?"]
+                        }))
+                    }>
+                        Supprimer projet
+                    </a>
+                }
                 <Link to={`/marches/new/${projet.id}`} className="_dr-item">Nouveau marché</Link>
 
                 {
@@ -53,5 +63,9 @@ const DropDown = ({ projet, index, deleteProjet, dispatch }) => {
 }
 
 
-export default connect()(DropDown)
+export default connect(
+    (state) => ({
+        permissions: getPermissions(state)
+    })
+)(DropDown)
 

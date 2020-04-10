@@ -8,8 +8,8 @@ const initialState = {
 export const isAuthenticated = (state) => state.login.isAuthenticated
 export const getUserInfo = (state) => state.login.userInfo
 export const getUserID = (state) => state.login.userInfo.id
-export const getUserType = (state) => state.login.userInfo.userType
 export const getRoles = (state) => state.login.userInfo.roles
+export const getPermissions = (state) => state.login.userInfo.permissions
 export const getFullName = (state) => `${state.login.userInfo.nom} ${state.login.userInfo.prenom}`
 
 export const login = (state = initialState, action) => {
@@ -18,8 +18,10 @@ export const login = (state = initialState, action) => {
         case types.LOGIN: 
             console.log("LOGIN >", { isAuthenticated: true, userInfo: action.userInfo })
             return { isAuthenticated: true, userInfo: action.userInfo };
-        case types.LOGOUT: return initialState;
-        default: return state;
+        case types.LOGOUT: 
+            return initialState;
+        default: 
+            return state;
     }
 }
 

@@ -9,10 +9,9 @@ import { setBreadCrumb } from '../../actions';
 import SearchBar from './SearchBar';
 import Percentage from './Percentage';
 import DropDown from './DropDown';
-import { getRoles, getUserID, getUserType } from '../../reducers/login';
-import { canUserEdit } from '../../security';
+import { getRoles, getUserID, getPermissions } from '../../reducers/login';
 import { SpinnerWh, ApiError } from '../helpers';
-import { toUrlParams } from '../../helpers';
+import { accessEditProject } from '../../security';
 
 
 
@@ -30,27 +29,13 @@ const initialState = {
     errors: false,
 }
 
-let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
+let ProjetList = ({dispatch, roles, userID, history}) => {
 
 
-
-    
-    
-
-
-    // const [projets, setProjets] = useState([]);
-    // const [totalElements, setTotalElements] = useState(null);
-    // const [totalPages, setTotalPages] = useState(null);
-
-    // const [currentPage, setCurrentPage] = useState(INITIAL_PAGE);
-    // const [pageSize, setPageSize] = useState(DEFAULT_SIZE);
-    // const [fromPaging, setFromPaging] = useState(false);
 
     const [state, setState] = useState(initialState);
     const [filters, setFilters] = useState({});
 
-    // const [loading, setLoading] = useState(false);
-    // const [errors, setErrors]   = useState(false);
 
     const { projets, totalElements, totalPages, currentPage, pageSize, fromPaging, loading, errors } = state
     const loadingFromPaging = loading && fromPaging  
@@ -58,8 +43,6 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
 
     useEffect(() => {
-        console.log(">>>> useEffect -> Bread Crum ...")
-
         dispatch(setBreadCrumb("Rechercher les projets"))
     }, [])
 
@@ -67,20 +50,7 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
     const paramsRef = useRef(null)
     paramsRef.current = history.location.search
-    // console.log("paramsRef =============>")
-    // console.log(paramsRef.current)
-    // // console.log(history.location.search)
-    // console.log("history =============>", history)
 
-
-
-    // useEffect(() => {
-    //     console.log(">>>> useEffect -> params ...", paramsRef.current)
-    //     // deserialise url to obj
-    //     console.log(paramsToObj(paramsRef.current.substring(1)))
-        
-    //     setFilters(paramsToObj(paramsRef.current.substring(1))) 
-    // }, [paramsRef.current])
 
     const deleteProjet = (idProjet, index) => {
         
@@ -99,8 +69,6 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
     useEffect(() => {
 
         console.log(">>>> useEffect -> filters ...", filters)
-        // console.log("page -> ", page, "currentPage -> ", currentPage, "fromPaging -> ", fromPaging)
-
 
         if( Object.keys(filters).length === 0 ) return
 
@@ -108,17 +76,7 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
         const page = fromPaging ? currentPage+1 : INITIAL_PAGE
         const preCallState = { ...state, loading: true, errors: false, currentPage: page }
         setState(preCallState)
-        
-        // history.push({
-        //     // pathname: APP_LINKS.SEARCH_PROJECT,
-        //     pathname: history.location.pathname,
-        //     search: `${ toUrlParams(filters) }`
-        // })
 
-
-        // return
-
-        // console.log("AJAX CALL ...")
 
         useAjaxFetch({
             url: 'projets',
@@ -155,15 +113,8 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
         return () => cancel = true
     }, [filters])
-    // }, [paramsRef.current, currentPage])
-
-    
-    
-
 
     const loadNextPage = () => {
-        // setLoading(true) // just to increase race condition
-        // state.fromPaging = true
         setState({ ...state, fromPaging: true })
         setFilters({ ...filters })
     }
@@ -171,7 +122,9 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
 
     const highlightText = (text, higlight) => {
-        // Split text on higlight term, include term itself into parts, ignore case
+        /**
+         * Split text on higlight term, include term itself into parts, ignore case
+         */
         var parts = text.split(new RegExp(`(${higlight})`, 'gi'));
         return (
             <span>{parts.map(part => part.toLowerCase() === higlight.toLowerCase() ? 
@@ -181,14 +134,14 @@ let ProjetList = ({dispatch, roles, userID, userType, history, match}) => {
 
     const renderResultsList = () => {
         
-        // const animate = index >= itemIndexRef.current
+
         return (
             <div className="projets-results">
                 { projets.map((projet, index) => (
                 <div className="projet-item box-sh box-br no_dc" key={projet.id}>
 
                 {
-                    canUserEdit(userID, projet.chargeSuivID, roles, userType) &&
+                    accessEditProject(userID, projet.chargeSuivID, roles) &&
                     <DropDown { ...{ projet, deleteProjet, index } } />
                 }
 
@@ -309,6 +262,6 @@ export default connect(
     (state) => ({
         roles: getRoles(state),
         userID: getUserID(state),
-        userType: getUserType(state)
+        permissions: getPermissions(state),
     })
 )(ProjetList)

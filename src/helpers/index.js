@@ -1,4 +1,6 @@
 import { ATTACH_TYPE } from "../types";
+import { store } from "../store";
+import { logoutUser, hideModal } from "../actions";
 
 export const asyncFunc = (f) => new Promise((resolve, reject) => {
     f();
@@ -43,6 +45,25 @@ export const toUrlParams = obj => Object.keys(obj)
                                                 .join('&')
 
 export const urlParamsTo = (urlParams) => Object.fromEntries(new URLSearchParams(urlParams))
+
+
+export const getItemFromStorage = (item) => sessionStorage.getItem(item)
+
+
+export const setSigninTokens = ({ userInfo, token }) => {
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('userInfo', userInfo);
+}
+export const deleteSigninTokens = () => {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('userInfo');
+}
+
+export const logoutAndClean = () => {
+    store.dispatch(logoutUser())
+    store.dispatch(hideModal())
+    deleteSigninTokens()
+}
 
 
 

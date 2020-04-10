@@ -12,8 +12,8 @@ import LocationLine from './LocationLine';
 import ProgLine from './ProgLine';
 
 import './forms.css';
-import { getRoles, getUserType } from '../../reducers/login';
-import { withForbbiden, canUserAffect } from '../../security';
+import { getRoles, getUserType, getPermissions } from '../../reducers/login';
+import { withForbbiden } from '../../security';
 import { ButtonSpinner, FooterForm } from '../divers';
 
 const vIndh = (value, formValues, props, name) => (
@@ -36,7 +36,7 @@ const vMod = (value, formValues, props, name) => (
 
 export const formName = 'projetForm'
 
-let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, roles, userType, setForbbiden }) => {
+let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, roles, permissions, setForbbiden }) => {
 
     const [localisationItems, setLocalisationItems] = useState([]);
     const [secteurs, setSecteurs] = useState([]);
@@ -71,8 +71,9 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
         // PROJET LOADING !!!
         setLoading(true)
         useAjaxFetch({
-            url: `/projets/loading`,
-            params: idProjet ? { edit: idProjet } : {},
+            url: `/projets/loading${ editMode ? `/${idProjet}` : '' }`,
+            // url: `/projets/loading`,
+            // params: editMode ? { edit: idProjet } : {},
             success: (result) => {
 
                 setLoading(false)
@@ -109,7 +110,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
         // return false
         let apiValues = { 
             ...formValues,
-            idProjet,
+            // idProjet,
             maitreOuvrage: formValues.maitreOuvrage ? formValues.maitreOuvrage.value : null,
             maitreOuvrageDel: formValues.maitreOuvrageDel ? formValues.maitreOuvrageDel.value : null,
         }
@@ -120,8 +121,8 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
         // return
 
         useAjaxFetch({
-            url: 'projets',
-            method: 'POST',
+            url: `projets${ editMode ? `/${idProjet}` : '' }`,
+            method: editMode ? 'PUT' : 'POST',
             body: JSON.stringify(apiValues),
             success: (savedProj) => {
                 initForm()
@@ -236,7 +237,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
 
 
             {
-                canUserAffect(roles, userType) &&
+                // canUserAffect(roles, userType) &&
             
                 <>
                 <div className="sep-line"></div>
@@ -297,7 +298,7 @@ ProjetForm = connect(
         // },
         // initialValues: getInitialFormValues(state),
         roles: getRoles(state),
-        userType: getUserType(state),
+        permissions: getPermissions(state),
         isConvention: selector(state, 'isConvention'),
         isMaitreOuvrageDel: selector(state, 'isMaitreOuvrageDel'),
         srcFinancement: selector(state, 'srcFinancement'),

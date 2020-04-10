@@ -8,12 +8,18 @@
     cursor: pointer;
 }
 
-.user-item {
-    /* box-shadow: 0 0 1px 1px rgba(20,23,28,0.1), 0 3px 1px 0 rgba(20,23,28,0.1); */
-    margin-bottom: 4px;
-    padding: 8px 10px;
+
+#userPage .user-item {
+    padding: 5px 0px;
+    /* padding-right: 0px; */
+    /* padding-left: 0px; */
     display: flex;
     align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+
+#userPage .user-item:last-child {
+    border-bottom: none;
 }
 
 .user-info {
@@ -35,10 +41,21 @@
     border-radius: 4px;
 }
 
-.user-result {
+#userPage .result-info {
+    font-weight: 600;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
 }
 
-.user-item.mtem_ls {
-    padding: 2px 14px;
+#userPage .user-result {
+    border: 1px solid #dadce0;
+    padding: 0px 14px;
+    background-color: white;
+    border-radius: 4px;
 }
+
+
+

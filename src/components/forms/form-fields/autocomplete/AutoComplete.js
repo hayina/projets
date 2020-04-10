@@ -4,6 +4,7 @@ import { reducer, initialState } from './acReducer';
 import useClickOutside from '../../../hooks/useClickOutside';
 import './autocomplete.css'
 import { ApiError } from '../../../helpers';
+import useAjaxFetch from '../../../hooks/useAjaxFetch';
 
 
 const AutoComplete = ({ onSelect, url, validateClass='', className='', placeholder='' }) => {
@@ -91,32 +92,32 @@ const AutoComplete = ({ onSelect, url, validateClass='', className='', placehold
         
         dispatch({ type: 'AC_API_CALL' });
 
-        axios({
+        useAjaxFetch({
             // SETUP PARAMS
             // baseURL: '/PROJETS/ajax',
-            baseURL: '/PROJET-API/api',
-            headers: {
-                "Access-Control-Allow-Origin": "*"
-            },
+            // baseURL: '/PROJET-API/api',
+            // headers: {
+            //     "Access-Control-Allow-Origin": "*"
+            // },
             // PASSED PARAMS
             url,
             method: 'GET',
-            params: { q }
-        })
-        .then((response) => {
-            // if( q !== lastTypedTerm.current ) console.log(`Canceling for -----------------> "${q}"`)
-            if ( q === lastTypedTerm.current ) { 
-                dispatch({
-                    type: 'AC_API_SUCCESS',
-                    suggestions: response.data 
-                    //.map((s) => ({ id: s.id, label: s.label }))
-                });
-            }
-        })
-        .catch((error) => {
-            if ( q === lastTypedTerm.current ) { 
-                console.log(error);
-                dispatch({ type: 'AC_API_ERROR' });
+            params: { q },
+            success: (data) => {
+
+                // if( q !== lastTypedTerm.current ) console.log(`Canceling for -----------------> "${q}"`)
+                if ( q === lastTypedTerm.current ) { 
+                    dispatch({
+                        type: 'AC_API_SUCCESS',
+                        suggestions: data 
+                        //.map((s) => ({ id: s.id, label: s.label }))
+                    });
+                }
+            },
+            error: () => {
+                if ( q === lastTypedTerm.current ) { 
+                    dispatch({ type: 'AC_API_ERROR' });
+                }
             }
         })
     }

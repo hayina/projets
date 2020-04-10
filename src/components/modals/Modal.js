@@ -26,7 +26,8 @@ const Modal = ({ title, children, handleValidation, dispatch, styles={ width: '5
     // })
 
     return (
-        <div className={`modals-container ${ fading && (submitting || loading) ? 'is-submitting' : '' }`}>
+        <div className={`modals-container`}>
+        {/* <div className={`modals-container ${ fading && (submitting || loading) ? 'is-submitting' : '' }`}> */}
 
             <div className="modals-dialog" ref={modalRef} style={styles}>
 

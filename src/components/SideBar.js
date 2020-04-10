@@ -2,12 +2,14 @@ import React from 'react'
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 
-import { getUserType, getRoles } from '../reducers/login';
+import { getRoles, getPermissions } from '../reducers/login';
 
 import './sideBar.css'
-import { canUserSaisir, isAdmin } from '../security';
+import { accessPermissions } from '../security';
+import { USER_PERMISSIONS } from '../types';
+// import { canUserSaisir, isAdmin } from '../security';
 
-let SideBar = ({ userType, roles }) => {
+let SideBar = ({ permissions, roles }) => {
 
 
     const SideItem = ({ url, label, children=(<i className="_fa_sb fas fa-bars"></i>) }) => (
@@ -39,27 +41,28 @@ let SideBar = ({ userType, roles }) => {
                     <i className="_fa_sb fas fa-poll-h"></i>
                 </SideItem>
 
-                {
-                    canUserSaisir(roles, userType) && 
+                {accessPermissions(permissions, [USER_PERMISSIONS.ADD_PROJECT]) && 
                     <SideItem label="Ajouter Projet" url="/projets/new" >
                         <i className="_fa_sb fas fa-industry"></i>
                     </SideItem>
                 }
 
-                { 
-                    isAdmin(userType) && 
-                    <>
+                {accessPermissions(permissions, [USER_PERMISSIONS.VIEW_CONVENTION]) && 
                     <SideItem label="Liste des Conventions" url="/conventions" />
-                    <SideItem label="Gestion des localisations" url="/localisations" >
+                }       
+
+                {accessPermissions(permissions, [USER_PERMISSIONS.VIEW_LOCATION]) && 
+                    <SideItem label="Gestion des localisations" url="/locations" >
                         <i className="_fa_sb fas fa-map-marker-alt"></i>
                     </SideItem>
+                }   
 
-
-                    <SideItem label="Gestion des utilisateurs" url="/users" >
-                        <i className="_fa_sb fas fa-users-cog"></i>
-                    </SideItem>
-                    </>
+                {accessPermissions(permissions, [USER_PERMISSIONS.VIEW_USERS]) && 
+                <SideItem label="Gestion des utilisateurs" url="/users" >
+                    <i className="_fa_sb fas fa-users-cog"></i>
+                </SideItem>
                 }
+         
 
             </div>
 
@@ -70,6 +73,6 @@ let SideBar = ({ userType, roles }) => {
 
 
 export default connect((state) => ({ 
-    userType: getUserType(state),
+    permissions: getPermissions(state),
     roles: getRoles(state),
 }))(SideBar);

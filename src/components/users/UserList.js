@@ -13,6 +13,7 @@ import DropDown from '../helpers/DropDown2';
 let UserList = ({ dispatch }) => {
 
     const [users, setUsers] = useState([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
 
@@ -20,12 +21,13 @@ let UserList = ({ dispatch }) => {
         
         dispatch(setBreadCrumb("Gestion des utilisateurs"))
 
-
+        setLoading(true)
         useAjaxFetch({
             url: 'users',
             method: 'GET',
             success: (data) => {
                 setUsers(data)
+                setLoading(false)
             }
             
         })
@@ -41,7 +43,7 @@ let UserList = ({ dispatch }) => {
         setUsers(nwUsers);
     }
 
-    const deleteUser = ({id, nom, prenom}, index) => {
+    const deleteUser = ({ id, nom, prenom }, index) => {
 
         dispatch(showModal(modalTypes.ADD_DELETE, 
             {
@@ -55,8 +57,8 @@ let UserList = ({ dispatch }) => {
                     }
                 }),
                 dangerText: `Voulez vous vraiment supprimer l'utilisateur : 
-                ${nom.toUpperCase()} 
-                ${prenom.toUpperCase()} ?`
+                            ${nom.toUpperCase()} 
+                            ${prenom.toUpperCase()} ?`
             }))
 
 
@@ -75,7 +77,18 @@ let UserList = ({ dispatch }) => {
 
             <div className="nav-user box-sh">
 
-                <div className="result-info">{ users.length } utilisateurs retrouvés</div>
+                <div className="result-info">
+                {
+                    loading ?
+                    <span>Chargement des utilisateurs ...</span>
+                    :
+                    <>
+                        <span>{ users.length } utilisateurs retrouvés</span>
+                        <i className="fas fa-user-plus" 
+                        onClick={() => dispatch(showModal(modalTypes.ADD_USER, {editMode: false, addUser }))} />
+                    </>    
+                }
+                </div>
 
                 {/* <div className="add-user blue-link l_ho" onClick={() => {
                         dispatch(showModal(modalTypes.ADD_USER, {editMode: false, addUser }))
@@ -83,9 +96,7 @@ let UserList = ({ dispatch }) => {
                     Ajouter un utilisateur
                 </div> */}
 
-                <i className="fas fa-user-plus" 
-                    onClick={() => dispatch(showModal(modalTypes.ADD_USER, {editMode: false, addUser }))}>
-                </i>
+
 
                 {/* <div className="add-user blue-link l_ho" onClick={() => {
                         dispatch(showModal(modalTypes.MANAGE_ROLE, {}))
@@ -93,12 +104,14 @@ let UserList = ({ dispatch }) => {
                     Gestion rôles
                 </div> */}
             </div>
+            
 
+            {!loading &&
             <div className="user-result ">
                 {   users.map((user, index) => {
 
                     return (
-                        <div className="user-item mtem_ls" key={user.id}>
+                        <div className="user-item " key={user.id}>
 
                             <div className="user-info">
                                 <div className="user-label">{user.nom} {user.prenom}</div>
@@ -124,6 +137,7 @@ let UserList = ({ dispatch }) => {
                     })
                 }
             </div>
+            }
 
         </div>
 
