@@ -14,15 +14,13 @@ export const withForbbiden = (Cp) => (props) => {
 
 
 export const accessEditProject = (userID, chargeSuivID, roles) => {
-    console.log("accessEditProject", userID, chargeSuivID, roles)
     return userID === chargeSuivID || accessRoles(roles, [USER_ROLES.SUPERVISOR_DIV, USER_ROLES.ADMIN])
 }
+
+export const assignProject = (permissions) => {
+    return accessPermissions(permissions, [USER_PERMISSIONS.ASSIGN_PROJECT]) 
+}
  
-
-
-// export const canUserAffect = (roles, userType) => isSupervisor(roles) || isAdmin(userType)
-// export const canUserSaisir = (roles, userType) => canHeAccessRoute(roles, USER_ROLES.SAISIR_PROJET, userType)
-
 
 export const accessRoles= (roles, authRole) => {
 

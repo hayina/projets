@@ -151,6 +151,9 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden, history }) => {
         dispatch(initialize(marcheFormName, {}))
     }
 
+    const urlPrefix = editMode ? '' : `/projets/${idProjet}`;
+    const urlSuffix = editMode ? `/${idMarche}` : '';
+
     useEffect(() => {
 
         dispatch(setBreadCrumb("Ajouter un marché"))
@@ -160,8 +163,9 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden, history }) => {
         setLoading(true)
 
         useAjaxFetch({
-            url: `/marches/loading`,
-            params: idMarche ? { edit: idMarche } : {},
+            url: `${ urlPrefix }/marches/loading${ urlSuffix }`,
+            // url: `/marches/loading`,
+            // params: idMarche ? { edit: idMarche } : {},
             success: (result) => {
 
                 setMarcheTypes(result.marcheTypes)
@@ -217,7 +221,7 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden, history }) => {
 
         let apiValues = {
             ...formValues,
-            idMarche,
+            // idMarche,
             idProjet,
             marcheType: { value: formValues.marcheType },
             marcheEtat: { value: formValues.marcheEtat },
@@ -235,12 +239,9 @@ let MarcheForm = ({ dispatch, handleSubmit, match, setForbbiden, history }) => {
         setErrors(false)
 
         useAjaxFetch({
-            // url: 'postman/marches22',
-            url: 'marches',
-            method: 'POST',
-            // contentType: "multipart/form-data",
+            url: `${ urlPrefix }/marches${ urlSuffix }`,
+            method: editMode ? 'PUT' : 'POST',
             body: formData,
-            // body: JSON.stringify(apiValues),
             success: () => {
 
 

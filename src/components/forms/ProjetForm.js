@@ -6,15 +6,15 @@ import { setBreadCrumb } from '../../actions';
 import { required, number, emptyArray } from './validator'
 import { TextField, SelectField, AutoCompleteField, ToggleField, SelectGrpField } from './form-fields/fields'
 import useAjaxFetch from '../hooks/useAjaxFetch';
-import { ApiError } from '../helpers';
 import PartnerLine from './PartnerLine';
 import LocationLine from './LocationLine';
 import ProgLine from './ProgLine';
 
 import './forms.css';
-import { getRoles, getUserType, getPermissions } from '../../reducers/login';
-import { withForbbiden } from '../../security';
-import { ButtonSpinner, FooterForm } from '../divers';
+import { getRoles, getPermissions } from '../../reducers/login';
+import { withForbbiden, assignProject } from '../../security';
+import { FooterForm } from '../divers';
+
 
 const vIndh = (value, formValues, props, name) => (
     (formValues.indh === true) && (!value) ? 
@@ -237,7 +237,7 @@ let ProjetForm = ({ handleSubmit, isMaitreOuvrageDel, dispatch, match, history, 
 
 
             {
-                // canUserAffect(roles, userType) &&
+                assignProject(permissions)  &&
             
                 <>
                 <div className="sep-line"></div>

@@ -126,19 +126,14 @@ const App = ({ breadCrumb , isAuth, dispatch }) => {
                             authPermissions={[USER_PERMISSIONS.ADD_PROJECT]} 
                             path="/projets/new" exact component={ProjetForm} 
                         />
-
-
-
                         <ProtectedRoute 
                             authPermissions={[USER_PERMISSIONS.EDIT_PROJECT]}  
                             path="/projets/edit/:idProjet" exact component={ProjetForm} 
                         />
-
                         <ProtectedRoute 
                             authPermissions={[USER_PERMISSIONS.ADD_PROJECT]} 
                             path="/marches/new/:idProjet" exact component={MarcheForm}
                         />
-
                         <ProtectedRoute 
                             authPermissions={[USER_PERMISSIONS.EDIT_PROJECT]}  
                             path="/marches/edit/:idMarche" exact component={MarcheForm} 
