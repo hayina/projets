@@ -47,16 +47,16 @@ export const toUrlParams = obj => Object.keys(obj)
 export const urlParamsTo = (urlParams) => Object.fromEntries(new URLSearchParams(urlParams))
 
 
-export const getItemFromStorage = (item) => sessionStorage.getItem(item)
+export const getItemFromStorage = (item) => localStorage.getItem(item)
 
 
 export const setSigninTokens = ({ userInfo, token }) => {
-    sessionStorage.setItem('token', token);
-    sessionStorage.setItem('userInfo', userInfo);
+    localStorage.setItem('token', token);
+    localStorage.setItem('userInfo', userInfo);
 }
 export const deleteSigninTokens = () => {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('userInfo');
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
 }
 
 export const logoutAndClean = () => {

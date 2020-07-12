@@ -19,10 +19,19 @@ const Dashboard = ({ dispatch }) => {
     //     console.log("No time function call...");
     //  });
 
+    const onKeyDown = (e) => {
+
+        const keyCode = e.keyCode || e.which;
+        //ENTER
+        console.log(keyCode)
+
+    }
+
     return (
         <div id="dashboard-page">
         
             <h1>Dashboard</h1>
+            <input onKeyDown={onKeyDown} type="text"/>
             <h2>{ sessionStorage.getItem("token") }</h2>
         </div>
     )

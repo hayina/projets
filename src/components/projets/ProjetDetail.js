@@ -96,6 +96,7 @@ const ProjetDetail = ({ match, history, dispatch, permissions, userID, roles }) 
 
 
     const projectLinks = []
+    const marcheLinks = []
 
     /**
      * Check if user have permissions & roles to edit the project
@@ -107,6 +108,13 @@ const ProjetDetail = ({ match, history, dispatch, permissions, userID, roles }) 
             label: 'Editer',
             callback: () => history.push(`/projets/edit/${idProjet}`),
         })
+
+        marcheLinks.push({
+            label: 'Editer',
+            callback: () => history.push(`/marches/edit/${defaultMarche.idMarche}`),
+        })
+
+  
 
         /**
          * Check if the user have the permission to delete a project
@@ -122,6 +130,17 @@ const ProjetDetail = ({ match, history, dispatch, permissions, userID, roles }) 
                         apiCall: true, fading: false
                     }))
                 },
+            })
+
+            marcheLinks.push({
+                label: 'Supprimer',
+                callback: () => {
+                    dispatch(showModal(modalTypes.ADD_DELETE, {
+                        handleValidation: () => deleteMarche(defaultMarche.idMarche),
+                        dangerText: <span>Voulez vous vraiment supprimer le marche <strong>{defaultMarche.intitule}</strong> ?</span>,
+                        apiCall: true, fading: false
+                    }))
+                }
             })
         }
     }
@@ -310,26 +329,9 @@ const ProjetDetail = ({ match, history, dispatch, permissions, userID, roles }) 
     const renderMarchesInfo = () => (
 
         <div className={`def-marche-wr ${ marcheLoading && 'is-loading'  }`}>
-
-            <DropDown
-
-                links={[
-                    {
-                        label: 'Editer',
-                        callback: () => history.push(`/marches/edit/${defaultMarche.idMarche}`),
-                    },
-                    {
-                        label: 'Supprimer',
-                        callback: () => {
-                            dispatch(showModal(modalTypes.ADD_DELETE, {
-                                handleValidation: () => deleteMarche(defaultMarche.idMarche),
-                                dangerText: <span>Voulez vous vraiment supprimer le marche <strong>{defaultMarche.intitule}</strong> ?</span>,
-                                apiCall: true, fading: false
-                            }))
-                        }
-                    }
-                ]}
-            />
+            { projectLinks.length !== 0 && 
+                <DropDown links={marcheLinks} />
+            }
 
             <div className="pm-h m-h">{defaultMarche.intitule}</div>
 

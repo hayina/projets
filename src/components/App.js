@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter , Route, Redirect } from "react-router-dom";
+import React, {  } from 'react';
+import { BrowserRouter , Route } from "react-router-dom";
 import { connect } from 'react-redux';
 
 
@@ -22,10 +22,6 @@ import { isAuthenticated, getUserID, getRoles, getPermissions } from '../reducer
 import { createBrowserHistory } from 'history';
 import { USER_PERMISSIONS, APP_LINKS } from '../types';
 import { accessPermissions } from '../security';
-import useAjaxFetch from './hooks/useAjaxFetch';
-import { loginUser } from '../actions';
-import { getItemFromStorage } from '../helpers';
-import { accessRoute } from '../security';
 import LocationPage from './locations/LocationsPage';
 import ConventionPage from './conventions/ConventionPage';
 export const history = createBrowserHistory();
@@ -82,7 +78,7 @@ ProtectedRoute = connect( state => ({
     permissions: getPermissions(state),
 }))(ProtectedRoute)
 
-const App = ({ breadCrumb , isAuth, dispatch }) => {
+const App = ({ breadCrumb , isAuth }) => {
 
 
     console.log("MAIN APP ------>")
@@ -91,7 +87,8 @@ const App = ({ breadCrumb , isAuth, dispatch }) => {
 
         <div className={`app-container`}>
 
-            <BrowserRouter basename={'/PROJET-API/routes/'}>
+            <BrowserRouter basename={'/PROJET-API/'}>
+            {/* <BrowserRouter basename={'/PROJET-API/routes/'}> */}
 
      
 
