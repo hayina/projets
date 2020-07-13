@@ -31,7 +31,7 @@ export const isPast = (date) => new Date(date).setHours(0,0,0,0) < new Date().se
 
 
 export const getAttachLink = ({ attachType, idMarche, date, label }) => 
-    `http://localhost:8080/PROJET-API/attachments/${idMarche}/${attachType}/download?n=${label}&d=${formatDate(date, '-')}`
+    `${process.env.PUBLIC_URL}/attachments/${idMarche}/${attachType}/download?n=${label}&d=${formatDate(date, '-')}`
 
 
 export const getOsImgLink = (props) => getAttachLink({ ...props, attachType: ATTACH_TYPE.OS })
