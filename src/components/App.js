@@ -1,5 +1,5 @@
 import React, {  } from 'react';
-import { BrowserRouter , Route } from "react-router-dom";
+import { BrowserRouter , Route, Switch } from "react-router-dom";
 import { connect } from 'react-redux';
 
 
@@ -24,6 +24,7 @@ import { USER_PERMISSIONS, APP_LINKS } from '../types';
 import { accessPermissions } from '../security';
 import LocationPage from './locations/LocationsPage';
 import ConventionPage from './conventions/ConventionPage';
+import NotFoundPage from './NotFoundPage';
 export const history = createBrowserHistory();
 
 
@@ -87,7 +88,8 @@ const App = ({ breadCrumb , isAuth }) => {
 
         <div className={`app-container`}>
 
-            <BrowserRouter basename={'/PROJET-API/'}>
+            <BrowserRouter basename={'project-app'}>
+            {/* <BrowserRouter basename={'/PROJET-API/'}> */}
             {/* <BrowserRouter basename={'/PROJET-API/routes/'}> */}
 
      
@@ -104,6 +106,7 @@ const App = ({ breadCrumb , isAuth }) => {
 
                         <BreadCrumb label={breadCrumb} />
 
+                        <Switch>
                         <Route path="/login" exact component={Login} />
                         {/* <Route path="/forbidden" exact component={ForbiddenRoute} /> */}
 
@@ -141,6 +144,8 @@ const App = ({ breadCrumb , isAuth }) => {
                             path="/users" exact component={UserList} 
                         />
 
+                        <Route component={NotFoundPage} />
+                        </Switch>
                     </div>
 
                 </section>

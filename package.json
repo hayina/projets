@@ -1,7 +1,7 @@
 {
   "name": "projets",
   "version": "0.1.0",
-  "homepage": "http://localhost:8080/PROJET-API/",
+  "homepage": "http://localhost:8080/project-app/",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
@@ -31,5 +31,7 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "proxy": "http://127.0.0.1:8080"
+  "devDependencies": {
+    "http-proxy-middleware": "^1.0.5"
+  }
 }

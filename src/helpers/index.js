@@ -1,6 +1,7 @@
 import { ATTACH_TYPE } from "../types";
 import { store } from "../store";
 import { logoutUser, hideModal } from "../actions";
+import { BACKEND_CONFIG } from "../conf";
 
 export const asyncFunc = (f) => new Promise((resolve, reject) => {
     f();
@@ -31,7 +32,7 @@ export const isPast = (date) => new Date(date).setHours(0,0,0,0) < new Date().se
 
 
 export const getAttachLink = ({ attachType, idMarche, date, label }) => 
-    `${process.env.PUBLIC_URL}/attachments/${idMarche}/${attachType}/download?n=${label}&d=${formatDate(date, '-')}`
+    `${BACKEND_CONFIG.ATTACH_URL}/${idMarche}/${attachType}/download?n=${label}&d=${formatDate(date, '-')}`
 
 
 export const getOsImgLink = (props) => getAttachLink({ ...props, attachType: ATTACH_TYPE.OS })

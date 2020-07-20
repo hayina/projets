@@ -4,6 +4,8 @@ import axios from 'axios';
 import { logoutUser, hideModal } from '../../actions';
 import { store } from '../../store';
 import { getItemFromStorage, deleteSigninTokens, logoutAndClean } from '../../helpers';
+import { BACKEND_CONFIG } from '../../conf';
+
 
 
 const useAjaxFetch = ({ 
@@ -23,7 +25,7 @@ const useAjaxFetch = ({
 
     axios({
             // SETUP PARAMS
-            baseURL: '/PROJET-API/api',
+            baseURL: BACKEND_CONFIG.API_URL,
             headers: {
                 "Access-Control-Allow-Origin": "*",
                 "X-Requested-With": "XMLHttpRequest",
