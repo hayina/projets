@@ -4,7 +4,7 @@
   "homepage": "http://localhost:8080/project-app/",
   "private": true,
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "jquery": "^3.4.0",
     "react": "^16.8.4",
     "react-datepicker": "^2.4.0",
